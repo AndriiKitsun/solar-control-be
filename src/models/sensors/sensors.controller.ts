@@ -16,12 +16,12 @@ export class SensorsController {
 
   @Post('pzem')
   @HttpCode(HttpStatus.NO_CONTENT)
-  createPzem(@Body() pzemSensorDto: CreatePzemSensorDto): void {
+  async createPzem(@Body() pzemSensorDto: CreatePzemSensorDto): Promise<void> {
     return this.sensorsService.createPzem(pzemSensorDto);
   }
 
   @Get('pzem')
-  getAllPzemData(): PzemRecordResponseDto[] {
+  async getAllPzemData(): Promise<PzemRecordResponseDto[]> {
     return this.sensorsService.getAllPzemData();
   }
 }
