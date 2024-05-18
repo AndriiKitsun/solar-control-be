@@ -1,48 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePzemSensorDto } from './dto/request/create-pzem-sensor.dto';
-import { PzemSensor } from './entities/pzem-sensor.entity';
+import { CreatePzemRecordDto } from './dto/request/create-pzem-record.dto';
 import { PzemDto } from './dto/request/pzem.dto';
 import { Pzem } from './entities/pzem.entity';
-import { PzemRecordResponseDto } from './dto/response/pzem-sensor.dto';
-import { PzemSensorRepository } from './pzem-sensor.repository';
+import { PzemRecordResponseDto } from './dto/response/pzem-record.dto';
+import { PzemsRepository } from './pzems.repository';
 import { plainToInstance } from 'class-transformer';
 import {
   ENERGY_COUNTER_T1_UA_ZONE_START_HOUR,
   ENERGY_COUNTER_T2_UA_ZONE_START_HOUR,
-} from './sensors.constants';
+} from './pzems.constants';
+import { PzemRecord } from './entities/pzem-record.entity';
 
 @Injectable()
-export class SensorsService {
-  constructor(private readonly pzemSensorRepository: PzemSensorRepository) {}
+export class PzemsService {
+  constructor(private readonly pzemSensorRepository: PzemsRepository) {}
 
-  async createPzem(pzemSensorDto: CreatePzemSensorDto): Promise<void> {
+  async createPzem(pzemSensorDto: CreatePzemRecordDto): Promise<void> {
     const recalculatedPzemRecord = await this.calculatePzem(pzemSensorDto);
 
     await this.pzemSensorRepository.createPzemRecord(recalculatedPzemRecord);
   }
 
-  async getAllPzemData(): Promise<PzemRecordResponseDto[]> {
+  async getAllPzems(): Promise<PzemRecordResponseDto[]> {
     const records = await this.pzemSensorRepository.getAllPzemRecords();
 
     return plainToInstance(PzemRecordResponseDto, records);
   }
 
   private async calculatePzem(
-    pzemData: CreatePzemSensorDto,
-  ): Promise<PzemSensor> {
+    pzemData: CreatePzemRecordDto,
+  ): Promise<PzemRecord> {
     const lastDayPzems =
       await this.pzemSensorRepository.getPzemRecordsForLastDay();
 
-    const t1Pzems: PzemSensor[] = [];
-    const t2Pzems: PzemSensor[] = [];
-    const last10MinutesPzems: PzemSensor[] = [];
+    const t1Pzems: PzemRecord[] = [];
+    const t2Pzems: PzemRecord[] = [];
+    const last10MinutesPzems: PzemRecord[] = [];
 
     const t1StartTime = this.getT1StartTime();
     const t2StartTime = this.getT2StartTime();
     const last10MinutesTime = this.getLast10MinutesTime();
 
     lastDayPzems.forEach((pzem) => {
-      const pzemTimeMs = new Date(pzem.recordDateGmt).getTime();
+      const pzemTimeMs = new Date(pzem.recordTimeGmt).getTime();
 
       if (pzemTimeMs >= t1StartTime && pzemTimeMs < t2StartTime) {
         t1Pzems.push(pzem);
@@ -76,10 +76,10 @@ export class SensorsService {
     // });
     //
     last10MinutesPzems.forEach((pzem) => {
-      inputAcVoltageSum += pzem.inputAc.voltageV;
-      outputAcVoltageSum += pzem.outputAc.voltageV;
-      batteryOutputDcVoltageSum += pzem.batteryOutputDc.voltageV;
-      solarOutputDcVoltageSum += pzem.solarOutputDc.voltageV;
+      inputAcVoltageSum += pzem.input.voltageV;
+      outputAcVoltageSum += pzem.output.voltageV;
+      batteryOutputDcVoltageSum += pzem.accOutput.voltageV;
+      solarOutputDcVoltageSum += pzem.solarOutput.voltageV;
     });
 
     const inputAcAverageVoltage = inputAcVoltageSum / last10MinutesPzems.length;
@@ -91,23 +91,17 @@ export class SensorsService {
       solarOutputDcVoltageSum / last10MinutesPzems.length;
 
     return {
-      inputAc: this.calculatePzemParams(
-        pzemData.inputAc,
-        inputAcAverageVoltage,
-      ),
-      outputAc: this.calculatePzemParams(
-        pzemData.outputAc,
-        outputAcAverageVoltage,
-      ),
-      batteryOutputDc: this.calculatePzemParams(
-        pzemData.batteryOutputDc,
+      input: this.calculatePzemParams(pzemData.input, inputAcAverageVoltage),
+      output: this.calculatePzemParams(pzemData.output, outputAcAverageVoltage),
+      accOutput: this.calculatePzemParams(
+        pzemData.accOutput,
         batteryOutputDcAverageVoltage,
       ),
-      solarOutputDc: this.calculatePzemParams(
-        pzemData.solarOutputDc,
+      solarOutput: this.calculatePzemParams(
+        pzemData.solarOutput,
         solarOutputDcAverageVoltage,
       ),
-      recordDateGmt: pzemData.recordDateGmt,
+      recordTimeGmt: pzemData.recordTimeGmt,
     };
   }
 
@@ -136,19 +130,16 @@ export class SensorsService {
   }
 
   private calculatePzemParams(pzem: PzemDto, averageVoltage: number): Pzem {
-    const { activePowerW } = pzem;
-    const activePowerKw = activePowerW / 1000;
-
     return {
       voltageV: pzem.voltageV,
       currentA: pzem.currentA,
-      activePowerKw,
-      activeEnergyKwh: pzem.activeEnergyKwh,
+      powerKw: pzem.powerKw,
+      energyKwh: pzem.energyKwh,
       frequencyHz: pzem.frequencyHz,
       powerFactor: pzem.powerFactor,
-      energyT1Kwh: 0,
-      energyT2Kwh: 0,
-      tenMinutesAverageVoltageV: averageVoltage,
+      t1EnergyKwh: 0,
+      t2EnergyKwh: 0,
+      avg10mVoltageV: averageVoltage,
     };
   }
 }

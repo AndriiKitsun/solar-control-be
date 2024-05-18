@@ -9,14 +9,20 @@ export class PzemResponseDto {
   currentA: number;
 
   @Expose()
-  activePowerKw: number;
+  powerKw: number;
 
   @Expose()
-  energyT1Kwh: number;
+  frequencyHz: number;
 
   @Expose()
-  energyT2Kwh: number;
+  powerFactor: number;
 
   @Expose()
-  tenMinutesAverageVoltageV: number;
+  t1EnergyKwh: number;
+
+  @Expose()
+  t2EnergyKwh: number;
+
+  @Expose()
+  avg10mVoltageV: number;
 }

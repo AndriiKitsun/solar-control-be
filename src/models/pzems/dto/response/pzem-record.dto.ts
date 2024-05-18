@@ -4,17 +4,17 @@ import { PzemResponseDto } from './pzem.dto';
 @Exclude()
 export class PzemRecordResponseDto {
   @Expose()
-  inputAc: PzemResponseDto;
+  input: PzemResponseDto;
 
   @Expose()
-  outputAc: PzemResponseDto;
+  output: PzemResponseDto;
 
   @Expose()
-  batteryOutputDc: PzemResponseDto;
+  accOutput: PzemResponseDto;
 
   @Expose()
-  solarOutputDc: PzemResponseDto;
+  solarOutput: PzemResponseDto;
 
   @Expose()
-  recordDateGmt: string;
+  recordTimeGmt: string;
 }

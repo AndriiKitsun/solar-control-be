@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SensorsModule } from './models/sensors/sensors.module';
+import { PzemsModule } from './models/pzems/pzems.module';
 
 @Module({
-  imports: [SensorsModule],
+  imports: [PzemsModule],
 })
 export class AppModule {}

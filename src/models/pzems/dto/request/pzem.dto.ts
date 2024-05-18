@@ -8,10 +8,10 @@ export class PzemDto {
   currentA: number;
 
   @IsNumber()
-  activePowerW: number;
+  powerKw: number;
 
   @IsNumber()
-  activeEnergyKwh: number;
+  energyKwh: number;
 
   @IsNumber()
   frequencyHz: number;
