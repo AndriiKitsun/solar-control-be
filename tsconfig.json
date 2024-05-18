@@ -12,7 +12,6 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
