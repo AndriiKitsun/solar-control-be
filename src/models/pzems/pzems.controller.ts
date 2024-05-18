@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PzemsService } from './pzems.service';
-import { CreatePzemRecordDto } from './dto/request/create-pzem-record.dto';
+import { CreatePzemDto } from './dto/request/create-pzem.dto';
 import { PzemRecordResponseDto } from './dto/response/pzem-record.dto';
 import { PzemsFileService } from './pzems-file.service';
 
@@ -20,8 +20,8 @@ export class PzemsController {
 
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async createPzem(@Body() pzemData: CreatePzemRecordDto): Promise<void> {
-    return this.pzemsService.createPzem(pzemData);
+  async createPzem(@Body() pzemDto: CreatePzemDto): Promise<void> {
+    return this.pzemsService.createPzem(pzemDto);
   }
 
   @Get()
@@ -30,7 +30,7 @@ export class PzemsController {
   }
 
   @Post('file')
-  savePzemToFile(@Body() pzemData: CreatePzemRecordDto): void {
+  savePzemToFile(@Body() pzemData: CreatePzemDto): void {
     return this.pzemsFileService.savePzemToFileV2(pzemData);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePzemRecordDto } from './dto/request/create-pzem-record.dto';
+import { CreatePzemDto } from './dto/request/create-pzem.dto';
 import { join } from 'node:path';
 import { appendFileSync, existsSync, mkdirSync } from 'node:fs';
 
@@ -7,7 +7,7 @@ import { appendFileSync, existsSync, mkdirSync } from 'node:fs';
 export class PzemsFileService {
   private fileName = `pzems-${new Date().toJSON()}.json`;
 
-  savePzemToFileV2(pzemData: CreatePzemRecordDto): void {
+  savePzemToFileV2(pzemData: CreatePzemDto): void {
     const outDir = 'output';
     const outPath = join(outDir, this.fileName);
     const content = JSON.stringify(pzemData) + ',\n';

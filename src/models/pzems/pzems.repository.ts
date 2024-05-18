@@ -3,19 +3,19 @@ import { PzemRecord } from './entities/pzem-record.entity';
 
 @Injectable()
 export class PzemsRepository {
-  private pzemSensorsDb: PzemRecord[] = [];
+  private pzemRecordsDb: PzemRecord[] = [];
 
-  async getAllPzemRecords(): Promise<PzemRecord[]> {
-    return this.pzemSensorsDb;
+  async getAll(): Promise<PzemRecord[]> {
+    return this.pzemRecordsDb;
   }
 
-  async createPzemRecord(pzem: PzemRecord): Promise<void> {
-    this.pzemSensorsDb.push(pzem);
+  async saveRecord(record: PzemRecord): Promise<void> {
+    this.pzemRecordsDb.push(record);
   }
 
-  async getPzemRecordsForLastDay(): Promise<PzemRecord[]> {
-    return this.pzemSensorsDb.filter((pzemSensor) => {
-      const recordDate = new Date(pzemSensor.recordTimeGmt);
+  async getRecordsForLastDay(): Promise<PzemRecord[]> {
+    return this.pzemRecordsDb.filter((record) => {
+      const recordDate = new Date(record.creationTimeGmt);
       const lastDay = new Date();
       lastDay.setDate(lastDay.getDate() - 1);
 

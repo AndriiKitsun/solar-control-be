@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePzemRecordDto } from './dto/request/create-pzem-record.dto';
+import { CreatePzemDto } from './dto/request/create-pzem.dto';
 import { PzemDto } from './dto/request/pzem.dto';
 import { Pzem } from './entities/pzem.entity';
 import { PzemRecordResponseDto } from './dto/response/pzem-record.dto';
@@ -15,43 +15,44 @@ import { PzemRecord } from './entities/pzem-record.entity';
 export class PzemsService {
   constructor(private readonly pzemSensorRepository: PzemsRepository) {}
 
-  async createPzem(pzemSensorDto: CreatePzemRecordDto): Promise<void> {
-    const recalculatedPzemRecord = await this.calculatePzem(pzemSensorDto);
+  async createPzem(pzemDto: CreatePzemDto): Promise<void> {
+    const pzemRecord = await this.calculatePzem(pzemDto);
 
-    await this.pzemSensorRepository.createPzemRecord(recalculatedPzemRecord);
+    await this.pzemSensorRepository.saveRecord(pzemRecord);
   }
 
   async getAllPzems(): Promise<PzemRecordResponseDto[]> {
-    const records = await this.pzemSensorRepository.getAllPzemRecords();
+    const records = await this.pzemSensorRepository.getAll();
 
     return plainToInstance(PzemRecordResponseDto, records);
   }
 
-  private async calculatePzem(
-    pzemData: CreatePzemRecordDto,
-  ): Promise<PzemRecord> {
-    const lastDayPzems =
-      await this.pzemSensorRepository.getPzemRecordsForLastDay();
+  private async calculatePzem(pzemDto: CreatePzemDto): Promise<PzemRecord> {
+    const records = await this.pzemSensorRepository.getRecordsForLastDay();
 
-    const t1Pzems: PzemRecord[] = [];
-    const t2Pzems: PzemRecord[] = [];
-    const last10MinutesPzems: PzemRecord[] = [];
+    const t1Records: PzemRecord[] = [];
+    const t2Records: PzemRecord[] = [];
+    const last10mRecords: PzemRecord[] = [];
 
-    const t1StartTime = this.getT1StartTime();
-    const t2StartTime = this.getT2StartTime();
-    const last10MinutesTime = this.getLast10MinutesTime();
+    const t1StartDate = this.getT1StartTime();
+    const t2StartDate = this.getT2StartTime();
+    const last10MinutesDate = this.getLast10MinutesTime();
 
-    lastDayPzems.forEach((pzem) => {
-      const pzemTimeMs = new Date(pzem.recordTimeGmt).getTime();
+    const t1StartTime = t1StartDate.getTime();
+    const t2StartTime = t2StartDate.getTime();
+    const last10MinutesTime = last10MinutesDate.getTime();
 
-      if (pzemTimeMs >= t1StartTime && pzemTimeMs < t2StartTime) {
-        t1Pzems.push(pzem);
-      } else if (pzemTimeMs >= t2StartTime && pzemTimeMs < t1StartTime) {
-        t2Pzems.push(pzem);
+    records.forEach((record) => {
+      const recordTime = new Date(record.creationTimeGmt).getTime();
+
+      if (recordTime >= t1StartTime && recordTime < t2StartTime) {
+        t1Records.push(record);
+      } else if (recordTime >= t2StartTime && recordTime < t1StartTime) {
+        t2Records.push(record);
       }
 
-      if (pzemTimeMs >= last10MinutesTime) {
-        last10MinutesPzems.push(pzem);
+      if (recordTime >= last10MinutesTime) {
+        last10mRecords.push(record);
       }
     });
 
@@ -75,58 +76,57 @@ export class PzemsService {
     //   t2Sum += pzem.solarOutputDc.activeEnergyKwh;
     // });
     //
-    last10MinutesPzems.forEach((pzem) => {
+    last10mRecords.forEach((pzem) => {
       inputAcVoltageSum += pzem.input.voltageV;
       outputAcVoltageSum += pzem.output.voltageV;
       batteryOutputDcVoltageSum += pzem.accOutput.voltageV;
       solarOutputDcVoltageSum += pzem.solarOutput.voltageV;
     });
 
-    const inputAcAverageVoltage = inputAcVoltageSum / last10MinutesPzems.length;
-    const outputAcAverageVoltage =
-      outputAcVoltageSum / last10MinutesPzems.length;
+    const inputAcAverageVoltage = inputAcVoltageSum / last10mRecords.length;
+    const outputAcAverageVoltage = outputAcVoltageSum / last10mRecords.length;
     const batteryOutputDcAverageVoltage =
-      batteryOutputDcVoltageSum / last10MinutesPzems.length;
+      batteryOutputDcVoltageSum / last10mRecords.length;
     const solarOutputDcAverageVoltage =
-      solarOutputDcVoltageSum / last10MinutesPzems.length;
+      solarOutputDcVoltageSum / last10mRecords.length;
 
     return {
-      input: this.calculatePzemParams(pzemData.input, inputAcAverageVoltage),
-      output: this.calculatePzemParams(pzemData.output, outputAcAverageVoltage),
+      input: this.calculatePzemParams(pzemDto.input, inputAcAverageVoltage),
+      output: this.calculatePzemParams(pzemDto.output, outputAcAverageVoltage),
       accOutput: this.calculatePzemParams(
-        pzemData.accOutput,
+        pzemDto.accOutput,
         batteryOutputDcAverageVoltage,
       ),
       solarOutput: this.calculatePzemParams(
-        pzemData.solarOutput,
+        pzemDto.solarOutput,
         solarOutputDcAverageVoltage,
       ),
-      recordTimeGmt: pzemData.recordTimeGmt,
+      creationTimeGmt: pzemDto.creationTimeGmt,
     };
   }
 
-  private getT1StartTime(): number {
+  private getT1StartTime(): Date {
     const now = new Date();
 
     now.setHours(ENERGY_COUNTER_T1_UA_ZONE_START_HOUR, 0, 0, 0);
 
-    return now.getTime();
+    return now;
   }
 
-  private getT2StartTime(): number {
+  private getT2StartTime(): Date {
     const now = new Date();
 
     now.setHours(ENERGY_COUNTER_T2_UA_ZONE_START_HOUR, 0, 0, 0);
 
-    return now.getTime();
+    return now;
   }
 
-  private getLast10MinutesTime(): number {
+  private getLast10MinutesTime(): Date {
     const now = new Date();
 
     now.setMinutes(now.getMinutes() - 10);
 
-    return now.getTime();
+    return now;
   }
 
   private calculatePzemParams(pzem: PzemDto, averageVoltage: number): Pzem {

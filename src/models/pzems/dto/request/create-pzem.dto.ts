@@ -6,7 +6,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreatePzemRecordDto {
+export class CreatePzemDto {
   @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => PzemDto)
@@ -28,5 +28,5 @@ export class CreatePzemRecordDto {
   solarOutput: PzemDto;
 
   @IsDateString()
-  recordTimeGmt: string;
+  creationTimeGmt: string;
 }

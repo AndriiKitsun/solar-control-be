@@ -7,5 +7,5 @@ export class PzemRecord {
   output: Pzem;
   accOutput: Pzem;
   solarOutput: Pzem;
-  recordTimeGmt: string;
+  creationTimeGmt: string;
 }
