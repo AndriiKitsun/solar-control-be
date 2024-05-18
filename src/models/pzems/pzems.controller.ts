@@ -5,6 +5,7 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { PzemsService } from './pzems.service';
 import { CreatePzemDto } from './dto/request/create-pzem.dto';
@@ -14,10 +15,17 @@ import { SinglePzemDto } from './dto/request/single-pzem.dto';
 
 @Controller('pzems')
 export class PzemsController {
+  private logger = new Logger(PzemsController.name);
+
   constructor(
     private readonly pzemsService: PzemsService,
     private readonly pzemsFileService: PzemsFileService,
   ) {}
+
+  @Get()
+  async getAllPzems(): Promise<PzemRecordResponseDto[]> {
+    return this.pzemsService.getAllPzems();
+  }
 
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -25,26 +33,17 @@ export class PzemsController {
     return this.pzemsService.createPzem(pzemDto);
   }
 
-  @Post('single')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  logSinglePzem(@Body() pzemDto: SinglePzemDto): void {
-    console.log(`pzemDto -->`, pzemDto);
+  @Post('file')
+  savePzemToFile(@Body() pzemData: CreatePzemDto): void {
+    this.pzemsFileService.savePzemDateToFile(pzemData);
+
+    this.logger.debug('Saved PZEM DTO data');
   }
 
   @Post('single/file')
   saveSinglePzem(@Body() pzemDto: SinglePzemDto): void {
     this.pzemsFileService.saveSinglePzemToFile(pzemDto);
 
-    console.log('LOG:', new Date(), 'saved');
-  }
-
-  @Get()
-  async getAllPzems(): Promise<PzemRecordResponseDto[]> {
-    return this.pzemsService.getAllPzems();
-  }
-
-  @Post('file')
-  savePzemToFile(@Body() pzemData: CreatePzemDto): void {
-    return this.pzemsFileService.savePzemDateToFile(pzemData);
+    this.logger.debug('Saved PZEM item');
   }
 }
