@@ -9,5 +9,5 @@ export class Pzem {
 
   t1EnergyKwh: number;
   t2EnergyKwh: number;
-  avg10mVoltageV: number;
+  avg10minutesVoltageV: number;
 }

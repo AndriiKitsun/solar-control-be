@@ -18,4 +18,10 @@ export class PzemDto {
 
   @IsNumber()
   powerFactor: number;
+
+  @IsNumber()
+  t1EnergyKwh: number;
+
+  @IsNumber()
+  t2EnergyKwh: number;
 }

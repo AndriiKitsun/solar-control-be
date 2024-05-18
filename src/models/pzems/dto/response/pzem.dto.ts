@@ -24,5 +24,5 @@ export class PzemResponseDto {
   t2EnergyKwh: number;
 
   @Expose()
-  avg10mVoltageV: number;
+  avg10minutesVoltageV: number;
 }

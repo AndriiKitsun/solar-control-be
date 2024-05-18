@@ -13,13 +13,13 @@ export class PzemsRepository {
     this.pzemRecordsDb.push(record);
   }
 
-  async getRecordsForLastDay(): Promise<PzemRecord[]> {
+  async getLast10minutesRecords(): Promise<PzemRecord[]> {
     return this.pzemRecordsDb.filter((record) => {
       const recordDate = new Date(record.creationTimeGmt);
-      const lastDay = new Date();
-      lastDay.setDate(lastDay.getDate() - 1);
+      const tenMinutesAgo = new Date();
+      tenMinutesAgo.setMinutes(tenMinutesAgo.getMinutes() - 10);
 
-      return recordDate.getTime() >= lastDay.getTime();
+      return recordDate.getTime() >= tenMinutesAgo.getTime();
     });
   }
 }
