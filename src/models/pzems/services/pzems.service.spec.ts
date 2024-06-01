@@ -1,12 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PzemsService } from './pzems.service';
+import { PzemsRepository } from '../pzems.repository';
+import { PzemsCalculationService } from './pzems-calculation.service';
 
 describe('PzemsService', () => {
   let service: PzemsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PzemsService],
+      providers: [
+        PzemsService,
+        {
+          provide: PzemsRepository,
+          useValue: {},
+        },
+        {
+          provide: PzemsCalculationService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<PzemsService>(PzemsService);
