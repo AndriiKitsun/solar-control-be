@@ -18,7 +18,8 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@models/*": ["src/models/*"]
+      "@models/*": ["src/models/*"],
+      "@api/*": ["src/api/*"],
     }
   }
 }
