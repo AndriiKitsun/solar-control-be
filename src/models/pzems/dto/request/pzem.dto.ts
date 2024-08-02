@@ -1,27 +1,38 @@
-import { IsNumber } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class PzemDto {
   @IsNumber()
-  voltageV: number;
+  @IsOptional()
+  voltageV?: number;
 
   @IsNumber()
-  currentA: number;
+  @IsOptional()
+  currentA?: number;
 
   @IsNumber()
-  powerKw: number;
+  @IsOptional()
+  powerKw?: number;
 
   @IsNumber()
-  energyKwh: number;
+  @IsOptional()
+  energyKwh?: number;
 
   @IsNumber()
-  frequencyHz: number;
+  @IsOptional()
+  frequencyHz?: number;
 
   @IsNumber()
-  powerFactor: number;
+  @IsOptional()
+  powerFactor?: number;
 
   @IsNumber()
-  t1EnergyKwh: number;
+  @IsOptional()
+  t1EnergyKwh?: number;
 
   @IsNumber()
-  t2EnergyKwh: number;
+  @IsOptional()
+  t2EnergyKwh?: number;
+
+  @IsDateString()
+  createdAt: string;
 }
