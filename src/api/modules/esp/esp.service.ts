@@ -1,0 +1,27 @@
+import { Injectable, Inject } from '@nestjs/common';
+import { HttpApiService } from '../../common';
+import { EspConfig, EspConfigType } from '@config/api';
+
+@Injectable()
+export class EspApiService {
+  constructor(
+    @Inject(EspConfig.KEY) private readonly espConfig: EspConfigType,
+    private readonly httpApiService: HttpApiService,
+  ) {}
+
+  checkHealth(): Promise<string> {
+    const url = this.buildUrl(['health']);
+
+    return this.httpApiService.get<string>(url);
+  }
+
+  resetCounter(): Promise<void> {
+    const url = this.buildUrl(['pzems', 'counter']);
+
+    return this.httpApiService.delete(url);
+  }
+
+  private buildUrl(path: string[]): string {
+    return `${this.espConfig.endpoint}${path.join('/')}`;
+  }
+}

@@ -5,6 +5,7 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { PzemsService, PzemsFileService } from './services';
 import { PzemResponseDto, PzemDto } from './dto';
@@ -21,6 +22,11 @@ export class PzemsController {
     return this.pzemsService.getAllPzems();
   }
 
+  @Get('health')
+  checkHealth(): Promise<string> {
+    return this.pzemsService.checkHealth();
+  }
+
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
   createPzem(@Body() pzemDto: PzemDto): Promise<void> {
@@ -31,5 +37,10 @@ export class PzemsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   savePzemToFile(@Body() pzemDto: PzemDto): void {
     this.pzemsFileService.savePzemToFile(pzemDto);
+  }
+
+  @Delete('counter')
+  resetEnergyCounter(): Promise<void> {
+    return this.pzemsService.resetEnergyCounter();
   }
 }
