@@ -1,13 +1,34 @@
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+
+@Entity()
 export class Pzem {
-  id: string;
-  voltage_v?: number;
-  current_a?: number;
-  power_kw?: number;
-  energy_kwh?: number;
-  freq_hz?: number;
-  pf?: number;
-  t1_energy_kwh?: number;
-  t2_energy_kwh?: number;
-  avg_voltage_v?: number;
-  create_date: string;
+  @PrimaryColumn({ type: 'timestamptz', precision: 3 })
+  createdAtGmt: Date;
+
+  @Column({ type: 'float', default: 0 })
+  voltageV: number;
+
+  @Column({ type: 'float', default: 0 })
+  currentA: number;
+
+  @Column({ type: 'float', default: 0 })
+  powerKw: number;
+
+  @Column({ type: 'float', default: 0 })
+  energyKwh: number;
+
+  @Column({ type: 'float', default: 0 })
+  frequencyHz: number;
+
+  @Column({ type: 'float', default: 0 })
+  powerFactor: number;
+
+  @Column({ type: 'float', default: 0 })
+  t1EnergyKwh: number;
+
+  @Column({ type: 'float', default: 0 })
+  t2EnergyKwh: number;
+
+  @Column({ type: 'float', default: 0 })
+  avgVoltageV: number;
 }

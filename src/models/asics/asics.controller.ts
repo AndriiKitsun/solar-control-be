@@ -8,31 +8,27 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AsicsService } from './asics.service';
-import {
-  CreateAsicDto,
-  AsicResponseDto,
-  UpdateAsicDto,
-  LoginAsicDto,
-} from './dto';
+import { CreateAsicDto, UpdateAsicDto, LoginAsicDto } from './dto';
 import { AuthToken } from '@common/decorators';
 import { AsicLoginResponse } from '@api/modules';
+import { Asic } from './entities';
 
 @Controller('asics')
 export class AsicsController {
   constructor(private readonly asicsService: AsicsService) {}
 
   @Post()
-  create(@Body() createAsicDto: CreateAsicDto): Promise<AsicResponseDto> {
+  create(@Body() createAsicDto: CreateAsicDto): Promise<Asic> {
     return this.asicsService.create(createAsicDto);
   }
 
   @Get()
-  findAll(): Promise<AsicResponseDto[]> {
+  findAll(): Promise<Asic[]> {
     return this.asicsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<AsicResponseDto> {
+  findOne(@Param('id') id: string): Promise<Asic> {
     return this.asicsService.findOne(id);
   }
 
@@ -40,7 +36,7 @@ export class AsicsController {
   update(
     @Param('id') id: string,
     @Body() updateAsicDto: UpdateAsicDto,
-  ): Promise<AsicResponseDto> {
+  ): Promise<Asic> {
     return this.asicsService.update(id, updateAsicDto);
   }
 

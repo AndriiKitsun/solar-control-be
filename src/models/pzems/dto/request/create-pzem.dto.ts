@@ -1,6 +1,9 @@
-import { IsDateString, IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsDateString } from 'class-validator';
 
-export class PzemDto {
+export class CreatePzemDto {
+  @IsDateString()
+  createdAtGmt: string;
+
   @IsNumber()
   @IsOptional()
   voltageV?: number;
@@ -32,7 +35,4 @@ export class PzemDto {
   @IsNumber()
   @IsOptional()
   t2EnergyKwh?: number;
-
-  @IsDateString()
-  createdAt: string;
 }

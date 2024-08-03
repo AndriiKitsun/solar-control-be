@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Asic } from './entities';
-import { CreateAsicDto, AsicResponseDto, UpdateAsicDto } from './dto';
+import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
 
@@ -15,17 +15,21 @@ export class AsicsRepository {
     private readonly asicsRepository: Repository<Asic>,
   ) {}
 
-  async create(createAsicDto: CreateAsicDto): Promise<AsicResponseDto> {
-    await this.asicsRepository.insert(createAsicDto);
+  async create(createAsicDto: CreateAsicDto): Promise<Asic> {
+    try {
+      await this.asicsRepository.insert(createAsicDto);
 
-    return createAsicDto as AsicResponseDto;
+      return createAsicDto as Asic;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findAll(): Promise<AsicResponseDto[]> {
+  findAll(): Promise<Asic[]> {
     return this.asicsRepository.find();
   }
 
-  async findOne(id: string): Promise<AsicResponseDto> {
+  async findOne(id: string): Promise<Asic> {
     try {
       return await this.asicsRepository.findOneByOrFail({ id });
     } catch (error) {
@@ -37,10 +41,7 @@ export class AsicsRepository {
     }
   }
 
-  async update(
-    id: string,
-    updateAsicDto: UpdateAsicDto,
-  ): Promise<AsicResponseDto> {
+  async update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
     const result = await this.asicsRepository.update(id, updateAsicDto);
 
     if (!result.affected) {

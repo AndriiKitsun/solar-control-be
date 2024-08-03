@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {
-  LoginAsicDto,
-  CreateAsicDto,
-  AsicResponseDto,
-  UpdateAsicDto,
-} from './dto';
+import { LoginAsicDto, CreateAsicDto, UpdateAsicDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService, AsicLoginResponse } from '@api/modules';
+import { Asic } from './entities';
 
 @Injectable()
 export class AsicsService {
@@ -15,19 +11,19 @@ export class AsicsService {
     private readonly asicsApiService: AsicsApiService,
   ) {}
 
-  create(createAsicDto: CreateAsicDto): Promise<AsicResponseDto> {
+  create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return this.asicsRepository.create(createAsicDto);
   }
 
-  findAll(): Promise<AsicResponseDto[]> {
+  findAll(): Promise<Asic[]> {
     return this.asicsRepository.findAll();
   }
 
-  findOne(id: string): Promise<AsicResponseDto> {
+  findOne(id: string): Promise<Asic> {
     return this.asicsRepository.findOne(id);
   }
 
-  update(id: string, updateAsicDto: UpdateAsicDto): Promise<AsicResponseDto> {
+  update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
     return this.asicsRepository.update(id, updateAsicDto);
   }
 
