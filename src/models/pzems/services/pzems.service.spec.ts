@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PzemsService } from './pzems.service';
 import { PzemsRepository } from '../pzems.repository';
 import { PzemsCalculationService } from './pzems-calculation.service';
+import { EspApiService } from '@api/modules';
 
 describe('PzemsService', () => {
   let service: PzemsService;
@@ -16,6 +17,10 @@ describe('PzemsService', () => {
         },
         {
           provide: PzemsCalculationService,
+          useValue: {},
+        },
+        {
+          provide: EspApiService,
           useValue: {},
         },
       ],
