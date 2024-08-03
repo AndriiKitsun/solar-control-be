@@ -14,7 +14,7 @@ import {
   UpdateAsicDto,
   LoginAsicDto,
 } from './dto';
-import { AuthToken } from '../../common';
+import { AuthToken } from '@common/decorators';
 import { AsicLoginResponse } from '@api/modules';
 
 @Controller('asics')

@@ -24,4 +24,12 @@ export class HttpApiService {
 
     return response.data;
   }
+
+  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await firstValueFrom(
+      this.httpService.delete<T>(url, config),
+    );
+
+    return response.data;
+  }
 }

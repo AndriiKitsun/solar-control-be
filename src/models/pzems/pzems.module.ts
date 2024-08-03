@@ -6,8 +6,10 @@ import {
 } from './services';
 import { PzemsController } from './pzems.controller';
 import { PzemsRepository } from './pzems.repository';
+import { EspApiModule } from '@api/modules';
 
 @Module({
+  imports: [EspApiModule],
   controllers: [PzemsController],
   providers: [
     PzemsService,
