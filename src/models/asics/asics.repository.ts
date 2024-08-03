@@ -1,60 +1,60 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Asic } from './entities';
 import { CreateAsicDto, AsicResponseDto, UpdateAsicDto } from './dto';
-import { randomUUID } from 'node:crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, EntityNotFoundError } from 'typeorm';
 
 @Injectable()
 export class AsicsRepository {
-  private asics: Asic[] = [];
+  constructor(
+    @InjectRepository(Asic)
+    private readonly asicsRepository: Repository<Asic>,
+  ) {}
 
   async create(createAsicDto: CreateAsicDto): Promise<AsicResponseDto> {
-    const asic: Asic = {
-      id: randomUUID(),
-      name: createAsicDto.name,
-      ip: createAsicDto.ip,
-    };
+    await this.asicsRepository.insert(createAsicDto);
 
-    this.asics.push(asic);
-
-    return asic;
+    return createAsicDto as AsicResponseDto;
   }
 
-  async findAll(): Promise<AsicResponseDto[]> {
-    return this.asics;
+  findAll(): Promise<AsicResponseDto[]> {
+    return this.asicsRepository.find();
   }
 
   async findOne(id: string): Promise<AsicResponseDto> {
-    const asic = this.asics.find((asic) => asic.id === id);
+    try {
+      return await this.asicsRepository.findOneByOrFail({ id });
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(`Asic with '${id}' id does not exist`);
+      }
 
-    if (!asic) {
-      throw new NotFoundException(`Asic with '${id}' id does not exist`);
+      throw new BadRequestException(error.message);
     }
-
-    return asic;
   }
 
   async update(
     id: string,
     updateAsicDto: UpdateAsicDto,
   ): Promise<AsicResponseDto> {
-    const asicIdx = this.asics.findIndex((asic) => asic.id === id);
+    const result = await this.asicsRepository.update(id, updateAsicDto);
 
-    if (asicIdx === -1) {
+    if (!result.affected) {
       throw new NotFoundException(`Asic with '${id}' id does not exist`);
     }
 
-    Object.assign(this.asics[asicIdx], updateAsicDto);
-
-    return this.asics[asicIdx];
+    return this.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    const asicIdx = this.asics.findIndex((asic) => asic.id === id);
+    const result = await this.asicsRepository.delete(id);
 
-    if (asicIdx === -1) {
+    if (!result.affected) {
       throw new NotFoundException(`Asic with '${id}' id does not exist`);
     }
-
-    this.asics.splice(asicIdx, 1);
   }
 }

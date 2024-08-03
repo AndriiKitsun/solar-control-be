@@ -22,7 +22,8 @@
       "@api/*": ["src/api/*"],
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
-      "@models/*": ["src/models/*"]
+      "@models/*": ["src/models/*"],
+      "@providers/*": ["src/providers/*"]
     }
   }
 }
