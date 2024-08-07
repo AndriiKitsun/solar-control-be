@@ -7,6 +7,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import { AppConfigType, APP_NAMESPACE } from '@config/app';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -14,6 +15,7 @@ async function bootstrap(): Promise<void> {
     new FastifyAdapter(),
   );
 
+  app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const configService = app.get(ConfigService);
