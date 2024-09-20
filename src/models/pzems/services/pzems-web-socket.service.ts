@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EspConfigType, EspConfig } from '@config/api';
 import { WebSocket } from 'ws';
-import { PzemsGateway } from './pzems.gateway';
+import { PzemsGateway } from '../pzems.gateway';
 
 @Injectable()
 export class PzemsWebSocketService {
@@ -17,7 +17,7 @@ export class PzemsWebSocketService {
     private readonly espConfig: EspConfigType,
     private readonly pzemsGateway: PzemsGateway,
   ) {
-    this.connect();
+    // this.connect();
   }
 
   private connect(): void {

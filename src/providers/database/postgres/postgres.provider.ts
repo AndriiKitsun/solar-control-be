@@ -21,6 +21,7 @@ export class PostgresProvider implements TypeOrmOptionsFactory {
       database,
       autoLoadEntities: true,
       synchronize: true,
+      logging: true,
     };
   }
 }

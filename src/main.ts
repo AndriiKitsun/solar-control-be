@@ -16,7 +16,7 @@ async function bootstrap(): Promise<void> {
   );
 
   app.useWebSocketAdapter(new WsAdapter(app));
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   const configService = app.get(ConfigService);
   const config = configService.get<AppConfigType>(APP_NAMESPACE);

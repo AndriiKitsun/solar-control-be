@@ -1,2 +1,2 @@
-export const TEN_MINUTES = 10;
-export const TEN_MINUTES_PZEM_COUNT = 600;
+export const PZEM_MINUTES_TO_FETCH = 10;
+export const PZEM_COUNT = PZEM_MINUTES_TO_FETCH * 60;

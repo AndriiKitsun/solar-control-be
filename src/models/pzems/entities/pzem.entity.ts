@@ -1,34 +1,17 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { PzemItem } from './pzem-item.entity';
 
 @Entity()
 export class Pzem {
-  @PrimaryColumn({ type: 'timestamptz', precision: 3 })
-  createdAtGmt: Date;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @Column({ type: 'float', default: 0 })
-  voltageV: number;
+  @Column({ type: 'timestamptz', precision: 3 })
+  createdAtGmt!: Date;
 
-  @Column({ type: 'float', default: 0 })
-  currentA: number;
-
-  @Column({ type: 'float', default: 0 })
-  powerKw: number;
-
-  @Column({ type: 'float', default: 0 })
-  energyKwh: number;
-
-  @Column({ type: 'float', default: 0 })
-  frequencyHz: number;
-
-  @Column({ type: 'float', default: 0 })
-  powerFactor: number;
-
-  @Column({ type: 'float', default: 0 })
-  t1EnergyKwh: number;
-
-  @Column({ type: 'float', default: 0 })
-  t2EnergyKwh: number;
-
-  @Column({ type: 'float', default: 0 })
-  avgVoltageV: number;
+  @OneToMany(() => PzemItem, (item) => item.pzem, {
+    nullable: true,
+    cascade: true,
+  })
+  pzems?: PzemItem[];
 }

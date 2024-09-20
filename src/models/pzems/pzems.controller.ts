@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Delete } from '@nestjs/common';
 import { CreatePzemDto } from './dto';
 import { Pzem } from './entities';
-import { PzemsService } from './pzems.service';
-import { PzemDtoToSave } from './pzems.types';
+import { PzemsService } from './services';
+import { EspResetPzemCounterResponse } from '@api/modules';
 
 @Controller('pzems')
 export class PzemsController {
   constructor(private readonly pzemsService: PzemsService) {}
 
   @Post()
-  create(@Body() createPzemDto: CreatePzemDto): Promise<PzemDtoToSave> {
+  create(@Body() createPzemDto: CreatePzemDto): Promise<Pzem> {
     return this.pzemsService.create(createPzemDto);
   }
 
@@ -24,7 +24,7 @@ export class PzemsController {
   }
 
   @Delete('counter')
-  resetEnergyCounter(): Promise<void> {
+  resetEnergyCounter(): Promise<EspResetPzemCounterResponse> {
     return this.pzemsService.resetEnergyCounter();
   }
 }
