@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { HttpApiService } from '../../common';
 import { EspConfig, EspConfigType } from '@config/api';
+import { EspResetPzemCounterResponse } from './esp.types';
+import { HttpApiService } from '../../common';
 
 @Injectable()
 export class EspApiService {
@@ -15,7 +16,7 @@ export class EspApiService {
     return this.httpApiService.get<string>(url);
   }
 
-  resetCounter(): Promise<void> {
+  resetCounter(): Promise<EspResetPzemCounterResponse> {
     const url = this.buildUrl(['pzems', 'counter']);
 
     return this.httpApiService.delete(url);

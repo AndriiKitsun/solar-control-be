@@ -1,8 +1,9 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Pzem } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
-import { PzemWithVoltage, PzemDtoToSave } from './pzems.types';
+import { Repository } from 'typeorm';
+import { CreatePzemDto } from './dto';
+import { RecentPzemForCalc } from './pzems.types';
 
 @Injectable()
 export class PzemsRepository {
@@ -11,31 +12,33 @@ export class PzemsRepository {
     private readonly pzemsRepository: Repository<Pzem>,
   ) {}
 
-  async create(createPzemDto: PzemDtoToSave): Promise<PzemDtoToSave> {
+  async create(createPzemDto: CreatePzemDto): Promise<Pzem> {
     try {
-      await this.pzemsRepository.insert(createPzemDto);
-
-      return createPzemDto;
+      return await this.pzemsRepository.save(createPzemDto);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  findAll(): Promise<Pzem[]> {
-    return this.pzemsRepository.find();
-  }
+  async findRecentForCalc(
+    date: string,
+    minutes: number,
+  ): Promise<Record<string, RecentPzemForCalc>> {
+    const fromDate = new Date(date);
+    fromDate.setMinutes(fromDate.getMinutes() - minutes);
 
-  findAllBeforeMinutes(date: string, min: number): Promise<PzemWithVoltage[]> {
-    const pastDate = new Date(date);
-    pastDate.setMinutes(pastDate.getMinutes() - min);
+    const pzems = await this.pzemsRepository
+      .createQueryBuilder('pzem')
+      .leftJoinAndSelect('pzem.pzems', 'pzems')
+      .select(['pzems.id as id', 'SUM(pzems.voltageV)', 'COUNT(*)::int'])
+      .where('pzem.createdAtGmt BETWEEN :from AND :to', {
+        from: fromDate,
+        to: new Date(date),
+      })
+      .andWhere('pzems.voltageV IS NOT NULL')
+      .groupBy('pzems.id')
+      .getRawMany<RecentPzemForCalc>();
 
-    return this.pzemsRepository.find({
-      where: {
-        createdAtGmt: Between(pastDate, new Date(date)),
-      },
-      select: {
-        voltageV: true,
-      },
-    });
+    return pzems.reduce((obj, pzem) => ({ ...obj, [pzem.id]: pzem }), {});
   }
 }
