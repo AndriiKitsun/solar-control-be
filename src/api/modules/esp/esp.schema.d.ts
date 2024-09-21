@@ -113,7 +113,7 @@ export interface components {
     EspStatus: {
       wifi: components['schemas']['WiFiStatus'];
       date: components['schemas']['DateStatus'];
-      pzems: components['schemas']['PzemsStatus'];
+      pzems: components['schemas']['PzemStatus'][];
       eeprom: components['schemas']['EepromStatus'];
     };
     WiFiStatus: {
@@ -137,13 +137,9 @@ export interface components {
        */
       createdAt: string;
     };
-    PzemsStatus: {
-      acInput: components['schemas']['AcPzemStatus'];
-      acOutput: components['schemas']['AcPzemStatus'];
-      dcBattery: components['schemas']['DcPzemStatus'];
-      dcSun: components['schemas']['DcPzemStatus'];
-    };
-    AcPzemStatus: {
+    PzemStatus: {
+      /** @description id of PZEM sensor */
+      id: string;
       /** @description true/false indicator when the PZEM is connected */
       isConnected: boolean;
       /**
@@ -156,25 +152,11 @@ export interface components {
        * @description Address saved in PZEM memory
        */
       savedAddress: number;
-    };
-    DcPzemStatus: {
-      /** @description true/false indicator when the PZEM is connected */
-      isConnected: boolean;
-      /**
-       * Format: int32
-       * @description Configured address to connect to the PZEM
-       */
-      currentAddress: number;
-      /**
-       * Format: int32
-       * @description Address saved in PZEM memory
-       */
-      savedAddress?: number;
       /**
        * Format: int32
        * @description Shunt type saved in PZEM memory
        */
-      savedShuntType: number;
+      savedShuntType?: number;
     };
     EepromStatus: {
       /** @description true/false indicator when the EEPROM module is connected */
@@ -185,31 +167,30 @@ export interface components {
        * Format: date-time
        * @description Data collection date in UTC
        */
-      createdAtGmt?: string;
-      acInput?: components['schemas']['AcPzem'];
-      acOutput?: components['schemas']['AcPzem'];
-      dcBattery?: components['schemas']['DcPzem'];
-      dcSun?: components['schemas']['DcPzem'];
+      createdAtGmt: string;
+      pzems: components['schemas']['Pzem'][];
     };
-    AcPzem: {
+    Pzem: {
+      /** @description id of PZEM sensor */
+      id: string;
       /**
        * Format: float
-       * @description AC voltage in Volts
+       * @description AC/DC voltage in Volts
        */
       voltageV?: number;
       /**
        * Format: float
-       * @description AC current in Amps
+       * @description AC/DC current in Amps
        */
       currentA?: number;
       /**
        * Format: float
-       * @description AC active power in kW
+       * @description AC/DC active power in kW
        */
       powerKw?: number;
       /**
        * Format: float
-       * @description AC active energy in kWh since last reset
+       * @description AC/DC active energy in kWh since last reset
        */
       energyKwh?: number;
       /**
@@ -233,44 +214,9 @@ export interface components {
        */
       t2EnergyKwh?: number;
     };
-    DcPzem: {
-      /**
-       * Format: float
-       * @description DC voltage in Volts
-       */
-      voltageV?: number;
-      /**
-       * Format: float
-       * @description DC current in Amps
-       */
-      currentA?: number;
-      /**
-       * Format: float
-       * @description DC active power in kW
-       */
-      powerKw?: number;
-      /**
-       * Format: float
-       * @description DC active energy in kWh since last reset
-       */
-      energyKwh?: number;
-      /**
-       * Format: float
-       * @description Calculated value of active energy during T1 zone
-       */
-      t1EnergyKwh?: number;
-      /**
-       * Format: float
-       * @description Calculated value of active energy during T2 zone
-       */
-      t2EnergyKwh?: number;
-    };
     PzemAddress: {
-      /**
-       * Format: int32
-       * @description Current configured address to connect
-       */
-      currentAddress?: number;
+      /** @description id of PZEM sensor */
+      id: string;
       /**
        * Format: int32
        * @description Address to save in PZEM memory
@@ -280,6 +226,8 @@ export interface components {
       isChanged: boolean;
     };
     DcPzemShunt: {
+      /** @description id of PZEM sensor */
+      id: string;
       /**
        * Format: int32
        * @description Shunt type to save in PZEM memory
@@ -288,12 +236,11 @@ export interface components {
       /** @description true/false indicator when the shunt type is set */
       isChanged: boolean;
     };
-    /** @description true/false indicators for every PZEM to notify which counters were reset */
     PzemCounter: {
-      acInput: boolean;
-      acOutput: boolean;
-      dcBattery: boolean;
-      dcSun: boolean;
+      /** @description id of PZEM sensor */
+      id: string;
+      /** @description true/false indicators for every PZEM to notify which counters were reset */
+      isReset: boolean;
     };
   };
   responses: never;
@@ -368,7 +315,7 @@ export interface operations {
     parameters: {
       query: {
         /** @description ID of the PZEM for which the address is changed */
-        id: 'acInput' | 'acOutput' | 'dcBattery' | 'dcSun';
+        id: string;
         /** @description The address to set in PZEM memory */
         address: number;
       };
@@ -411,7 +358,7 @@ export interface operations {
     parameters: {
       query: {
         /** @description ID of the DC PZEM for which the shunt type is changed */
-        id: 'dcBattery' | 'dcSun';
+        id: string;
         /** @description The shunt type to set in PZEM memory */
         shunt: number;
       };
@@ -465,7 +412,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['PzemCounter'];
+          'application/json': components['schemas']['PzemCounter'][];
         };
       };
     };

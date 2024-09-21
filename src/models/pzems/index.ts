@@ -7,4 +7,3 @@ export * from './pzems.gateway';
 export * from './pzems.module';
 export * from './pzems.repository';
 export * from './pzems.types';
-export * from './services/pzems-web-socket.service';
