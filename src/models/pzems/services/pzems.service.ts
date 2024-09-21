@@ -17,12 +17,6 @@ export class PzemsService {
     await this.pzemsCalculationService.calcAvgVoltage(createPzemDto);
 
     return this.pzemsRepository.create(createPzemDto);
-
-    // return new Pzem();
-  }
-
-  findAll(): Promise<Pzem[]> {
-    return this.pzemsRepository.findAll();
   }
 
   checkHealth(): Promise<string> {

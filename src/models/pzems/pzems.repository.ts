@@ -20,19 +20,6 @@ export class PzemsRepository {
     }
   }
 
-  findAll(): Promise<Pzem[]> {
-    return this.pzemsRepository.find({
-      relations: {
-        pzems: true,
-      },
-      order: {
-        createdAtGmt: {
-          direction: 'desc',
-        },
-      },
-    });
-  }
-
   async findRecentForCalc(
     date: string,
     minutes: number,
@@ -43,15 +30,15 @@ export class PzemsRepository {
     const pzems = await this.pzemsRepository
       .createQueryBuilder('pzem')
       .leftJoinAndSelect('pzem.pzems', 'pzems')
-      .select(['pzems.name as name', 'SUM(pzems.voltageV)', 'COUNT(*)::int'])
+      .select(['pzems.id as id', 'SUM(pzems.voltageV)', 'COUNT(*)::int'])
       .where('pzem.createdAtGmt BETWEEN :from AND :to', {
         from: fromDate,
         to: new Date(date),
       })
       .andWhere('pzems.voltageV IS NOT NULL')
-      .groupBy('pzems.name')
+      .groupBy('pzems.id')
       .getRawMany<RecentPzemForCalc>();
 
-    return pzems.reduce((obj, pzem) => ({ ...obj, [pzem.name]: pzem }), {});
+    return pzems.reduce((obj, pzem) => ({ ...obj, [pzem.id]: pzem }), {});
   }
 }

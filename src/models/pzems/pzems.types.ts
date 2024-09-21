@@ -1,5 +1,5 @@
 export type RecentPzemForCalc = {
-  name: string;
+  id: string;
   sum: number;
   count: number;
 };

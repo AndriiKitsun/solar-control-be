@@ -4,13 +4,13 @@ import { Pzem } from './pzem.entity';
 @Entity()
 export class PzemItem {
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  pid!: string;
 
   @ManyToOne(() => Pzem, (pzem) => pzem.pzems)
   pzem!: Pzem;
 
   @Column()
-  name!: string;
+  id!: string;
 
   @Column({ type: 'float', nullable: true })
   voltageV?: number;

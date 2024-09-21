@@ -2,7 +2,7 @@ import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export abstract class PzemDto {
   @IsString()
-  name!: string;
+  id!: string;
 
   @IsOptional()
   @IsNumber()

@@ -13,11 +13,6 @@ export class PzemsController {
     return this.pzemsService.create(createPzemDto);
   }
 
-  @Get()
-  findAll(): Promise<Pzem[]> {
-    return this.pzemsService.findAll();
-  }
-
   @Get('health')
   checkHealth(): Promise<string> {
     return this.pzemsService.checkHealth();

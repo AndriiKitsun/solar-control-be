@@ -2,6 +2,8 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EspConfigType, EspConfig } from '@config/api';
 import { WebSocket } from 'ws';
 import { PzemsGateway } from '../pzems.gateway';
+import { CreatePzemDto } from '../dto';
+import { PzemsService } from './pzems.service';
 
 @Injectable()
 export class PzemsWebSocketService {
@@ -16,8 +18,9 @@ export class PzemsWebSocketService {
     @Inject(EspConfig.KEY)
     private readonly espConfig: EspConfigType,
     private readonly pzemsGateway: PzemsGateway,
+    private readonly pzemsService: PzemsService,
   ) {
-    // this.connect();
+    this.connect();
   }
 
   private connect(): void {
@@ -59,8 +62,16 @@ export class PzemsWebSocketService {
     });
   }
 
-  private handleMessage(pzems: Record<string, any>): void {
-    this.pzemsGateway.emitData(pzems);
+  private async handleMessage(createPzemDto: CreatePzemDto): Promise<void> {
+    if (!createPzemDto.pzems.length) {
+      this.pzemsGateway.emitData(createPzemDto);
+
+      return;
+    }
+
+    const pzem = await this.pzemsService.create(createPzemDto);
+
+    this.pzemsGateway.emitData(pzem);
   }
 
   private startHeartbeat(): void {

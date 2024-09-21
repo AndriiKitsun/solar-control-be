@@ -9,9 +9,6 @@ export class Pzem {
   @Column({ type: 'timestamptz', precision: 3 })
   createdAtGmt!: Date;
 
-  @OneToMany(() => PzemItem, (item) => item.pzem, {
-    nullable: true,
-    cascade: true,
-  })
-  pzems?: PzemItem[];
+  @OneToMany(() => PzemItem, (item) => item.pzem, { cascade: true })
+  pzems!: PzemItem[];
 }
