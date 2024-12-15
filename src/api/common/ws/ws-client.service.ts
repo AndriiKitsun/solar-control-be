@@ -4,9 +4,9 @@ import { WebSocket } from 'ws';
 export abstract class WsClientService<T = any> {
   protected logger?: Logger = new Logger(WsClientService.name);
   protected heartbeatInterval = 30000;
-  protected client: WebSocket | null;
+  protected client?: WebSocket;
 
-  private heartbeatTimeout: NodeJS.Timeout;
+  private heartbeatTimeout?: NodeJS.Timeout;
 
   protected constructor(private readonly baseUrl: string) {
     this.connect();
@@ -77,7 +77,7 @@ export abstract class WsClientService<T = any> {
 
   private terminate(): void {
     this.client?.terminate();
-    this.client = null;
+    this.client = undefined;
   }
 
   protected abstract handleMessage(data: T, rawMessage: string): Promise<void>;
