@@ -1,9 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  PzemsService,
-  PzemsWebSocketService,
-  PzemsCalculationService,
-} from './services';
+import { PzemsService, PzemsWsService } from './services';
 import { PzemsController } from './pzems.controller';
 import { PzemsRepository } from './pzems.repository';
 import { EspApiModule } from '@api/modules';
@@ -14,12 +10,6 @@ import { PzemsGateway } from './pzems.gateway';
 @Module({
   imports: [TypeOrmModule.forFeature([Pzem, PzemItem]), EspApiModule],
   controllers: [PzemsController],
-  providers: [
-    PzemsRepository,
-    PzemsService,
-    PzemsCalculationService,
-    PzemsWebSocketService,
-    PzemsGateway,
-  ],
+  providers: [PzemsService, PzemsWsService, PzemsRepository, PzemsGateway],
 })
 export class PzemsModule {}
