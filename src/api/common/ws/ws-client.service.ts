@@ -8,7 +8,7 @@ export abstract class WsClientService<T = any> {
 
   private heartbeatTimeout: NodeJS.Timeout;
 
-  constructor(private readonly baseUrl: string) {
+  protected constructor(private readonly baseUrl: string) {
     this.connect();
   }
 
