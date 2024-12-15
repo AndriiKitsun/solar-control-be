@@ -1,17 +1,10 @@
-import { Controller, Get, Post, Body, Delete } from '@nestjs/common';
-import { CreatePzemDto } from './dto';
-import { Pzem } from './entities';
+import { Controller, Get, Delete } from '@nestjs/common';
 import { PzemsService } from './services';
 import { EspResetPzemCounterResponse } from '@api/modules';
 
 @Controller('pzems')
 export class PzemsController {
   constructor(private readonly pzemsService: PzemsService) {}
-
-  @Post()
-  create(@Body() createPzemDto: CreatePzemDto): Promise<Pzem> {
-    return this.pzemsService.create(createPzemDto);
-  }
 
   @Get('health')
   checkHealth(): Promise<string> {

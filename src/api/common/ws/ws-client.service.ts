@@ -76,7 +76,7 @@ export abstract class WsClientService<T = any> {
   }
 
   private terminate(): void {
-    this.client!.terminate();
+    this.client?.terminate();
     this.client = null;
   }
 

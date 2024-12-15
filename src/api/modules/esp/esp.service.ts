@@ -23,6 +23,6 @@ export class EspApiService {
   }
 
   private buildUrl(path: string[]): string {
-    return `${this.espConfig.endpoint}${path.join('/')}`;
+    return new URL(path.join('/'), this.espConfig.endpoint).toString();
   }
 }

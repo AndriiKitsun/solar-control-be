@@ -5,7 +5,7 @@ import { HttpApiService } from './http-api.service';
 @Module({
   imports: [
     HttpModule.register({
-      timeout: 2000,
+      timeout: 8000,
     }),
   ],
   providers: [HttpApiService],
