@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import {
   PzemsService,
-  PzemsWebSocketService,
   PzemsCalculationService,
+  PzemsWsService,
 } from './services';
 import { PzemsController } from './pzems.controller';
 import { PzemsRepository } from './pzems.repository';
@@ -17,8 +17,8 @@ import { PzemsGateway } from './pzems.gateway';
   providers: [
     PzemsRepository,
     PzemsService,
+    PzemsWsService,
     PzemsCalculationService,
-    PzemsWebSocketService,
     PzemsGateway,
   ],
 })
