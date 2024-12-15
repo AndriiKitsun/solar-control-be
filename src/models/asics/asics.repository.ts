@@ -21,7 +21,7 @@ export class AsicsRepository {
 
       return createAsicDto as Asic;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException((error as Error).message);
     }
   }
 
@@ -37,7 +37,7 @@ export class AsicsRepository {
         throw new NotFoundException(`Asic with '${id}' id does not exist`);
       }
 
-      throw new BadRequestException(error.message);
+      throw new BadRequestException((error as Error).message);
     }
   }
 

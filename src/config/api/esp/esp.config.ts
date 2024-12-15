@@ -2,10 +2,10 @@ import { registerAs } from '@nestjs/config';
 
 const ESP_NAMESPACE = 'EspNamespace';
 
-export type EspConfigType = {
+export interface EspConfigType {
   endpoint: string;
   wsEndpoint: string;
-};
+}
 
 export const EspConfig = registerAs<EspConfigType>(ESP_NAMESPACE, () => {
   return {
