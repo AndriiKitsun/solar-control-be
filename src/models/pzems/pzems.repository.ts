@@ -16,7 +16,7 @@ export class PzemsRepository {
     try {
       return await this.pzemsRepository.save(createPzemDto);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException((error as Error).message);
     }
   }
 

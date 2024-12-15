@@ -1,7 +1,7 @@
-export type AsicLoginDto = {
+export interface AsicLoginDto {
   pw: string;
-};
+}
 
-export type AsicLoginResponse = {
+export interface AsicLoginResponse {
   token: string;
-};
+}

@@ -2,13 +2,13 @@ import { registerAs } from '@nestjs/config';
 
 const POSTGRES_NAMESPACE = 'POSTGRES_NAMESPACE';
 
-export type PostgresConfigType = {
+export interface PostgresConfigType {
   host: string;
   port: number;
   username: string;
   password: string;
   database: string;
-};
+}
 
 export const PostgresConfig = registerAs<PostgresConfigType>(
   POSTGRES_NAMESPACE,

@@ -24,4 +24,4 @@ async function bootstrap(): Promise<void> {
   await app.listen(config!.port, '0.0.0.0');
 }
 
-bootstrap();
+void bootstrap();

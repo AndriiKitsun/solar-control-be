@@ -2,9 +2,9 @@ import { registerAs } from '@nestjs/config';
 
 export const APP_NAMESPACE = 'AppNamespace';
 
-export type AppConfigType = {
+export interface AppConfigType {
   port: string;
-};
+}
 
 export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
   return {
