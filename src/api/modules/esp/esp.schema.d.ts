@@ -138,8 +138,8 @@ export interface components {
       createdAt: string;
     };
     PzemStatus: {
-      /** @description id of PZEM sensor */
-      id: string;
+      /** @description name of PZEM sensor */
+      name: string;
       /** @description true/false indicator when the PZEM is connected */
       isConnected: boolean;
       /**
@@ -171,8 +171,8 @@ export interface components {
       pzems: components['schemas']['Pzem'][];
     };
     Pzem: {
-      /** @description id of PZEM sensor */
-      id: string;
+      /** @description name of PZEM sensor */
+      name: string;
       /**
        * Format: float
        * @description AC/DC voltage in Volts
@@ -215,8 +215,8 @@ export interface components {
       t2EnergyKwh?: number;
     };
     PzemAddress: {
-      /** @description id of PZEM sensor */
-      id: string;
+      /** @description name of PZEM sensor */
+      name: string;
       /**
        * Format: int32
        * @description Address to save in PZEM memory
@@ -226,8 +226,8 @@ export interface components {
       isChanged: boolean;
     };
     DcPzemShunt: {
-      /** @description id of PZEM sensor */
-      id: string;
+      /** @description name of PZEM sensor */
+      name: string;
       /**
        * Format: int32
        * @description Shunt type to save in PZEM memory
@@ -237,8 +237,8 @@ export interface components {
       isChanged: boolean;
     };
     PzemCounter: {
-      /** @description id of PZEM sensor */
-      id: string;
+      /** @description name of PZEM sensor */
+      name: string;
       /** @description true/false indicators for every PZEM to notify which counters were reset */
       isReset: boolean;
     };
@@ -314,8 +314,8 @@ export interface operations {
   setPzemAddress: {
     parameters: {
       query: {
-        /** @description ID of the PZEM for which the address is changed */
-        id: string;
+        /** @description name of the PZEM for which the address is changed */
+        name: string;
         /** @description The address to set in PZEM memory */
         address: number;
       };
@@ -357,8 +357,8 @@ export interface operations {
   setPzemShunt: {
     parameters: {
       query: {
-        /** @description ID of the DC PZEM for which the shunt type is changed */
-        id: string;
+        /** @description name of the DC PZEM for which the shunt type is changed */
+        name: string;
         /** @description The shunt type to set in PZEM memory */
         shunt: number;
       };

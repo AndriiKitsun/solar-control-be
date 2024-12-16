@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Asic {
@@ -8,6 +9,7 @@ export class Asic {
   @Column()
   name!: string;
 
+  @Exclude()
   @Column()
   ip!: string;
 }

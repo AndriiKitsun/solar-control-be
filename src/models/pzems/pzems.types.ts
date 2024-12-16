@@ -1,5 +1,6 @@
 export interface RecentPzemForCalc {
-  id: string;
+  name: string;
   sum: number;
   count: number;
+  avgVoltage?: number;
 }

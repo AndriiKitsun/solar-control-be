@@ -9,7 +9,7 @@ export class EspWsService
   extends WsClientService
   implements EspWsServiceInterface
 {
-  events = new EventEmitter<any>();
+  events = new EventEmitter();
 
   protected override logger = new Logger(EspWsService.name);
 

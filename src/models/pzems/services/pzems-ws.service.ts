@@ -1,9 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PzemsGateway } from '../pzems.gateway';
 import { PzemsService } from './pzems.service';
-import { CreatePzemDto } from '../dto';
 import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
-import { EspWsServiceInterface } from '@api/modules';
+import { EspWsServiceInterface, EspPzemData } from '@api/modules';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { Pzem } from '../entities';
 
 @Injectable()
 export class PzemsWsService {
@@ -15,13 +16,13 @@ export class PzemsWsService {
   ) {
     espWsService.events.on(
       'message',
-      (data: CreatePzemDto, rawMessage: string) => {
+      (data: EspPzemData, rawMessage: string) => {
         void this.handleMessage(data, rawMessage);
       },
     );
   }
 
-  async handleMessage(data: CreatePzemDto, rawMessage: string): Promise<void> {
+  async handleMessage(data: EspPzemData, rawMessage: string): Promise<void> {
     if (!data.pzems.length) {
       this.pzemsGateway.emitData(rawMessage);
 
@@ -30,6 +31,8 @@ export class PzemsWsService {
 
     const pzem = await this.pzemsService.create(data);
 
-    this.pzemsGateway.emitData(JSON.stringify(pzem));
+    this.pzemsGateway.emitData(
+      JSON.stringify(instanceToPlain(plainToInstance(Pzem, pzem))),
+    );
   }
 }

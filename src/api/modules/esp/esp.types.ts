@@ -3,6 +3,7 @@ import { EventEmitter } from 'node:events';
 
 export type EspResetPzemCounterResponse = components['schemas']['PzemCounter'];
 export type EspPzemData = components['schemas']['PzemData'];
+export type EspPzem = components['schemas']['Pzem'];
 
 export interface EspWsServiceInterface {
   events: EventEmitter;

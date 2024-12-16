@@ -1,8 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Pzem } from './pzem.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class PzemItem {
+  @Exclude()
   @PrimaryGeneratedColumn('uuid')
   pid!: string;
 
@@ -10,7 +12,7 @@ export class PzemItem {
   pzem!: Pzem;
 
   @Column()
-  id!: string;
+  name!: string;
 
   @Column({ type: 'float', nullable: true })
   voltageV?: number;
