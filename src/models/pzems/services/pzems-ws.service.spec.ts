@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PzemsWsService } from './pzems-ws.service';
-import { EspConfig } from '@config/api';
 import { PzemsGateway } from '../pzems.gateway';
 import { PzemsService } from './pzems.service';
-
-jest.mock('ws');
+import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
+import { EventEmitter } from 'node:events';
 
 describe('PzemsWsService', () => {
   let service: PzemsWsService;
@@ -14,8 +13,10 @@ describe('PzemsWsService', () => {
       providers: [
         PzemsWsService,
         {
-          provide: EspConfig.KEY,
-          useValue: {},
+          provide: ESP_WS_SERVICE,
+          useValue: {
+            events: new EventEmitter(),
+          },
         },
         {
           provide: PzemsGateway,
