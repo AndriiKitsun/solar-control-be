@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePzemDto } from '../dto';
 import { PzemsRepository } from '../pzems.repository';
-import { Pzem } from '../entities';
-import { EspApiService, EspResetPzemCounterResponse } from '@api/modules';
-import { PZEM_MINUTES_TO_FETCH, PZEM_COUNT } from '../pzems.constants';
+import { Pzem, PzemItem } from '../entities';
+import {
+  EspApiService,
+  EspResetPzemCounterResponse,
+  EspPzemData,
+} from '@api/modules';
+import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
 
 @Injectable()
 export class PzemsService {
@@ -12,10 +15,10 @@ export class PzemsService {
     private readonly espApiService: EspApiService,
   ) {}
 
-  async create(createPzemDto: CreatePzemDto): Promise<Pzem> {
-    await this.calcAvgVoltage(createPzemDto);
+  async create(pzemData: EspPzemData): Promise<Pzem> {
+    await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
 
-    return this.pzemsRepository.create(createPzemDto);
+    return this.pzemsRepository.create(pzemData);
   }
 
   checkHealth(): Promise<string> {
@@ -26,21 +29,24 @@ export class PzemsService {
     return this.espApiService.resetCounter();
   }
 
-  async calcAvgVoltage(createPzemDto: CreatePzemDto): Promise<void> {
+  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
     const recentPzems = await this.pzemsRepository.findRecentForCalc(
-      createPzemDto.createdAtGmt,
-      PZEM_MINUTES_TO_FETCH,
+      pzemData.createdAtGmt,
+      minutes,
     );
 
-    for (const pzemDto of createPzemDto.pzems) {
-      const recentPzem = recentPzems[pzemDto.id];
+    const secondsToCalc = minutes * 60 - 1;
 
-      if (!recentPzem || recentPzem.count < PZEM_COUNT) {
-        pzemDto.avgVoltageV = 0;
+    for (const pzemDto of pzemData.pzems) {
+      const recentPzem = recentPzems[pzemDto.name];
+
+      if (!recentPzem || recentPzem.count < secondsToCalc) {
+        (pzemDto as PzemItem).avgVoltageV = 0;
+
         continue;
       }
 
-      pzemDto.avgVoltageV = recentPzem.sum / recentPzem.count;
+      (pzemDto as PzemItem).avgVoltageV = recentPzem.sum / recentPzem.count;
     }
   }
 }

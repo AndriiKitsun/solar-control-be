@@ -8,6 +8,6 @@ export interface AppConfigType {
 
 export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
   return {
-    port: process.env.PORT!,
+    port: process.env.PORT,
   } as AppConfigType;
 });

@@ -1,22 +1,28 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { EspConfig, EspConfigType } from '@config/api';
-import { WsClientService } from '@api/common/ws/ws-client.service';
 import { PzemsGateway } from '../pzems.gateway';
 import { PzemsService } from './pzems.service';
-import { CreatePzemDto } from '../dto';
+import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
+import { EspWsServiceInterface, EspPzemData } from '@api/modules';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { Pzem } from '../entities';
 
 @Injectable()
-export class PzemsWsService extends WsClientService {
+export class PzemsWsService {
   constructor(
-    @Inject(EspConfig.KEY)
-    espConfig: EspConfigType,
+    @Inject(ESP_WS_SERVICE)
+    espWsService: EspWsServiceInterface,
     private readonly pzemsGateway: PzemsGateway,
     private readonly pzemsService: PzemsService,
   ) {
-    super(espConfig.wsEndpoint);
+    espWsService.events.on(
+      'message',
+      (data: EspPzemData, rawMessage: string) => {
+        void this.handleMessage(data, rawMessage);
+      },
+    );
   }
 
-  async handleMessage(data: CreatePzemDto, rawMessage: string): Promise<void> {
+  async handleMessage(data: EspPzemData, rawMessage: string): Promise<void> {
     if (!data.pzems.length) {
       this.pzemsGateway.emitData(rawMessage);
 
@@ -25,6 +31,8 @@ export class PzemsWsService extends WsClientService {
 
     const pzem = await this.pzemsService.create(data);
 
-    this.pzemsGateway.emitData(JSON.stringify(pzem));
+    this.pzemsGateway.emitData(
+      JSON.stringify(instanceToPlain(plainToInstance(Pzem, pzem))),
+    );
   }
 }
