@@ -26,6 +26,7 @@ export class PzemsRepository {
   ): Promise<Record<string, RecentPzemForCalc>> {
     const fromDate = new Date(date);
     fromDate.setMinutes(fromDate.getMinutes() - minutes);
+    fromDate.setMilliseconds(0);
 
     const pzems = await this.pzemsRepository
       .createQueryBuilder('pzem')
@@ -39,6 +40,10 @@ export class PzemsRepository {
       .groupBy('pzems.name')
       .getRawMany<RecentPzemForCalc>();
 
-    return pzems.reduce((obj, pzem) => ({ ...obj, [pzem.name]: pzem }), {});
+    return pzems.reduce((acc: Record<string, RecentPzemForCalc>, pzem) => {
+      acc[pzem.name] = pzem;
+
+      return acc;
+    }, {});
   }
 }

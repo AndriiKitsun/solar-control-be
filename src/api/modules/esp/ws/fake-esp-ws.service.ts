@@ -23,20 +23,11 @@ export class FakeEspWsService implements EspWsServiceInterface {
   private randomSensor(): EspPzemData {
     const pzems: EspPzem[] = [];
 
-    if (faker.helpers.maybe(() => true, { probability: 1 })) {
-      pzems.push(this.randomPzem('acInput'));
-    }
-
-    if (faker.helpers.maybe(() => true, { probability: 1 })) {
-      pzems.push(this.randomPzem('acOutput'));
-    }
+    pzems.push(this.randomPzem('acInput'));
+    pzems.push(this.randomPzem('acOutput'));
 
     if (faker.helpers.maybe(() => true, { probability: 0.95 })) {
       pzems.push(this.randomPzem('dcBattery'));
-    }
-
-    if (faker.helpers.maybe(() => true, { probability: 0.9 })) {
-      pzems.push(this.randomPzem('dcSun'));
     }
 
     return {

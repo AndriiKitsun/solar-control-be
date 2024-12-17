@@ -6,7 +6,7 @@ import {
   EspResetPzemCounterResponse,
   EspPzemData,
 } from '@api/modules';
-import { PZEM_MINUTES_TO_FETCH, PZEM_COUNT } from '../pzems.constants';
+import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
 
 @Injectable()
 export class PzemsService {
@@ -16,7 +16,7 @@ export class PzemsService {
   ) {}
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
-    await this.calcAvgVoltage(pzemData);
+    await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
 
     return this.pzemsRepository.create(pzemData);
   }
@@ -29,16 +29,18 @@ export class PzemsService {
     return this.espApiService.resetCounter();
   }
 
-  async calcAvgVoltage(pzemData: EspPzemData): Promise<void> {
+  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
     const recentPzems = await this.pzemsRepository.findRecentForCalc(
       pzemData.createdAtGmt,
-      PZEM_MINUTES_TO_FETCH,
+      minutes,
     );
+
+    const secondsToCalc = minutes * 60 - 1;
 
     for (const pzemDto of pzemData.pzems) {
       const recentPzem = recentPzems[pzemDto.name];
 
-      if (!recentPzem || recentPzem.count < PZEM_COUNT) {
+      if (!recentPzem || recentPzem.count < secondsToCalc) {
         (pzemDto as PzemItem).avgVoltageV = 0;
 
         continue;
