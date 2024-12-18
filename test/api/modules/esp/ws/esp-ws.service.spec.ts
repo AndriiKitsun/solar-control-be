@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EspWsService } from './esp-ws.service';
+import { EspWsService } from '@api/modules/esp/ws/esp-ws.service';
 import { EspConfig } from '@config/api';
 
 jest.mock('ws');

@@ -19,11 +19,11 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@common/*": ["src/common/*"],
-      "@config/*": ["src/config/*"],
-      "@models/*": ["src/models/*"],
-      "@providers/*": ["src/providers/*"]
+      "@api/*": ["src/api/*", "test/api/*"],
+      "@common/*": ["src/common/*", "test/common/*"],
+      "@config/*": ["src/config/*", "test/config/*"],
+      "@models/*": ["src/models/*", "test/models/*"],
+      "@providers/*": ["src/providers/*", "test/providers/*"]
     }
   }
 }

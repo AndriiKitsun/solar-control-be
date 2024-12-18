@@ -7,11 +7,11 @@ const config: Config = {
     prefix: '<rootDir>',
   }),
   moduleFileExtensions: ['js', 'json', 'ts'],
-  roots: ['<rootDir>/src/'],
-  testRegex: '.*\\.spec\\.ts$',
+  roots: ['<rootDir>/test/'],
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  testRegex: '.*\\.spec\\.ts$',
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
