@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PzemsService } from './pzems.service';
-import { PzemsRepository } from '../pzems.repository';
 import { EspApiService } from '@api/modules';
+import { PzemsService, PzemsRepository } from '@models/pzems';
+import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
+import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 
 describe('PzemsService', () => {
   let service: PzemsService;
@@ -12,16 +13,16 @@ describe('PzemsService', () => {
         PzemsService,
         {
           provide: PzemsRepository,
-          useValue: {},
+          useClass: PzemsRepositoryMock,
         },
         {
           provide: EspApiService,
-          useValue: {},
+          useClass: EspApiServiceMock,
         },
       ],
     }).compile();
 
-    service = module.get<PzemsService>(PzemsService);
+    service = module.get(PzemsService);
   });
 
   it('should be defined', () => {

@@ -1,6 +1,6 @@
-import { ClassMock } from '@common/types/test.types';
-import { HttpApiService } from '../http-api.service';
+import { HttpApiService } from '@api/common/modules/http-api/http-api.service';
 import { AxiosRequestConfig } from 'axios';
+import { ClassMock } from '@common/types/test.types';
 
 export class HttpApiServiceMock implements ClassMock<HttpApiService> {
   static responseMock = 'response';

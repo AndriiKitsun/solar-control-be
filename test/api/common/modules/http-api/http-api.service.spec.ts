@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HttpApiService } from './http-api.service';
+import { HttpApiService } from '@api/common/modules/http-api/http-api.service';
 import { HttpService } from '@nestjs/axios';
+import { TestingModule, Test } from '@nestjs/testing';
 import { HttpServiceMock } from './mocks/http-service.mock';
 
 describe('HttpApiService', () => {

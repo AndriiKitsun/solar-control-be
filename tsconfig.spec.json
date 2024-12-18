@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@api/*": ["src/api/*", "test/api/*"],
+      "@common/*": ["src/common/*", "test/common/*"],
+      "@config/*": ["src/config/*", "test/config/*"],
+      "@models/*": ["src/models/*", "test/models/*"],
+      "@providers/*": ["src/providers/*", "test/providers/*"]
+    }
+  }
+}

@@ -1,7 +1,7 @@
-import { ClassMock } from '@common/types/test.types';
 import { HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
 import { Observable, of } from 'rxjs';
+import { ClassMock } from '@common/types/test.types';
 
 export class HttpServiceMock implements ClassMock<HttpService> {
   static responseDataMock = 'data';

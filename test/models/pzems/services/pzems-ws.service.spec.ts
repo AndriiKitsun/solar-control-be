@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PzemsWsService } from './pzems-ws.service';
-import { PzemsGateway } from '../pzems.gateway';
-import { PzemsService } from './pzems.service';
+import { PzemsWsService } from '@models/pzems/services/pzems-ws.service';
+import { PzemsGateway } from '@models/pzems/pzems.gateway';
+import { PzemsService } from '@models/pzems/services/pzems.service';
 import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
-import { EventEmitter } from 'node:events';
+import { PzemsServiceMock } from './mocks/pzems.service.mock';
+import { PzemsGatewayMock } from '../mocks/pzems.gateway.mock';
+import { EspWsServiceMock } from '@api/modules/esp/ws/mocks/esp-ws.service.mock';
 
 describe('PzemsWsService', () => {
   let service: PzemsWsService;
@@ -14,17 +16,15 @@ describe('PzemsWsService', () => {
         PzemsWsService,
         {
           provide: ESP_WS_SERVICE,
-          useValue: {
-            events: new EventEmitter(),
-          },
+          useClass: EspWsServiceMock,
         },
         {
           provide: PzemsGateway,
-          useValue: {},
+          useClass: PzemsGatewayMock,
         },
         {
           provide: PzemsService,
-          useValue: {},
+          useClass: PzemsServiceMock,
         },
       ],
     }).compile();
