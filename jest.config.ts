@@ -1,6 +1,6 @@
 import type { Config } from 'jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.spec.json';
+import { compilerOptions } from './tsconfig.json';
 
 const config: Config = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
@@ -9,7 +9,7 @@ const config: Config = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   roots: ['<rootDir>/test/'],
   transform: {
-    '^.+\\.(t|j)s$': ['ts-jest', { tsconfig: './tsconfig.spec.json' }],
+    '^.+\\.(t|j)s$': 'ts-jest',
   },
   testRegex: '.*\\.spec\\.ts$',
   collectCoverageFrom: ['**/*.(t|j)s'],
