@@ -7,13 +7,13 @@ import {
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
-  static asicMock: Asic = {
+  static readonly asicMock: Asic = {
     id: 'id',
     name: 'name',
     ip: '123',
   };
 
-  static asicsMock: Asic[] = [this.asicMock];
+  static readonly asicsMock: Asic[] = [this.asicMock];
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;

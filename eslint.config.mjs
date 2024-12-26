@@ -1,5 +1,6 @@
 // @ts-check
 import eslint from '@eslint/js';
+import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -10,6 +11,7 @@ export default tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   tseslint.configs.stylisticTypeChecked,
+  sonarjs.configs.recommended,
   {
     languageOptions: {
       globals: {
@@ -25,6 +27,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
+      'sonarjs/todo-tag': 'warn',
     },
   },
   {

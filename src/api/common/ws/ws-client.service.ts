@@ -51,7 +51,7 @@ export abstract class WsClientService {
     this.client!.on('message', (data: Buffer) => {
       const message = data.toString();
 
-      void this.handleMessage(JSON.parse(message), message);
+      this.handleMessage(JSON.parse(message), message);
     });
   }
 
