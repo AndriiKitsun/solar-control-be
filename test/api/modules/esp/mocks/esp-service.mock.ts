@@ -3,8 +3,8 @@ import { EspResetPzemCounterResponse } from '@api/modules/esp/esp.types';
 import { ClassMock } from '@common/types/test.types';
 
 export class EspApiServiceMock implements ClassMock<EspApiService> {
-  static healthCheckResponseMock = 'UP';
-  static counterResetResponseMock: EspResetPzemCounterResponse = {
+  static readonly healthCheckResponseMock = 'UP';
+  static readonly counterResetResponseMock: EspResetPzemCounterResponse = {
     name: 'acInput',
     isReset: true,
   };

@@ -3,7 +3,7 @@ import { AsicLoginResponse } from '@api/modules/asics/asics.types';
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsApiServiceMock implements ClassMock<AsicsApiService> {
-  static loginResponseMock: AsicLoginResponse = {
+  static readonly loginResponseMock: AsicLoginResponse = {
     token: '123',
   };
 

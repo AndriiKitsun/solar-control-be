@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import { ClassMock } from '@common/types/test.types';
 
 export class HttpApiServiceMock implements ClassMock<HttpApiService> {
-  static responseMock = 'response';
+  static readonly responseMock = 'response';
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return HttpApiServiceMock.responseMock as T;

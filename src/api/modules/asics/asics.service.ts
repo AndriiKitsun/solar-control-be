@@ -1,28 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { AsicLoginResponse, AsicLoginDto } from './asics.types';
+import { AsicLoginResponse } from './asics.types';
 import { HttpApiService } from '../../common';
 
 @Injectable()
 export class AsicsApiService {
   constructor(private readonly httpApiService: HttpApiService) {}
 
-  async login(ip: string, password: string): Promise<AsicLoginResponse> {
-    const url = this.buildUrl(ip, ['unlock']);
-    const body: AsicLoginDto = {
-      pw: password,
-    };
-
+  login(ip: string, password: string): Promise<AsicLoginResponse> {
     const str = JSON.stringify({
       ip,
       date: new Date().toJSON(),
+      password,
     });
 
-    return {
+    return Promise.resolve({
       token: Buffer.from(str).toString('base64'),
-    };
+    });
 
-    // TODO: Replace stub token with actual Asic API
-    return this.httpApiService.post<AsicLoginResponse>(url, body);
+    // const url = this.buildUrl(ip, ['unlock']);
+    // const body: AsicLoginDto = {
+    //   pw: password,
+    // };
+    //
+    //
+    // return this.httpApiService.post<AsicLoginResponse>(url, body);
   }
 
   async start(ip: string, token: string): Promise<void> {

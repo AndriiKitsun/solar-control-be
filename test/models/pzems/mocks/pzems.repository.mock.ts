@@ -3,13 +3,13 @@ import { EspPzemData } from '@api/modules';
 import { ClassMock } from '@common/types/test.types';
 
 export class PzemsRepositoryMock implements ClassMock<PzemsRepository> {
-  static pzemMock: Pzem = {
+  static readonly pzemMock: Pzem = {
     id: 'id',
     createdAtGmt: new Date(),
     pzems: [],
   };
 
-  static recentPzemsMock: Record<string, RecentPzemForCalc> = {
+  static readonly recentPzemsMock: Record<string, RecentPzemForCalc> = {
     acInput: {
       name: 'acInput',
       count: 60,
