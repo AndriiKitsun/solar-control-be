@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RecentPzemForCalc } from './pzems.types';
 import { EspPzemData } from '@api/modules';
+import { toError } from '@core/exceptions';
 
 @Injectable()
 export class PzemsRepository {
@@ -16,7 +17,7 @@ export class PzemsRepository {
     try {
       return await this.pzemsRepository.save(pzemData);
     } catch (error) {
-      throw new BadRequestException((error as Error).message);
+      throw new BadRequestException(toError((error as Error).message));
     }
   }
 
