@@ -14,7 +14,7 @@ export class EspApiService extends HttpClientService {
   }
 
   checkHealth(): Promise<string> {
-    const url = this.buildUrl(['hsealth']);
+    const url = this.buildUrl(['health']);
 
     return this.get(url);
   }

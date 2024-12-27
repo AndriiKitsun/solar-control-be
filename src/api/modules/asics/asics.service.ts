@@ -1,7 +1,6 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AsicLoginResponse } from './asics.types';
 import { AxiosError } from 'axios';
-import { HttpError } from 'src/common/interfaces';
 import { HttpClientService } from '../../common';
 
 @Injectable()
@@ -50,28 +49,7 @@ export class AsicsApiService extends HttpClientService {
     return `http://${ip}/api/v1/${path.join('/')}`;
   }
 
-  didEncounterError(error: AxiosError): HttpException {
-    let status: HttpStatus;
-
-    if (error.response?.status) {
-      status = error.response.status;
-    } else if (error.code === 'ECONNABORTED' || error.code === 'EHOSTDOWN') {
-      status = HttpStatus.GATEWAY_TIMEOUT;
-    } else {
-      status = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
-
-    const message =
-      typeof error.response?.data === 'string'
-        ? error.response.data
-        : error.message;
-
-    const response: HttpError = {
-      timestamp: new Date().toJSON(),
-      code: error.code,
-      message,
-    };
-
-    return new HttpException(response, status);
+  didEncounterError(error: AxiosError): any {
+    return error;
   }
 }
