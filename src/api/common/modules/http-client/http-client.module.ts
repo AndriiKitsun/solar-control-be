@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { HttpClientService } from './http-client.service';
 import { HttpClientProvider } from './http-client.provider';
 
 @Module({
@@ -9,7 +8,6 @@ import { HttpClientProvider } from './http-client.provider';
       useClass: HttpClientProvider,
     }),
   ],
-  providers: [HttpClientService],
-  exports: [HttpClientService],
+  exports: [HttpModule],
 })
 export class HttpClientModule {}

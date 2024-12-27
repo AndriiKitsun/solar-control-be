@@ -1,6 +1,6 @@
 import { Controller, Get, Delete } from '@nestjs/common';
 import { PzemsService } from './services';
-import { EspResetPzemCounterResponse } from '@api/modules';
+import { EspPzemCounter } from '@api/modules';
 
 @Controller('pzems')
 export class PzemsController {
@@ -12,7 +12,7 @@ export class PzemsController {
   }
 
   @Delete('counter')
-  resetEnergyCounter(): Promise<EspResetPzemCounterResponse> {
+  resetEnergyCounter(): Promise<EspPzemCounter[]> {
     return this.pzemsService.resetEnergyCounter();
   }
 }

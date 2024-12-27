@@ -1,4 +1,4 @@
-import { HttpClientService } from '@api/common/modules/http-client/http-client.service';
+import { HttpClientService } from '@api/common/services/http-client.service';
 import { HttpService } from '@nestjs/axios';
 import { TestingModule, Test } from '@nestjs/testing';
 import { HttpServiceMock } from './mocks/http-service.mock';

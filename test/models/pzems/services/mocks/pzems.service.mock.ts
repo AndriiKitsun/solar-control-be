@@ -1,5 +1,5 @@
 import { PzemsService, Pzem } from '@models/pzems';
-import { EspPzemData, EspResetPzemCounterResponse } from '@api/modules';
+import { EspPzemData, EspPzemCounter } from '@api/modules';
 import { PzemsRepositoryMock } from '../../mocks/pzems.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
@@ -13,7 +13,7 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     return EspApiServiceMock.healthCheckResponseMock;
   }
 
-  async resetEnergyCounter(): Promise<EspResetPzemCounterResponse> {
+  async resetEnergyCounter(): Promise<EspPzemCounter> {
     return EspApiServiceMock.counterResetResponseMock;
   }
 

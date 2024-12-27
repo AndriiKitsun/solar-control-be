@@ -1,4 +1,4 @@
-import { HttpClientService } from '@api/common/modules/http-client/http-client.service';
+import { HttpClientService } from '@api/common/services/http-client.service';
 import { AxiosRequestConfig } from 'axios';
 import { ClassMock } from '@common/types/test.types';
 
