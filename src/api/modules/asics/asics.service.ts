@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AsicLoginResponse } from './asics.types';
-import { HttpApiService } from '../../common';
+import { AxiosError } from 'axios';
+import { HttpClientService } from '../../common';
 
 @Injectable()
-export class AsicsApiService {
-  constructor(private readonly httpApiService: HttpApiService) {}
-
+export class AsicsApiService extends HttpClientService {
   login(ip: string, password: string): Promise<AsicLoginResponse> {
     const str = JSON.stringify({
       ip,
@@ -23,13 +22,13 @@ export class AsicsApiService {
     // };
     //
     //
-    // return this.httpApiService.post<AsicLoginResponse>(url, body);
+    // return this.httpClientService.post<AsicLoginResponse>(url, body);
   }
 
   async start(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'start']);
 
-    return this.httpApiService.post(url, null, {
+    return this.post(url, null, {
       headers: {
         Authorization: token,
       },
@@ -39,7 +38,7 @@ export class AsicsApiService {
   async stop(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'stop']);
 
-    return this.httpApiService.post(url, null, {
+    return this.post(url, null, {
       headers: {
         Authorization: token,
       },
@@ -48,5 +47,9 @@ export class AsicsApiService {
 
   private buildUrl(ip: string, path: string[]): string {
     return `http://${ip}/api/v1/${path.join('/')}`;
+  }
+
+  didEncounterError(error: AxiosError): any {
+    return error;
   }
 }

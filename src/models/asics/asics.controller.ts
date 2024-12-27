@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { AsicsService } from './asics.service';
 import { CreateAsicDto, UpdateAsicDto, LoginAsicDto } from './dto';
-import { AuthToken } from '@common/decorators';
+import { AuthToken } from '../../common/decorators';
 import { AsicLoginResponse } from '@api/modules';
 import { Asic } from './entities';
+import { AsicIdParams } from './params';
 
 @Controller('asics')
 export class AsicsController {
@@ -28,21 +29,21 @@ export class AsicsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Asic> {
-    return this.asicsService.findOne(id);
+  findOne(@Param() params: AsicIdParams): Promise<Asic> {
+    return this.asicsService.findOne(params.id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param() params: AsicIdParams,
     @Body() updateAsicDto: UpdateAsicDto,
   ): Promise<Asic> {
-    return this.asicsService.update(id, updateAsicDto);
+    return this.asicsService.update(params.id, updateAsicDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.asicsService.remove(id);
+  remove(@Param() params: AsicIdParams): Promise<void> {
+    return this.asicsService.remove(params.id);
   }
 
   @Post(':id/login')
@@ -54,12 +55,18 @@ export class AsicsController {
   }
 
   @Post(':id/start')
-  start(@Param('id') id: string, @AuthToken() token: string): Promise<void> {
-    return this.asicsService.start(id, token);
+  start(
+    @Param() params: AsicIdParams,
+    @AuthToken() token: string,
+  ): Promise<void> {
+    return this.asicsService.start(params.id, token);
   }
 
   @Post(':id/stop')
-  stop(@Param('id') id: string, @AuthToken() token: string): Promise<void> {
-    return this.asicsService.stop(id, token);
+  stop(
+    @Param() params: AsicIdParams,
+    @AuthToken() token: string,
+  ): Promise<void> {
+    return this.asicsService.stop(params.id, token);
   }
 }

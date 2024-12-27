@@ -7,6 +7,7 @@ import { Asic } from './entities';
 import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
+import { toError } from '@common/utils';
 
 @Injectable()
 export class AsicsRepository {
@@ -21,7 +22,7 @@ export class AsicsRepository {
 
       return createAsicDto as Asic;
     } catch (error) {
-      throw new BadRequestException((error as Error).message);
+      throw new BadRequestException(toError((error as Error).message));
     }
   }
 
@@ -34,7 +35,9 @@ export class AsicsRepository {
       return await this.asicsRepository.findOneByOrFail({ id });
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
-        throw new NotFoundException(`Asic with '${id}' id does not exist`);
+        throw new NotFoundException(
+          toError(`Asic with '${id}' id does not exist`),
+        );
       }
 
       throw new BadRequestException((error as Error).message);
@@ -45,7 +48,9 @@ export class AsicsRepository {
     const result = await this.asicsRepository.update(id, updateAsicDto);
 
     if (!result.affected) {
-      throw new NotFoundException(`Asic with '${id}' id does not exist`);
+      throw new NotFoundException(
+        toError(`Asic with '${id}' id does not exist`),
+      );
     }
 
     return this.findOne(id);
@@ -55,7 +60,9 @@ export class AsicsRepository {
     const result = await this.asicsRepository.delete(id);
 
     if (!result.affected) {
-      throw new NotFoundException(`Asic with '${id}' id does not exist`);
+      throw new NotFoundException(
+        toError(`Asic with '${id}' id does not exist`),
+      );
     }
   }
 }

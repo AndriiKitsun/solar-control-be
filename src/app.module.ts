@@ -8,10 +8,11 @@ import { AsicsModule } from '@models/asics';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '@config/app';
-import { EspConfig } from '@config/api';
-import { PostgresConfig } from '@config/database';
-import { PostgresProvider } from '@providers/database';
+import { EspConfig } from '@config/esp';
+import { PostgresConfig } from '@config/postgres';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { PostgresProvider } from '@providers/postgres';
+import { convertToHttpException } from '@common/utils';
 
 @Module({
   imports: [
@@ -32,7 +33,11 @@ import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
     },
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({ transform: true, whitelist: true }),
+      useValue: new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        exceptionFactory: convertToHttpException,
+      }),
     },
   ],
 })
