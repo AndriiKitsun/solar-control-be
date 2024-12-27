@@ -1,8 +1,11 @@
 import { AsicsApiService } from '@api/modules/asics/asics.service';
 import { AsicLoginResponse } from '@api/modules/asics/asics.types';
-import { ClassMock } from '@common/types/test.types';
+import { ClassMockWithout } from '@common/types/test.types';
+import { HttpClientService } from '@api/common';
 
-export class AsicsApiServiceMock implements ClassMock<AsicsApiService> {
+export class AsicsApiServiceMock
+  implements ClassMockWithout<AsicsApiService, HttpClientService>
+{
   static readonly loginResponseMock: AsicLoginResponse = {
     token: '123',
   };

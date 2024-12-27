@@ -13,7 +13,7 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     return EspApiServiceMock.healthCheckResponseMock;
   }
 
-  async resetEnergyCounter(): Promise<EspPzemCounter> {
+  async resetEnergyCounter(): Promise<EspPzemCounter[]> {
     return EspApiServiceMock.counterResetResponseMock;
   }
 
