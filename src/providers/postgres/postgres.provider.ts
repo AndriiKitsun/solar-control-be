@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { PostgresConfigType, PostgresConfig } from '@config/database';
+import { PostgresConfig, PostgresConfigType } from '@config/postgres';
 
 @Injectable()
 export class PostgresProvider implements TypeOrmOptionsFactory {

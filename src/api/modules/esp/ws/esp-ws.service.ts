@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { EspConfig, EspConfigType } from '@config/api';
-import { WsClientService } from '../../../common/ws/ws-client.service';
+import { EspConfigType, EspConfig } from '@config/esp';
+import { WsClientService } from '../../../common/services/ws-client.service';
 import { EventEmitter } from 'node:events';
 import { EspWsServiceInterface, EspPzemData } from '../esp.types';
 

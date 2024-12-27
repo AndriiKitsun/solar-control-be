@@ -1,8 +1,8 @@
-import { HttpApiService } from '@api/common/modules/http-api/http-api.service';
+import { HttpClientService } from '@api/common/modules/http-client/http-client.service';
 import { AxiosRequestConfig } from 'axios';
 import { ClassMock } from '@common/types/test.types';
 
-export class HttpApiServiceMock implements ClassMock<HttpApiService> {
+export class HttpApiServiceMock implements ClassMock<HttpClientService> {
   static readonly responseMock = 'response';
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

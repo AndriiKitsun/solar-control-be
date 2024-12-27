@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AsicsApiService } from './asics.service';
-import { HttpApiModule } from '../../common';
+import { HttpClientModule } from '../../common/modules';
 
 @Module({
-  imports: [HttpApiModule],
+  imports: [HttpClientModule],
   providers: [AsicsApiService],
   exports: [AsicsApiService],
 })

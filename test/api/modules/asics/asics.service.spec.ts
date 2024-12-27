@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpApiService } from '@api/common';
+import { HttpClientService } from '@api/common';
 import { AsicsApiService } from '@api/modules';
 import { HttpApiServiceMock } from '../../common/modules/http-api/mocks/http-api.service.mock';
 
@@ -11,7 +11,7 @@ describe('AsicsApiService', () => {
       providers: [
         AsicsApiService,
         {
-          provide: HttpApiService,
+          provide: HttpClientService,
           useClass: HttpApiServiceMock,
         },
       ],

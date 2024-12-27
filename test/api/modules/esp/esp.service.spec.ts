@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpApiService } from '@api/common';
 import { EspApiService } from '@api/modules';
-import { EspConfig } from '@config/api';
-import { EspConfigMock } from '@config/api/esp/mocks/esp.config.mock';
 import { HttpApiServiceMock } from '../../common/modules/http-api/mocks/http-api.service.mock';
+import { EspConfig } from '@config/esp';
+import { EspConfigMock } from '@config/api/esp/mocks/esp.config.mock';
+import { HttpClientService } from '@api/common/modules';
 
 describe('EspApiService', () => {
   let service: EspApiService;
@@ -17,7 +17,7 @@ describe('EspApiService', () => {
           useValue: EspConfigMock,
         },
         {
-          provide: HttpApiService,
+          provide: HttpClientService,
           useClass: HttpApiServiceMock,
         },
       ],

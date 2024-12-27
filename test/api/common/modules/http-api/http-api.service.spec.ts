@@ -1,15 +1,15 @@
-import { HttpApiService } from '@api/common/modules/http-api/http-api.service';
+import { HttpClientService } from '@api/common/modules/http-client/http-client.service';
 import { HttpService } from '@nestjs/axios';
 import { TestingModule, Test } from '@nestjs/testing';
 import { HttpServiceMock } from './mocks/http-service.mock';
 
 describe('HttpApiService', () => {
-  let service: HttpApiService;
+  let service: HttpClientService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        HttpApiService,
+        HttpClientService,
         {
           provide: HttpService,
           useClass: HttpServiceMock,
@@ -17,7 +17,7 @@ describe('HttpApiService', () => {
       ],
     }).compile();
 
-    service = module.get(HttpApiService);
+    service = module.get(HttpClientService);
   });
 
   it('should be defined', () => {

@@ -1,4 +1,4 @@
-import { WsClientService } from '@api/common/ws/ws-client.service';
+import { WsClientService } from '@api/common/services/ws-client.service';
 
 jest.mock('ws');
 

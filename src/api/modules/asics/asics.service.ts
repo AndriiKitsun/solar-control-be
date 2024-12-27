@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AsicLoginResponse } from './asics.types';
-import { HttpApiService } from '../../common';
+import { HttpClientService } from '../../common/modules';
 
 @Injectable()
 export class AsicsApiService {
-  constructor(private readonly httpApiService: HttpApiService) {}
+  constructor(private readonly httpClientService: HttpClientService) {}
 
   login(ip: string, password: string): Promise<AsicLoginResponse> {
     const str = JSON.stringify({
@@ -23,13 +23,13 @@ export class AsicsApiService {
     // };
     //
     //
-    // return this.httpApiService.post<AsicLoginResponse>(url, body);
+    // return this.httpClientService.post<AsicLoginResponse>(url, body);
   }
 
   async start(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'start']);
 
-    return this.httpApiService.post(url, null, {
+    return this.httpClientService.post(url, null, {
       headers: {
         Authorization: token,
       },
@@ -39,7 +39,7 @@ export class AsicsApiService {
   async stop(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'stop']);
 
-    return this.httpApiService.post(url, null, {
+    return this.httpClientService.post(url, null, {
       headers: {
         Authorization: token,
       },

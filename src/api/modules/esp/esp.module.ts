@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EspApiService } from './esp.service';
-import { HttpApiModule } from '../../common';
+import { HttpClientModule } from '../../common/modules';
 import { ESP_WS_SERVICE } from './esp.constants';
 import { FakeEspWsService } from './ws/fake-esp-ws.service';
 
 @Module({
-  imports: [HttpApiModule],
+  imports: [HttpClientModule],
   providers: [
     EspApiService,
     {

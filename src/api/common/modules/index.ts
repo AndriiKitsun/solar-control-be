@@ -1,1 +1,1 @@
-export * from './http-api';
+export * from './http-client';

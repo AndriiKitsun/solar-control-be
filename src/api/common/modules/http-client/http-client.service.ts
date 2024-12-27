@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
 
 @Injectable()
-export class HttpApiService {
+export class HttpClientService {
   constructor(private readonly httpService: HttpService) {}
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
