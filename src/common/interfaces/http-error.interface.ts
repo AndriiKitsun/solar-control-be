@@ -1,3 +1,5 @@
+import { HttpErrorType } from '../enums';
+
 export interface HttpError {
   timestamp: string;
   code?: string;
@@ -15,8 +17,4 @@ export interface HttpSubError {
 export interface HttpErrorDetails {
   key: string;
   value: string;
-}
-
-export enum HttpErrorType {
-  VALIDATION = 'ValidationError',
 }

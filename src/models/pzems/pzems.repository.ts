@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RecentPzemForCalc } from './pzems.types';
 import { EspPzemData } from '@api/modules';
-import { toError } from '@core/exceptions';
+import { toError } from '@common/utils';
 
 @Injectable()
 export class PzemsRepository {

@@ -1,15 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AsicLoginResponse } from './asics.types';
 import { AxiosError } from 'axios';
-import { HttpError } from '@core/types';
+import { HttpError } from 'src/common/interfaces';
 import { HttpClientService } from '../../common';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
-  constructor() {
-    super();
-  }
-
   login(ip: string, password: string): Promise<AsicLoginResponse> {
     const str = JSON.stringify({
       ip,

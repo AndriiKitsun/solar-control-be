@@ -12,7 +12,7 @@ import { EspConfig } from '@config/esp';
 import { PostgresConfig } from '@config/postgres';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { PostgresProvider } from '@providers/postgres';
-import { convertToHttpException } from '@core/validators';
+import { convertToHttpException } from '@common/utils';
 
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-import { HttpError } from '../../types';
+import { HttpError } from '../interfaces';
 
 export function toError(messageOrResponse: string | HttpError): HttpError {
   if (typeof messageOrResponse === 'string') {

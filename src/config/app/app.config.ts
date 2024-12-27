@@ -13,7 +13,7 @@ export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
   return {
     port: process.env.PORT ?? '3000',
     http: {
-      timeout: parseInt(process.env.HTTP_TIMEOUT ?? '30000'),
+      timeout: parseInt(process.env.HTTP_TIMEOUT ?? '10000'),
     },
   } satisfies AppConfigType;
 });

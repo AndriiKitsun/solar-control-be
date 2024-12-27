@@ -1,5 +1,6 @@
 import { BadRequestException, ValidationError } from '@nestjs/common';
-import { HttpSubError, HttpError, HttpErrorType } from '../../types';
+import { HttpSubError, HttpError } from '../interfaces';
+import { HttpErrorType } from '../enums';
 import { AxiosError } from 'axios';
 
 export function convertToHttpException(

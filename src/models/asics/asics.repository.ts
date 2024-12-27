@@ -7,7 +7,7 @@ import { Asic } from './entities';
 import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
-import { toError } from '@core/exceptions/utils';
+import { toError } from '@common/utils';
 
 @Injectable()
 export class AsicsRepository {

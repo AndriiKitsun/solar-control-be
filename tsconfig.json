@@ -22,7 +22,6 @@
       "@api/*": ["src/api/*", "test/api/*"],
       "@common/*": ["src/common/*", "test/common/*"],
       "@config/*": ["src/config/*", "test/config/*"],
-      "@core/*": ["src/core/*", "test/core/*"],
       "@models/*": ["src/models/*", "test/models/*"],
       "@providers/*": ["src/providers/*", "test/providers/*"]
     }
