@@ -1,8 +1,9 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { EspConfig, EspConfigType } from '@config/esp';
 import { EspPzemCounter } from './esp.types';
-import { HttpClientService, HttpError } from '../../common';
 import { AxiosError } from 'axios';
+import { HttpClientService } from '../../common';
+import { HttpError } from '@core/types';
 
 @Injectable()
 export class EspApiService extends HttpClientService {

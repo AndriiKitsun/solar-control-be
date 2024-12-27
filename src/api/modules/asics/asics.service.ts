@@ -1,7 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AsicLoginResponse } from './asics.types';
-import { HttpClientService, HttpError } from '../../common';
 import { AxiosError } from 'axios';
+import { HttpError } from '@core/types';
+import { HttpClientService } from '../../common';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {

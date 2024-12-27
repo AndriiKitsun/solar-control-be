@@ -12,6 +12,7 @@ import { EspConfig } from '@config/esp';
 import { PostgresConfig } from '@config/postgres';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { PostgresProvider } from '@providers/postgres';
+import { convertToHttpException } from '@core/validators';
 
 @Module({
   imports: [
@@ -32,7 +33,11 @@ import { PostgresProvider } from '@providers/postgres';
     },
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({ transform: true, whitelist: true }),
+      useValue: new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        exceptionFactory: convertToHttpException,
+      }),
     },
   ],
 })
