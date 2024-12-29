@@ -41,12 +41,28 @@ export class FakeEspWsService implements EspWsServiceInterface {
       name,
       voltageV: faker.number.float({ min: 170, max: 260 }),
       currentA: faker.number.float({ min: 0, max: 5 }),
-      powerKw: faker.number.float({ min: 0, max: 10 }),
-      energyKwh: faker.number.float({ min: 0, max: 50 }),
+      powerKw: faker.number.float({
+        min: 0,
+        max: 10,
+        fractionDigits: faker.number.int({ min: 2, max: 4 }),
+      }),
+      energyKwh: faker.number.float({
+        min: 0,
+        max: 50,
+        fractionDigits: faker.number.int({ min: 0, max: 3 }),
+      }),
       frequencyHz: faker.number.int({ min: 50, max: 60 }),
       powerFactor: faker.number.float({ min: 0, max: 1 }),
-      t1EnergyKwh: faker.number.float({ min: 0, max: 50 }),
-      t2EnergyKwh: faker.number.float({ min: 0, max: 50 }),
+      t1EnergyKwh: faker.number.float({
+        min: 0,
+        max: 50,
+        fractionDigits: faker.number.int({ min: 0, max: 3 }),
+      }),
+      t2EnergyKwh: faker.number.float({
+        min: 0,
+        max: 50,
+        fractionDigits: faker.number.int({ min: 0, max: 3 }),
+      }),
     };
   }
 }
