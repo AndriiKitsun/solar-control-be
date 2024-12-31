@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "AndriiKitsun/solar-control-be" }
+  ],
+  "commit": false,
+  "access": "restricted",
+  "baseBranch": "dev",
+  "privatePackages": {
+    "version": true,
+    "tag": true
+  }
+}
