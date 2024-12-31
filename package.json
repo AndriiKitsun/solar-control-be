@@ -22,7 +22,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json",
     "types:esp": "npx openapi-typescript https://raw.githubusercontent.com/AndriiKitsun/solar-control-arduino/main/api/openapi.yaml -o src/api/modules/esp/esp.schema.d.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changeset:add": "changeset",
+    "changeset:publish": "changeset publish",
+    "changeset:check": "changeset status --verbose --since=origin/dev"
   },
   "lint-staged": {
     "*.ts": [
@@ -51,6 +54,8 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.11",
     "@eslint/js": "^9.17.0",
     "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.2.3",
