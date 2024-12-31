@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-PROJECT_PATH="/solar-control-be"
+PROJECT_PATH="."
 
 cd $PROJECT_PATH || exit
 echo "Current directory: $(pwd)"
