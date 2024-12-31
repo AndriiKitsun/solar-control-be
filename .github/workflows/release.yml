@@ -32,4 +32,4 @@ jobs:
         with:
           publish: npm run changeset:publish
         env:
-          GITHUB_TOKEN: ${{ secrets.SC-BE_PAT-TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
