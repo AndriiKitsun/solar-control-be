@@ -6,7 +6,7 @@
   ],
   "commit": false,
   "access": "restricted",
-  "baseBranch": "main",
+  "baseBranch": "dev",
   "privatePackages": {
     "version": true,
     "tag": true

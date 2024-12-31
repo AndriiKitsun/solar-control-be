@@ -24,8 +24,7 @@
     "types:esp": "npx openapi-typescript https://raw.githubusercontent.com/AndriiKitsun/solar-control-arduino/main/api/openapi.yaml -o src/api/modules/esp/esp.schema.d.ts",
     "prepare": "husky",
     "changeset:add": "changeset",
-    "changeset:publish": "changeset publish",
-    "changeset:check": "changeset status --verbose --since=origin/dev"
+    "changeset:publish": "changeset publish"
   },
   "lint-staged": {
     "*.ts": [
