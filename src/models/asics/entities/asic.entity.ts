@@ -7,9 +7,19 @@ export class Asic {
   id!: string;
 
   @Column()
-  name!: string;
+  ip!: string;
+
+  @Column()
+  address!: string;
 
   @Exclude()
   @Column()
-  ip!: string;
+  password!: string; // TODO: encode pwd
+
+  @Column()
+  hostname!: string;
+
+  @Exclude()
+  @Column()
+  token!: string;
 }
