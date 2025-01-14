@@ -42,6 +42,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+      'sonarjs/no-hardcoded-passwords': 'off',
     },
   },
   {

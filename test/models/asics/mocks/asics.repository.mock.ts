@@ -9,8 +9,11 @@ import { ClassMock } from '@common/types/test.types';
 export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
   static readonly asicMock: Asic = {
     id: 'id',
-    name: 'name',
     ip: '123',
+    address: 'address',
+    password: 'pwd',
+    hostname: 'name',
+    token: 'token',
   };
 
   static readonly asicsMock: Asic[] = [this.asicMock];
