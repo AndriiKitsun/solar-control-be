@@ -23,11 +23,11 @@ export class FakeEspWsService implements EspWsServiceInterface {
   private randomSensor(): EspPzemData {
     const pzems: EspPzem[] = [];
 
-    pzems.push(this.randomPzem('acInput'));
-    pzems.push(this.randomPzem('acOutput'));
+    pzems.push(this.randomAcPzem('acInput'));
+    pzems.push(this.randomAcPzem('acOutput'));
 
-    if (faker.helpers.maybe(() => true, { probability: 0.97 })) {
-      pzems.push(this.randomPzem('dcBattery'));
+    if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
+      pzems.push(this.randomDcPzem('dcBattery'));
     }
 
     return {
@@ -36,7 +36,7 @@ export class FakeEspWsService implements EspWsServiceInterface {
     };
   }
 
-  private randomPzem(name: string): EspPzem {
+  private randomAcPzem(name: string): EspPzem {
     return {
       name,
       voltageV: faker.number.float({ min: 170, max: 260 }),
@@ -49,7 +49,7 @@ export class FakeEspWsService implements EspWsServiceInterface {
       energyKwh: faker.number.float({
         min: 0,
         max: 50,
-        fractionDigits: faker.number.int({ min: 0, max: 3 }),
+        fractionDigits: faker.number.int({ min: 3, max: 5 }),
       }),
       frequencyHz: faker.number.int({ min: 50, max: 60 }),
       powerFactor: faker.number.float({ min: 0, max: 1 }),
@@ -62,6 +62,24 @@ export class FakeEspWsService implements EspWsServiceInterface {
         min: 0,
         max: 50,
         fractionDigits: faker.number.int({ min: 0, max: 3 }),
+      }),
+    };
+  }
+
+  private randomDcPzem(name: string): EspPzem {
+    return {
+      name,
+      voltageV: faker.number.float({ min: 10, max: 36, fractionDigits: 2 }),
+      currentA: faker.number.float({ min: 0, max: 5, fractionDigits: 2 }),
+      powerKw: faker.number.float({
+        min: 0,
+        max: 2,
+        fractionDigits: faker.number.int({ min: 2, max: 4 }),
+      }),
+      energyKwh: faker.number.float({
+        min: 0,
+        max: 6,
+        fractionDigits: faker.number.int({ min: 3, max: 5 }),
       }),
     };
   }

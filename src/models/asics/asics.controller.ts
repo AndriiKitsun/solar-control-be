@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AsicsService } from './asics.service';
 import { CreateAsicDto, UpdateAsicDto, LoginAsicDto } from './dto';
-import { AuthToken } from '../../common/decorators';
+import { AuthToken } from '@common/decorators';
 import { AsicLoginResponse } from '@api/modules';
 import { Asic } from './entities';
 import { AsicIdParams } from './params';

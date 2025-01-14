@@ -1,28 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { AsicLoginResponse } from './asics.types';
+import { AsicLoginResponse, AsicLoginDto } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
   login(ip: string, password: string): Promise<AsicLoginResponse> {
-    const str = JSON.stringify({
-      ip,
-      date: new Date().toJSON(),
-      password,
-    });
+    const url = this.buildUrl(ip, ['unlock']);
+    const body: AsicLoginDto = {
+      pw: password,
+    };
 
-    return Promise.resolve({
-      token: Buffer.from(str).toString('base64'),
-    });
-
-    // const url = this.buildUrl(ip, ['unlock']);
-    // const body: AsicLoginDto = {
-    //   pw: password,
-    // };
-    //
-    //
-    // return this.httpClientService.post<AsicLoginResponse>(url, body);
+    return this.post<AsicLoginResponse>(url, body);
   }
 
   async start(ip: string, token: string): Promise<void> {

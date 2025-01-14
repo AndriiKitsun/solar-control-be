@@ -6,7 +6,11 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs', 'src/api/modules/esp/esp.schema.d.ts'],
+    ignores: [
+      'eslint.config.mjs',
+      'src/api/modules/esp/esp.schema.d.ts',
+      'src/api/modules/asics/asics.schema.d.ts',
+    ],
   },
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
