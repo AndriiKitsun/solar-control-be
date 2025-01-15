@@ -3,11 +3,24 @@ import {
   AsicsService,
   CreateAsicDto,
   Asic,
+  AsicSummaryResponseDto,
 } from '@models/asics';
 import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsServiceMock implements ClassMock<AsicsService> {
+  static readonly asicIdMock: string = 'asicId';
+
+  static readonly asicSummaryResponseDtoMock: AsicSummaryResponseDto = {
+    hostname: 'hostname',
+    ip: '192.168.55.1',
+    state: 'mining',
+    avgHashRate: 66.34,
+    maxChipTemp: 60,
+    powerConsumption: 690,
+    avgFanSpeed: 55,
+  };
+
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;
   }
@@ -34,5 +47,9 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
 
   async update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;
+  }
+
+  async getSummary(id: string): Promise<AsicSummaryResponseDto> {
+    return AsicsServiceMock.asicSummaryResponseDtoMock;
   }
 }

@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ClassMock } from '@common/types/test.types';
 
 export class HttpServiceMock implements ClassMock<HttpService> {
+  static readonly urlMock = 'url';
   static readonly responseDataMock = 'data';
   static readonly axiosResponseMock: AxiosResponse = {
     data: this.responseDataMock,

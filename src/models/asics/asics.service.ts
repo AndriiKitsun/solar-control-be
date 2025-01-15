@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAsicDto, UpdateAsicDto } from './dto';
+import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt } from '@common/utils';
-import { AsicSummaryResponseDto } from './dto/asic-summary-response.dto';
 
 @Injectable()
 export class AsicsService {
