@@ -30,10 +30,6 @@ export class AsicsService {
     return this.asicsRepository.findAll();
   }
 
-  findOne(id: string): Promise<Asic> {
-    return this.asicsRepository.findOne(id);
-  }
-
   update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
     return this.asicsRepository.update(id, updateAsicDto);
   }
@@ -42,15 +38,15 @@ export class AsicsService {
     return this.asicsRepository.remove(id);
   }
 
-  async start(id: string, token: string): Promise<void> {
+  async start(id: string): Promise<void> {
     const asic = await this.asicsRepository.findOne(id);
 
-    return this.asicsApiService.start(asic.ip, token);
+    return this.asicsApiService.start(asic.ip, asic.token);
   }
 
-  async stop(id: string, token: string): Promise<void> {
+  async stop(id: string): Promise<void> {
     const asic = await this.asicsRepository.findOne(id);
 
-    return this.asicsApiService.stop(asic.ip, token);
+    return this.asicsApiService.stop(asic.ip, asic.token);
   }
 }

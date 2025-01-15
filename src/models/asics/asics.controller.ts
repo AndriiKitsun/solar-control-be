@@ -11,7 +11,6 @@ import { AsicsService } from './asics.service';
 import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { Asic } from './entities';
 import { AsicIdParams } from './params';
-import { AuthToken } from '@common/decorators';
 
 @Controller('asics')
 export class AsicsController {
@@ -25,11 +24,6 @@ export class AsicsController {
   @Get()
   findAll(): Promise<Asic[]> {
     return this.asicsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param() params: AsicIdParams): Promise<Asic> {
-    return this.asicsService.findOne(params.id);
   }
 
   @Patch(':id')
@@ -46,18 +40,12 @@ export class AsicsController {
   }
 
   @Post(':id/start')
-  start(
-    @Param() params: AsicIdParams,
-    @AuthToken() token: string,
-  ): Promise<void> {
-    return this.asicsService.start(params.id, token);
+  start(@Param() params: AsicIdParams): Promise<void> {
+    return this.asicsService.start(params.id);
   }
 
   @Post(':id/stop')
-  stop(
-    @Param() params: AsicIdParams,
-    @AuthToken() token: string,
-  ): Promise<void> {
-    return this.asicsService.stop(params.id, token);
+  stop(@Param() params: AsicIdParams): Promise<void> {
+    return this.asicsService.stop(params.id);
   }
 }
