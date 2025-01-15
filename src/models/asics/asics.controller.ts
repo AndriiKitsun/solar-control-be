@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AsicsService } from './asics.service';
-import { CreateAsicDto, UpdateAsicDto } from './dto';
+import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { Asic } from './entities';
 import { AsicIdParams } from './params';
 
@@ -47,5 +47,10 @@ export class AsicsController {
   @Post(':id/stop')
   stop(@Param() params: AsicIdParams): Promise<void> {
     return this.asicsService.stop(params.id);
+  }
+
+  @Get(':id/summary')
+  getSummary(@Param() params: AsicIdParams): Promise<AsicSummaryResponseDto> {
+    return this.asicsService.getSummary(params.id);
   }
 }
