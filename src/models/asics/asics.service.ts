@@ -3,6 +3,7 @@ import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
+import { encrypt } from '@common/utils';
 
 @Injectable()
 export class AsicsService {
@@ -19,6 +20,7 @@ export class AsicsService {
 
     const payload: Partial<Asic> = {
       ...createAsicDto,
+      password: encrypt(createAsicDto.password),
       token: auth.token,
       hostname: info.system?.network_status.hostname,
     };

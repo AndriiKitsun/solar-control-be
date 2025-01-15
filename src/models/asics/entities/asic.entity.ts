@@ -14,7 +14,7 @@ export class Asic {
 
   @Exclude()
   @Column()
-  password!: string; // TODO: encode pwd
+  password!: string;
 
   @Column()
   hostname!: string;
