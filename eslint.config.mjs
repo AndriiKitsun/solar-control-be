@@ -6,7 +6,11 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs', 'src/api/modules/esp/esp.schema.d.ts'],
+    ignores: [
+      'eslint.config.mjs',
+      'src/api/modules/esp/esp.schema.d.ts',
+      'src/api/modules/asics/asics.schema.d.ts',
+    ],
   },
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
@@ -38,6 +42,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+      'sonarjs/no-hardcoded-passwords': 'off',
     },
   },
   {

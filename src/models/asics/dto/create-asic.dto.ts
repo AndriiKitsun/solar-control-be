@@ -1,9 +1,14 @@
-import { IsString, IsIP } from 'class-validator';
+import { IsIP, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateAsicDto {
-  @IsString()
-  name!: string;
-
-  @IsIP()
+  @IsIP(4)
   ip!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  address!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password!: string;
 }

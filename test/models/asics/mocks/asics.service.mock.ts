@@ -3,12 +3,9 @@ import {
   AsicsService,
   CreateAsicDto,
   Asic,
-  LoginAsicDto,
 } from '@models/asics';
-import { AsicLoginResponse } from '@api/modules';
 import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 
 export class AsicsServiceMock implements ClassMock<AsicsService> {
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
@@ -23,22 +20,15 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     return AsicsRepositoryMock.asicMock;
   }
 
-  async login(
-    id: string,
-    loginAsicDto: LoginAsicDto,
-  ): Promise<AsicLoginResponse> {
-    return AsicsApiServiceMock.loginResponseMock;
-  }
-
   async remove(id: string): Promise<void> {
     return;
   }
 
-  async start(id: string, token: string): Promise<void> {
+  async start(id: string): Promise<void> {
     return;
   }
 
-  async stop(id: string, token: string): Promise<void> {
+  async stop(id: string): Promise<void> {
     return;
   }
 

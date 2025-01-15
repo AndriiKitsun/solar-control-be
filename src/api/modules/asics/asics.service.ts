@@ -1,28 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { AsicLoginResponse } from './asics.types';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import {
+  AsicUnlockScreenBody,
+  AsicUnlockSuccess,
+  AsicInfo,
+} from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
+import { HttpError } from '@common/interfaces';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
-  login(ip: string, password: string): Promise<AsicLoginResponse> {
-    const str = JSON.stringify({
-      ip,
-      date: new Date().toJSON(),
-      password,
-    });
+  login(ip: string, password: string): Promise<AsicUnlockSuccess> {
+    const url = this.buildUrl(ip, ['unlock']);
+    const body: AsicUnlockScreenBody = {
+      pw: password,
+    };
 
-    return Promise.resolve({
-      token: Buffer.from(str).toString('base64'),
-    });
-
-    // const url = this.buildUrl(ip, ['unlock']);
-    // const body: AsicLoginDto = {
-    //   pw: password,
-    // };
-    //
-    //
-    // return this.httpClientService.post<AsicLoginResponse>(url, body);
+    return this.post<AsicUnlockSuccess>(url, body);
   }
 
   async start(ip: string, token: string): Promise<void> {
@@ -45,11 +39,35 @@ export class AsicsApiService extends HttpClientService {
     });
   }
 
+  getInfo(ip: string): Promise<AsicInfo> {
+    const url = this.buildUrl(ip, ['info']);
+
+    return this.get(url);
+  }
+
   private buildUrl(ip: string, path: string[]): string {
     return `http://${ip}/api/v1/${path.join('/')}`;
   }
 
   didEncounterError(error: AxiosError): any {
-    return error;
+    const response: HttpError = {
+      timestamp: new Date().toJSON(),
+      code: error.code,
+    };
+
+    const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+
+    if (!error.response?.data) {
+      response.message = error.message;
+
+      return new HttpException(response, status);
+    }
+
+    response.message =
+      typeof error.response.data === 'string'
+        ? error.response.data
+        : JSON.stringify(error.response.data);
+
+    return new HttpException(response, status);
   }
 }

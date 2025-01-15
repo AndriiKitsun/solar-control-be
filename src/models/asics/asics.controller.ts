@@ -3,14 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
+  Patch,
   Delete,
 } from '@nestjs/common';
 import { AsicsService } from './asics.service';
-import { CreateAsicDto, UpdateAsicDto, LoginAsicDto } from './dto';
-import { AuthToken } from '../../common/decorators';
-import { AsicLoginResponse } from '@api/modules';
+import { CreateAsicDto, UpdateAsicDto } from './dto';
 import { Asic } from './entities';
 import { AsicIdParams } from './params';
 
@@ -28,11 +26,6 @@ export class AsicsController {
     return this.asicsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param() params: AsicIdParams): Promise<Asic> {
-    return this.asicsService.findOne(params.id);
-  }
-
   @Patch(':id')
   update(
     @Param() params: AsicIdParams,
@@ -46,27 +39,13 @@ export class AsicsController {
     return this.asicsService.remove(params.id);
   }
 
-  @Post(':id/login')
-  login(
-    @Param('id') id: string,
-    @Body() loginAsicDto: LoginAsicDto,
-  ): Promise<AsicLoginResponse> {
-    return this.asicsService.login(id, loginAsicDto);
-  }
-
   @Post(':id/start')
-  start(
-    @Param() params: AsicIdParams,
-    @AuthToken() token: string,
-  ): Promise<void> {
-    return this.asicsService.start(params.id, token);
+  start(@Param() params: AsicIdParams): Promise<void> {
+    return this.asicsService.start(params.id);
   }
 
   @Post(':id/stop')
-  stop(
-    @Param() params: AsicIdParams,
-    @AuthToken() token: string,
-  ): Promise<void> {
-    return this.asicsService.stop(params.id, token);
+  stop(@Param() params: AsicIdParams): Promise<void> {
+    return this.asicsService.stop(params.id);
   }
 }
