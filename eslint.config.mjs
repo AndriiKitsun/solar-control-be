@@ -32,6 +32,7 @@ export default tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       'sonarjs/todo-tag': 'warn',
+      'sonarjs/deprecation': 'warn',
     },
   },
   {
@@ -43,6 +44,7 @@ export default tseslint.config(
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       'sonarjs/no-hardcoded-passwords': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
     },
   },
   {
@@ -50,7 +52,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
+      'sonarjs/no-hardcoded-ip': 'off',
     },
   },
 );

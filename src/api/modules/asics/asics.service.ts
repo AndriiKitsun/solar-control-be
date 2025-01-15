@@ -3,10 +3,13 @@ import {
   AsicUnlockScreenBody,
   AsicUnlockSuccess,
   AsicInfo,
+  AsicSummaryStats,
+  AsicSummary,
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
 import { HttpError } from '@common/interfaces';
+import { Maybe } from '@common/types';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
@@ -43,6 +46,13 @@ export class AsicsApiService extends HttpClientService {
     const url = this.buildUrl(ip, ['info']);
 
     return this.get(url);
+  }
+
+  async getSummary(ip: string): Promise<Maybe<AsicSummary>> {
+    const url = this.buildUrl(ip, ['summary']);
+    const stats = await this.get<AsicSummaryStats>(url);
+
+    return stats.miner;
   }
 
   private buildUrl(ip: string, path: string[]): string {

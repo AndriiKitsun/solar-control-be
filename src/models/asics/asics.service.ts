@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAsicDto, UpdateAsicDto } from './dto';
+import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
@@ -50,5 +50,20 @@ export class AsicsService {
     const asic = await this.asicsRepository.findOne(id);
 
     return this.asicsApiService.stop(asic.ip, asic.token);
+  }
+
+  async getSummary(id: string): Promise<AsicSummaryResponseDto> {
+    const asic = await this.asicsRepository.findOne(id);
+    const response = await this.asicsApiService.getSummary(asic.ip);
+
+    return {
+      hostname: asic.hostname,
+      ip: asic.ip,
+      state: response?.miner_status.miner_state,
+      avgHashRate: response?.average_hashrate,
+      maxChipTemp: response?.chip_temp.max,
+      powerConsumption: response?.power_consumption,
+      avgFanSpeed: response?.cooling.fan_duty,
+    };
   }
 }

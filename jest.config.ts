@@ -7,14 +7,24 @@ const config: Config = {
     prefix: '<rootDir>',
   }),
   moduleFileExtensions: ['js', 'json', 'ts'],
-  roots: ['<rootDir>/test/'],
-  transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
-  },
+  roots: ['<rootDir>/src/', '<rootDir>/test/'],
+  transform: { '^.+\\.(t|j)s$': 'ts-jest' },
   testRegex: '.*\\.spec\\.ts$',
-  collectCoverageFrom: ['**/*.(t|j)s'],
-  coverageDirectory: '../coverage',
+  collectCoverageFrom: ['src/**/*.(t|j)s'],
+  coverageDirectory: 'coverage',
   testEnvironment: 'node',
+  coveragePathIgnorePatterns: [
+    'index.ts',
+    '.entity.ts',
+    '.dto.ts',
+    '.params.ts',
+    '.module.ts',
+    '.config.ts',
+    '.constants.ts',
+    '.schema.d.ts',
+    'main.ts',
+  ],
+  coverageReporters: ['html-spa'],
 };
 
 export default config;
