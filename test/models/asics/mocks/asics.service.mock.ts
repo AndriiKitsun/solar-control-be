@@ -24,11 +24,11 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     return;
   }
 
-  async start(id: string, token: string): Promise<void> {
+  async start(id: string): Promise<void> {
     return;
   }
 
-  async stop(id: string, token: string): Promise<void> {
+  async stop(id: string): Promise<void> {
     return;
   }
 
