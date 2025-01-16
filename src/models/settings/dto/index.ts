@@ -1,1 +1,1 @@
-export * from './save-setting.dto';
+export * from './save-settings.dto';

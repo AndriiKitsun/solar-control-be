@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, Min } from 'class-validator';
 
-export class SaveSettingDto {
+export class SaveSettingsDto {
   @Min(0)
   @IsNumber()
   @IsOptional()

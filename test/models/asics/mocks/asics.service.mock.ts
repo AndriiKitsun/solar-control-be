@@ -9,8 +9,6 @@ import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsServiceMock implements ClassMock<AsicsService> {
-  static readonly asicIdMock: string = 'asicId';
-
   static readonly asicSummaryResponseDtoMock: AsicSummaryResponseDto = {
     hostname: 'hostname',
     ip: '192.168.55.1',

@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Setting } from './entities';
-import { SaveSettingDto } from './dto';
+import { SaveSettingsDto } from './dto';
 import { plainToInstance } from 'class-transformer';
 import { toError } from '@common/utils';
 
@@ -17,11 +17,11 @@ export class SettingsRepository {
     private readonly settingRepository: Repository<Setting>,
   ) {}
 
-  async create(saveSettingDto: SaveSettingDto): Promise<Setting> {
+  async create(saveSettingsDto: SaveSettingsDto): Promise<Setting> {
     try {
-      await this.settingRepository.insert(saveSettingDto);
+      await this.settingRepository.insert(saveSettingsDto);
 
-      return plainToInstance(Setting, saveSettingDto);
+      return plainToInstance(Setting, saveSettingsDto);
     } catch (error) {
       throw new BadRequestException(toError((error as Error).message));
     }
@@ -37,8 +37,8 @@ export class SettingsRepository {
     return setting[0];
   }
 
-  async update(id: string, updateSettingDto: SaveSettingDto): Promise<Setting> {
-    const result = await this.settingRepository.update(id, updateSettingDto);
+  async update(id: string, saveSettingsDto: SaveSettingsDto): Promise<Setting> {
+    const result = await this.settingRepository.update(id, saveSettingsDto);
 
     if (!result.affected) {
       throw new NotFoundException(
