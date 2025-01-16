@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSettingDto } from './dto';
+import { SaveSettingDto } from './dto';
 import { SettingsRepository } from './settings.repository';
 import { Setting } from './entities';
 
@@ -7,13 +7,11 @@ import { Setting } from './entities';
 export class SettingsService {
   constructor(private readonly settingsRepository: SettingsRepository) {}
 
-  create(createSettingDto: CreateSettingDto): Promise<Setting> {
-    return this.settingsRepository.create(createSettingDto);
+  getSettings(): Promise<Setting> {
+    return this.settingsRepository.getSettings();
   }
 
-  async findAll(): Promise<Setting> {
-    const settings = await this.settingsRepository.findAll();
-
-    return settings[0];
+  update(id: string, updateSettingDto: SaveSettingDto): Promise<Setting> {
+    return this.settingsRepository.update(id, updateSettingDto);
   }
 }

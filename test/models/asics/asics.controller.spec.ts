@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AsicsService, AsicsController } from '@models/asics';
 import { AsicsServiceMock } from './mocks/asics.service.mock';
-import { AsicIdParams } from '@models/asics/params';
+import { IdParams } from 'src/common/params';
 
 describe('AsicsController', () => {
   let controller: AsicsController;
@@ -9,7 +9,7 @@ describe('AsicsController', () => {
 
   const { asicIdMock, asicSummaryResponseDtoMock } = AsicsServiceMock;
 
-  const paramsMock: AsicIdParams = {
+  const paramsMock: IdParams = {
     id: asicIdMock,
   };
 

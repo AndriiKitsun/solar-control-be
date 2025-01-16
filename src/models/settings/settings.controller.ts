@@ -1,19 +1,23 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
 import { SettingsService } from './settings.service';
-import { CreateSettingDto } from './dto';
 import { Setting } from './entities';
+import { IdParams } from '@common/params';
+import { SaveSettingDto } from './dto';
 
 @Controller('settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
-  @Post()
-  create(@Body() createSettingDto: CreateSettingDto): Promise<Setting> {
-    return this.settingsService.create(createSettingDto);
+  @Get()
+  getSettings(): Promise<Setting> {
+    return this.settingsService.getSettings();
   }
 
-  @Get()
-  findAll(): Promise<Setting> {
-    return this.settingsService.findAll();
+  @Patch(':id')
+  updateSettings(
+    @Param() params: IdParams,
+    @Body() saveSettingDto: SaveSettingDto,
+  ): Promise<Setting> {
+    return this.settingsService.update(params.id, saveSettingDto);
   }
 }

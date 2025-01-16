@@ -10,7 +10,7 @@ import {
 import { AsicsService } from './asics.service';
 import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { Asic } from './entities';
-import { AsicIdParams } from './params';
+import { IdParams } from '@common/params';
 
 @Controller('asics')
 export class AsicsController {
@@ -28,29 +28,29 @@ export class AsicsController {
 
   @Patch(':id')
   update(
-    @Param() params: AsicIdParams,
+    @Param() params: IdParams,
     @Body() updateAsicDto: UpdateAsicDto,
   ): Promise<Asic> {
     return this.asicsService.update(params.id, updateAsicDto);
   }
 
   @Delete(':id')
-  remove(@Param() params: AsicIdParams): Promise<void> {
+  remove(@Param() params: IdParams): Promise<void> {
     return this.asicsService.remove(params.id);
   }
 
   @Post(':id/start')
-  start(@Param() params: AsicIdParams): Promise<void> {
+  start(@Param() params: IdParams): Promise<void> {
     return this.asicsService.start(params.id);
   }
 
   @Post(':id/stop')
-  stop(@Param() params: AsicIdParams): Promise<void> {
+  stop(@Param() params: IdParams): Promise<void> {
     return this.asicsService.stop(params.id);
   }
 
   @Get(':id/summary')
-  getSummary(@Param() params: AsicIdParams): Promise<AsicSummaryResponseDto> {
+  getSummary(@Param() params: IdParams): Promise<AsicSummaryResponseDto> {
     return this.asicsService.getSummary(params.id);
   }
 }
