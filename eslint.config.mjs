@@ -52,6 +52,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
     },
   },
