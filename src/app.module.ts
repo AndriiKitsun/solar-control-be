@@ -13,6 +13,7 @@ import { PostgresConfig } from '@config/postgres';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { PostgresProvider } from '@providers/postgres';
 import { convertToHttpException } from '@common/utils';
+import { SettingsModule } from '@models/settings/settings.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { convertToHttpException } from '@common/utils';
     }),
     PzemsModule,
     AsicsModule,
+    SettingsModule,
   ],
   providers: [
     {
