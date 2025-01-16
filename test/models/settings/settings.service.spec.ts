@@ -51,7 +51,6 @@ describe('SettingsService', () => {
 
       const result = await service.updateSettings(idMock, saveSettingsDtoMock);
 
-      expect(updateSpy).toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith(idMock, saveSettingsDtoMock);
 
       expect(result).toBe(settingMock);

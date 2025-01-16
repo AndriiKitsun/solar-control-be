@@ -54,7 +54,6 @@ describe('SettingsController', () => {
         saveSettingsDtoMock,
       );
 
-      expect(updateSettingsSpy).toHaveBeenCalled();
       expect(updateSettingsSpy).toHaveBeenCalledWith(
         idMock,
         saveSettingsDtoMock,
