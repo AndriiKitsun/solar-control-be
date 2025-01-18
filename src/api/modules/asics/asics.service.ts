@@ -1,10 +1,11 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import {
   AsicUnlockScreenBody,
   AsicUnlockSuccess,
   AsicInfo,
   AsicSummaryStats,
   AsicSummary,
+  AsicPerfSummary,
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
@@ -13,6 +14,8 @@ import { Maybe } from '@common/types';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
+  private logger = new Logger(AsicsApiService.name);
+
   login(ip: string, password: string): Promise<AsicUnlockSuccess> {
     const url = this.buildUrl(ip, ['unlock']);
     const body: AsicUnlockScreenBody = {
@@ -50,9 +53,21 @@ export class AsicsApiService extends HttpClientService {
 
   async getSummary(ip: string): Promise<Maybe<AsicSummary>> {
     const url = this.buildUrl(ip, ['summary']);
-    const stats = await this.get<AsicSummaryStats>(url);
+    const response = await this.get<AsicSummaryStats>(url);
 
-    return stats.miner;
+    return response.miner;
+  }
+
+  async getPerfSummary(ip: string): Promise<Maybe<AsicPerfSummary>> {
+    const url = this.buildUrl(ip, ['perf-summary']);
+
+    // GET /perf-summary doesn't exist in v1.2.1, so handle 404 here
+    try {
+      return await this.get<AsicPerfSummary>(url);
+    } catch (err) {
+      this.logger.error(err);
+      return null;
+    }
   }
 
   private buildUrl(ip: string, path: string[]): string {

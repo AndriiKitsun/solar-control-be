@@ -8,4 +8,5 @@ export class AsicSummaryResponseDto {
   maxChipTemp?: number;
   powerConsumption?: number;
   avgFanSpeed?: number;
+  currentPreset?: string;
 }

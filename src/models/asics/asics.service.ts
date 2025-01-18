@@ -54,16 +54,25 @@ export class AsicsService {
 
   async getSummary(id: string): Promise<AsicSummaryResponseDto> {
     const asic = await this.asicsRepository.findOne(id);
-    const response = await this.asicsApiService.getSummary(asic.ip);
+    const summary = await this.asicsApiService.getSummary(asic.ip);
+    const perfSummary = await this.asicsApiService.getPerfSummary(asic.ip);
 
-    return {
+    const response: AsicSummaryResponseDto = {
       hostname: asic.hostname,
       ip: asic.ip,
-      state: response?.miner_status.miner_state,
-      avgHashRate: response?.average_hashrate,
-      maxChipTemp: response?.chip_temp.max,
-      powerConsumption: response?.power_consumption,
-      avgFanSpeed: response?.cooling.fan_duty,
+      state: summary?.miner_status.miner_state,
+      avgHashRate: summary?.average_hashrate,
+      maxChipTemp: summary?.chip_temp.max,
+      powerConsumption: summary?.power_consumption,
+      avgFanSpeed: summary?.cooling.fan_duty,
     };
+
+    if (perfSummary?.current_preset?.pretty) {
+      response.currentPreset = perfSummary.current_preset.pretty
+        .split('~')[1]
+        .trim();
+    }
+
+    return response;
   }
 }
