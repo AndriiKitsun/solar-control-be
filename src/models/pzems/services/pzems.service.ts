@@ -3,15 +3,7 @@ import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspPzemData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
-
-interface CalcPzem {
-  count: number;
-  sum: number;
-  debug: {
-    date: Date;
-    voltage?: number;
-  }[];
-}
+import { PzemGroup } from '../pzems.types';
 
 @Injectable()
 export class PzemsService implements OnModuleInit {
@@ -22,14 +14,14 @@ export class PzemsService implements OnModuleInit {
     private readonly appConfig: AppConfigType,
   ) {}
 
-  async onModuleInit(): Promise<any> {
+  async onModuleInit(): Promise<void> {
     if (this.appConfig.feature.clearPzems) {
       await this.pzemsRepository.clearPzemTable();
     }
   }
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
-    await this.getRecentPzems(pzemData, 1);
+    await this.calcAvgVoltage(pzemData, 1);
 
     return this.pzemsRepository.create(pzemData);
   }
@@ -42,10 +34,7 @@ export class PzemsService implements OnModuleInit {
     return this.espApiService.resetCounter();
   }
 
-  async getRecentPzems(
-    pzemData: EspPzemData,
-    minutes: number,
-  ): Promise<Record<string, CalcPzem>> {
+  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
     const limit = minutes * 60;
     const period = limit * 2;
 
@@ -54,7 +43,7 @@ export class PzemsService implements OnModuleInit {
       period,
     );
 
-    const result: Record<string, CalcPzem> = {};
+    const result: Record<string, PzemGroup> = {};
 
     for (const recentPzem of recentPzems) {
       recentPzem.pzems.forEach((pzem) => {
@@ -99,7 +88,5 @@ export class PzemsService implements OnModuleInit {
 
       (pzemDto as PzemItem).avgVoltageV = group.sum / group.count;
     }
-
-    return result;
   }
 }
