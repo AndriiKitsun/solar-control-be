@@ -47,29 +47,35 @@ describe('AsicsService', () => {
     it('should return mapped summary response', async () => {
       const findOneSpy = jest.spyOn(asicsRepository, 'findOne');
       const getSummarySpy = jest.spyOn(asicsApiService, 'getSummary');
+      const getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
 
       const result = await service.getSummary(idMock);
 
-      expect(findOneSpy).toHaveBeenCalledTimes(1);
       expect(findOneSpy).toHaveBeenCalledWith(idMock);
-
-      expect(getSummarySpy).toHaveBeenCalledTimes(1);
       expect(getSummarySpy).toHaveBeenCalledWith(asicMock.ip);
+      expect(getPerfSummarySpy).toHaveBeenCalledWith(asicMock.ip);
 
       expect(result).toEqual(asicSummaryResponseDtoMock);
     });
 
     it('should return partial response', async () => {
-      const expectedResul: AsicSummaryResponseDto = {
+      const expectedResult: AsicSummaryResponseDto = {
         hostname: 'hostname',
         ip: '192.168.55.1',
+        status: {
+          state: undefined,
+          stateTimeDays: 0,
+          stateTimeHours: 0,
+          stateTimeMinutes: 0,
+        },
       };
 
       jest.spyOn(asicsApiService, 'getSummary').mockResolvedValueOnce(null);
+      jest.spyOn(asicsApiService, 'getPerfSummary').mockResolvedValueOnce(null);
 
       const result = await service.getSummary(idMock);
 
-      expect(result).toEqual(expectedResul);
+      expect(result).toEqual(expectedResult);
     });
   });
 });

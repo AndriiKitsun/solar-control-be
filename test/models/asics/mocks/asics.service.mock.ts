@@ -12,11 +12,17 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
   static readonly asicSummaryResponseDtoMock: AsicSummaryResponseDto = {
     hostname: 'hostname',
     ip: '192.168.55.1',
-    state: 'mining',
+    status: {
+      state: 'mining',
+      stateTimeDays: 0,
+      stateTimeHours: 0,
+      stateTimeMinutes: 2,
+    },
     avgHashRate: 66.34,
     maxChipTemp: 60,
     powerConsumption: 690,
     avgFanSpeed: 55,
+    currentPreset: '65 TH',
   };
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {

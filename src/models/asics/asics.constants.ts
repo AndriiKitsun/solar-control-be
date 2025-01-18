@@ -1,0 +1,3 @@
+export const DAY_MILLISECONDS = 86_400_000;
+export const HOUR_MILLISECONDS = 3_600_000;
+export const MINUTE_MILLISECONDS = 60_000;

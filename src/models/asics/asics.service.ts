@@ -4,6 +4,11 @@ import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt } from '@common/utils';
+import {
+  DAY_MILLISECONDS,
+  HOUR_MILLISECONDS,
+  MINUTE_MILLISECONDS,
+} from './asics.constants';
 
 @Injectable()
 export class AsicsService {
@@ -54,16 +59,45 @@ export class AsicsService {
 
   async getSummary(id: string): Promise<AsicSummaryResponseDto> {
     const asic = await this.asicsRepository.findOne(id);
-    const response = await this.asicsApiService.getSummary(asic.ip);
+    const summary = await this.asicsApiService.getSummary(asic.ip);
+    const perfSummary = await this.asicsApiService.getPerfSummary(asic.ip);
 
-    return {
+    const response: AsicSummaryResponseDto = {
       hostname: asic.hostname,
       ip: asic.ip,
-      state: response?.miner_status.miner_state,
-      avgHashRate: response?.average_hashrate,
-      maxChipTemp: response?.chip_temp.max,
-      powerConsumption: response?.power_consumption,
-      avgFanSpeed: response?.cooling.fan_duty,
+      status: {
+        state: summary?.miner_status.miner_state,
+        ...this.calcStateTime(summary?.miner_status.miner_state_time),
+      },
+      avgHashRate: summary?.average_hashrate,
+      maxChipTemp: summary?.chip_temp.max,
+      powerConsumption: summary?.power_consumption,
+      avgFanSpeed: summary?.cooling.fan_duty,
+    };
+
+    if (perfSummary?.current_preset?.pretty) {
+      response.currentPreset = perfSummary.current_preset.pretty
+        .split('~')[1]
+        .trim();
+    }
+
+    return response;
+  }
+
+  private calcStateTime(time = 0): AsicSummaryResponseDto['status'] {
+    const start = Date.now() - time * 1000;
+    const res = Date.now();
+
+    const diff = res - start;
+
+    const days = Math.floor(diff / DAY_MILLISECONDS);
+    const hours = Math.floor((diff / HOUR_MILLISECONDS) % 24);
+    const minutes = Math.floor((diff / MINUTE_MILLISECONDS) % 60);
+
+    return {
+      stateTimeDays: days,
+      stateTimeHours: hours,
+      stateTimeMinutes: minutes,
     };
   }
 }

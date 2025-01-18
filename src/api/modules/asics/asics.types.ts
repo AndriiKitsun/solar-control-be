@@ -9,3 +9,5 @@ export type AsicSummaryStats = components['schemas']['SummaryAntmMinerStats'];
 export type AsicSummary = components['schemas']['AntmMinerStats'];
 
 export type AsicMinerState = components['schemas']['MinerState'];
+
+export type AsicPerfSummary = components['schemas']['PerfSummary'];

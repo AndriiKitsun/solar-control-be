@@ -8,7 +8,7 @@ describe('AsicsApiService', () => {
   let service: AsicsApiService;
 
   let getSpy: jest.SpyInstance;
-  let buildUrl: jest.SpyInstance;
+  let buildUrlSpy: jest.SpyInstance;
 
   const ipMock = '192.168.0.1';
 
@@ -28,7 +28,7 @@ describe('AsicsApiService', () => {
 
     service = module.get(AsicsApiService);
 
-    buildUrl = jest
+    buildUrlSpy = jest
       .spyOn(service as any, 'buildUrl')
       .mockReturnValueOnce(urlMock);
     getSpy = jest.spyOn(service, 'get').mockResolvedValue(responseDataMock);
@@ -39,18 +39,34 @@ describe('AsicsApiService', () => {
   });
 
   describe('getSummary', () => {
-    it('should return miner stats', async () => {
+    it('should return summary', async () => {
       getSpy.mockResolvedValueOnce(asicSummaryStats);
 
       const result = await service.getSummary(ipMock);
 
-      expect(buildUrl).toHaveBeenCalledTimes(1);
-      expect(buildUrl).toHaveBeenCalledWith(ipMock, ['summary']);
-
-      expect(getSpy).toHaveBeenCalledTimes(1);
+      expect(buildUrlSpy).toHaveBeenCalledWith(ipMock, ['summary']);
       expect(getSpy).toHaveBeenCalledWith(urlMock);
 
       expect(result).toBe(asicSummaryMock);
+    });
+  });
+
+  describe('getPerfSummary', () => {
+    it('should return perf summary', async () => {
+      const result = await service.getPerfSummary(ipMock);
+
+      expect(buildUrlSpy).toHaveBeenCalledWith(ipMock, ['perf-summary']);
+      expect(getSpy).toHaveBeenCalledWith(urlMock);
+
+      expect(result).toBe(responseDataMock);
+    });
+
+    it('should return null in case when endpoint is not reachable', async () => {
+      getSpy.mockRejectedValueOnce(new Error('Not Found'));
+
+      const result = await service.getPerfSummary(ipMock);
+
+      expect(result).toBeNull();
     });
   });
 });

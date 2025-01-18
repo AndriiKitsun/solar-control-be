@@ -168,6 +168,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/chains': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get miner chains
+     * @description Get miner chains
+     */
+    get: operations['getChains'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/chains/factory-info': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get miner chains factory info
+     * @description Get miner chains factory info
+     */
+    get: operations['getChainsFactoryInfo'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/chips': {
     parameters: {
       query?: never;
@@ -176,8 +216,9 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Save miner settings
-     * @description Save miner settings
+     * Get miner chips. Deprecated. Use /chains route instead
+     * @deprecated
+     * @description Get miner chips. Deprecated. Use /chains route instead
      */
     get: operations['getChips'];
     put?: never;
@@ -188,7 +229,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/cloning': {
+  '/find-miner': {
     parameters: {
       query?: never;
       header?: never;
@@ -198,10 +239,10 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Cloning
-     * @description Cloning
+     * Find miner
+     * @description Find miner
      */
-    post: operations['cloning'];
+    post: operations['findMiner'];
     delete?: never;
     options?: never;
     head?: never;
@@ -318,10 +359,10 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Lock miner
-     * @description Lock miner
+     * Lock other miner sessions
+     * @description Lock other miner sessions
      */
-    post: operations['lock'];
+    post: operations['lock_others'];
     delete?: never;
     options?: never;
     head?: never;
@@ -508,6 +549,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/perf-summary': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Summary
+     * @description Summary
+     */
+    get: operations['perfSummary'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/settings': {
     parameters: {
       query?: never;
@@ -676,8 +737,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    AddApiKeyRes: {
+      status: components['schemas']['AddApiKeyStatus'];
+    };
     /** @enum {string} */
-    AddApiKeyRes: 'inserted' | 'updated' | 'nochanges';
+    AddApiKeyStatus: 'inserted' | 'updated' | 'nochanges';
     AddApikeyQuery: components['schemas']['ApiKeysJsonItem'];
     AdvancedSettings: {
       asic_boost?: boolean | null;
@@ -735,6 +799,18 @@ export interface components {
       /** Format: int32 */
       voltage: number;
     };
+    AntmChainChips: {
+      chips: components['schemas']['AntmChip'][];
+      /** Format: float */
+      freq: number;
+      /** Format: float */
+      hr_nominal: number;
+      /** Format: float */
+      hr_realtime: number;
+      id: number;
+      sensors: components['schemas']['AntmChipSensor'][];
+      status: components['schemas']['CgChainStatus'];
+    };
     AntmChainChipsStats: {
       chips: components['schemas']['AntmiChipStats'][];
       id: number;
@@ -742,6 +818,32 @@ export interface components {
     AntmChainsChipsStats: {
       chains: components['schemas']['AntmChainChipsStats'][];
       chips_per_chain: number;
+    };
+    AntmChip: {
+      /** Format: int32 */
+      errs: number;
+      /** Format: int32 */
+      freq: number;
+      grade: components['schemas']['ChipGrade'];
+      /** Format: float */
+      hr: number;
+      id: number;
+      /** Format: float */
+      temp: number;
+      /** Format: int32 */
+      volt: number;
+    };
+    AntmChipSensor: {
+      /** Format: int32 */
+      board: number;
+      /** Format: int32 */
+      chip: number;
+      /**
+       * Format: int32
+       * @description Location that refers to `chip.id`
+       */
+      loc: number;
+      state: components['schemas']['TempSensorStatus'];
     };
     AntmMinerStats: {
       /**
@@ -770,6 +872,8 @@ export interface components {
       hr_error: number;
       /** Format: float */
       hr_realtime: number;
+      /** Format: float */
+      hr_stock: number;
       /** Format: int32 */
       hw_errors: number;
       /** Format: float */
@@ -806,6 +910,8 @@ export interface components {
       id: number;
       sensor?: components['schemas']['TempSensor'] | null;
       status: components['schemas']['ChipGrade'];
+      /** Format: float */
+      temp: number;
     };
     ApiKeysJson: components['schemas']['ApiKeysJsonItem'][];
     ApiKeysJsonItem: {
@@ -813,6 +919,15 @@ export interface components {
       key: string;
     };
     Apikey: string;
+    AutotuneChain: {
+      chips: number[];
+      /** Format: int32 */
+      freq: number;
+      serial?: string | null;
+    };
+    AutotunePresetDto: components['schemas']['AutotunePresetsItem'] & {
+      tune_settings?: components['schemas']['AutotuneResultsItem'] | null;
+    };
     /**
      * @description Preset status. `tuned` means that preset tuned successfully
      * @enum {string}
@@ -821,17 +936,33 @@ export interface components {
     AutotunePresets: components['schemas']['AutotunePresetsItem'][];
     AutotunePresetsItem: {
       modded_psu_required: boolean;
-      /** @description Preset name */
+      /** @description Preset id name */
       name: string;
+      /** @description Preset human-readable name */
       pretty: string;
       status: components['schemas']['AutotunePresetStatus'];
     };
     AutotuneReset: {
+      /** @description List of presets to reset */
       presets: string[];
+      /** @description Restart after presets remove */
       restart: boolean;
     };
     AutotuneResetAll: {
       restart: boolean;
+    };
+    AutotuneResultsItem: {
+      chains: components['schemas']['AutotuneChain'][];
+      /** Format: int32 */
+      freq: number;
+      /** Format: int32 */
+      hashrate: number;
+      /** Format: int32 */
+      volt: number;
+    };
+    CgChainStatus: {
+      failure_message?: string | null;
+      state: components['schemas']['ChainState'];
     };
     ChainChipStatuses: {
       /** Format: int32 */
@@ -869,53 +1000,12 @@ export interface components {
     };
     /** @enum {string} */
     ChipGrade: 'grey' | 'orange' | 'red';
-    /** @description A stripped version of config */
-    CloningConfig: {
-      layout?: components['schemas']['Layout'] | null;
-      miner?: components['schemas']['MinerConfigRaw'] | null;
-      network?: unknown;
-      password?: components['schemas']['PasswordChange'] | null;
-      regional?: components['schemas']['RegionalSettings'] | null;
-      ui?: components['schemas']['UiSettings'] | null;
-    };
-    CloningQuery: components['schemas']['UnlockScreenBody'] & {
-      /** @description If present and non-empty then start_ end_ addr params will be ignored.
-       *     Mainly for debug/testing purposes */
-      addr_list?: string[];
-      config?: components['schemas']['CloningConfig'];
-      /** Format: ipv4 */
-      end_addr: string;
-      /** @description Flag to switch find_miner function on target devices. Optional, default `false` */
-      find_miner?: boolean | null;
-      mining?: components['schemas']['MiningActions'] | null;
-      /**
-       * Format: int32
-       * @description If present then target devices default port (80) will be overridden.
-       *     Mainly for debug/testing purposes
-       */
-      port?: number | null;
-      /** Format: ipv4 */
-      start_addr: string;
-    };
-    CloningResult:
-      | {
-          data: components['schemas']['SuccessCloningResult'];
-          /** @enum {string} */
-          status: 'success';
-        }
-      | {
-          data: components['schemas']['SuccessCloningResult'] & {
-            fail_reason: components['schemas']['FailReason'];
-          };
-          /** @enum {string} */
-          status: 'fail';
-        };
     Consts: {
       cooling: components['schemas']['Cooling'];
       overclock: components['schemas']['Overclock'];
       /** @description Available timezones list.
        *     A purpose for this field is to display timezones list in UI.
-       *     Makes sense for GET queries only and shall ignored for UPDATE queries. */
+       *     Makes sense for GET queries only and shall ignore for UPDATE queries. */
       timezones: (components['schemas']['Timezone'] & string)[][];
     };
     Cooling: {
@@ -932,6 +1022,9 @@ export interface components {
       fan_min_duty?: number | null;
       mode?: Omit<components['schemas']['ModeRaw'], 'name'> | null;
     };
+    CurrentPreset: components['schemas']['AutotunePresetsItem'] & {
+      globals?: components['schemas']['GlobalsRaw'] | null;
+    };
     DeleteApikeyQuery: {
       key: string;
     };
@@ -947,10 +1040,29 @@ export interface components {
     ErrDescr: {
       err: string;
     };
-    /** @enum {string} */
-    FailReason: 'wrong_password' | 'connection_error' | 'other';
+    FactoryInfoChain: {
+      board_model: string;
+      /** Format: int32 */
+      chip_bin: number;
+      /** Format: int32 */
+      freq: number;
+      /** Format: double */
+      hashrate: number;
+      /** Format: int32 */
+      id: number;
+      serial: string;
+      /** Format: int32 */
+      volt: number;
+    };
+    FactoryInfoReply: {
+      chains?: components['schemas']['FactoryInfoChain'][] | null;
+      /** Format: double */
+      hr_stock?: number | null;
+    };
     Fan: {
       id: number;
+      /** Format: int32 */
+      max_rpm: number;
       /** Format: int32 */
       rpm: number;
       status: components['schemas']['FanStatus'];
@@ -964,6 +1076,10 @@ export interface components {
     };
     /** @enum {string} */
     FanStatus: 'ok' | 'lost';
+    FindMinerStatus: {
+      /** @description Find miner on/off */
+      on: boolean;
+    };
     FwInfo: {
       /** @description Build time */
       build_time: string;
@@ -998,6 +1114,7 @@ export interface components {
     HrMeasure: 'GH/s' | 'MH/s';
     InfoJson: components['schemas']['FwInfo'] & {
       hr_measure: components['schemas']['HrMeasure'];
+      serial: string;
       system?: components['schemas']['SystemInfo'] | null;
     };
     InputConfig: {
@@ -1017,14 +1134,24 @@ export interface components {
      */
     InstallType: 'sd' | 'nand';
     Layout: {
-      lg?: Record<string, string> | null;
-      md?: Record<string, string> | null;
-      sm?: Record<string, string> | null;
-      xs?: Record<string, string> | null;
-      xxs?: Record<string, string> | null;
+      lg?: {
+        [key: string]: string;
+      } | null;
+      md?: {
+        [key: string]: string;
+      } | null;
+      sm?: {
+        [key: string]: string;
+      } | null;
+      xs?: {
+        [key: string]: string;
+      } | null;
+      xxs?: {
+        [key: string]: string;
+      } | null;
     };
     /** @enum {string} */
-    Locale: 'ru' | 'en' | 'fa';
+    Locale: 'ru' | 'en' | 'fa' | 'ua';
     /**
      * @description Log type name, `*` for all log types
      * @enum {string}
@@ -1063,7 +1190,11 @@ export interface components {
       hotel_fee?: components['schemas']['HotelFee'] | null;
       misc?: components['schemas']['AdvancedSettings'] | null;
       overclock?: components['schemas']['OverclockSettingsRaw'] | null;
-      pools?: components['schemas']['Pool'][] | null;
+      pools?:
+        | (components['schemas']['Pool'] &
+            components['schemas']['Pool'] &
+            components['schemas']['Pool'])[]
+        | null;
     };
     /** @enum {string} */
     MinerEvent:
@@ -1095,11 +1226,6 @@ export interface components {
        */
       miner_state_time: number;
     };
-    /**
-     * @description One of mining control actions
-     * @enum {string}
-     */
-    MiningActions: 'stop' | 'start' | 'restart';
     ModeRaw:
       | {
           /** @enum {string} */
@@ -1164,11 +1290,15 @@ export interface components {
       current: string;
       pw: string;
     };
+    PerfSummary: {
+      current_preset?: components['schemas']['CurrentPreset'] | null;
+      preset_switcher: components['schemas']['PresetSwitcherRaw'];
+    };
     /**
-     * @description Platform type code xil|bb|aml (Xilinx/BeagleBone/Amlogic)
+     * @description Platform type code aml|bb|cv|xil (Amlogic/BeagleBone/Cvitek/Xilix)
      * @enum {string}
      */
-    Platform: 'xil' | 'bb' | 'aml';
+    Platform: 'aml' | 'bb' | 'cv' | 'xil';
     Pool: {
       pass: string;
       url: string;
@@ -1255,24 +1385,6 @@ export interface components {
         unlocked: boolean;
         warranty?: components['schemas']['Warranty'];
       };
-    SuccessCloningResult: {
-      /** Format: ipv4 */
-      addr?: string | null;
-      /** @description If `true` then config was successfuly uploaded on target device */
-      config_upload?: boolean | null;
-      /** @description A purpose of this field's is unknown by api's author yet */
-      custom_fw?: boolean | null;
-      /** @description Target device's hostname (may be empty if can't retrieve) */
-      hostname: string;
-      /** @description Non-null value. Means did miner was or was not restarted on target device
-       *     that were depends on whether miner was able or not to apply uploaded config
-       *     without restart and also by a stop_miner flag value */
-      restart?: boolean | null;
-      /** @description Total job size (address range size) */
-      total: number;
-      /** @description Target device's miner version (may be empty if can't retrieve) */
-      version: string;
-    };
     SummaryAntmMinerStats: {
       miner?: components['schemas']['AntmMinerStats'] | null;
     };
@@ -1413,19 +1525,25 @@ export interface operations {
     responses: {
       /** @description Warranty was successfully activated */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['WarrantyStatus'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1441,19 +1559,27 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Key deleted successfully */
+      /** @description Api key list read successfully */
       200: {
-        headers: Record<string, unknown>;
-        content?: never;
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiKeysJsonItem'][];
+        };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Key delete error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1475,19 +1601,25 @@ export interface operations {
     responses: {
       /** @description Api key was added successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['AddApiKeyRes'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1509,17 +1641,23 @@ export interface operations {
     responses: {
       /** @description Key deleted successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Key delete error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1537,12 +1675,16 @@ export interface operations {
     responses: {
       /** @description Authorized */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
@@ -1558,19 +1700,25 @@ export interface operations {
     responses: {
       /** @description Autotune preset list read successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
-          'application/json': components['schemas']['AutotunePresets'];
+          'application/json': components['schemas']['AutotunePresetDto'][];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1592,17 +1740,23 @@ export interface operations {
     responses: {
       /** @description Reset list of autotune profiles done successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1624,17 +1778,23 @@ export interface operations {
     responses: {
       /** @description Reset all autotune profiles done successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1652,21 +1812,67 @@ export interface operations {
     responses: {
       /** @description Warranty canceled successfully, or was not provided */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['WarrantyStatus'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
+        };
+      };
+    };
+  };
+  getChains: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Chains read successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AntmChainChips'][];
+        };
+      };
+    };
+  };
+  getChainsFactoryInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Chains factory info read successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FactoryInfoReply'];
         };
       };
     };
@@ -1682,56 +1888,39 @@ export interface operations {
     responses: {
       /** @description Chips read successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['AntmChainsChipsStats'];
         };
       };
-      /** @description Unauthorized */
-      401: {
-        headers: Record<string, unknown>;
-        content?: never;
-      };
-      /** @description Config save error */
-      500: {
-        headers: Record<string, unknown>;
-        content: {
-          'application/json': components['schemas']['ErrDescr'];
-        };
-      };
     };
   };
-  cloning: {
+  findMiner: {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CloningQuery'];
-      };
-    };
+    requestBody?: never;
     responses: {
-      /** @description Cloning done successfully */
+      /** @description Request handled successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
-          'application/json': components['schemas']['CloningResult'][];
+          'application/json': components['schemas']['FindMinerStatus'] | null;
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
-        content?: never;
-      };
-      /** @description Cloning error */
-      500: {
-        headers: Record<string, unknown>;
-        content: {
-          'application/json': components['schemas']['ErrDescr'];
+        headers: {
+          [name: string]: unknown;
         };
+        content?: never;
       };
     };
   };
@@ -1746,26 +1935,34 @@ export interface operations {
     responses: {
       /** @description Firmware was successfully removed. System will reboot after */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['RebootAfter'];
         };
       };
       /** @description This model has no 'remove firmware' */
       400: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Firmware remove error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1787,24 +1984,32 @@ export interface operations {
     responses: {
       /** @description Firmware update successfully. System will reboot after */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['RebootAfter'];
         };
       };
       /** @description Bad request */
       400: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Firmware update error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1822,7 +2027,9 @@ export interface operations {
     responses: {
       /** @description Miner Info */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['InfoJson'];
         };
@@ -1840,7 +2047,9 @@ export interface operations {
     responses: {
       /** @description Dashboard elements layout */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['Layout'] | null;
         };
@@ -1858,22 +2067,28 @@ export interface operations {
     responses: {
       /** @description Session dropped */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
   };
-  lock: {
+  lock_others: {
     parameters: {
       query?: never;
       header?: never;
@@ -1888,22 +2103,30 @@ export interface operations {
     responses: {
       /** @description Other sessions dropped */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Wrong password */
       400: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
@@ -1922,12 +2145,16 @@ export interface operations {
     responses: {
       /** @description Log file was read successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Clean logs error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1948,12 +2175,16 @@ export interface operations {
     responses: {
       /** @description Logs was cleared successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Clean logs error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -1978,14 +2209,18 @@ export interface operations {
     responses: {
       /** @description Config saved successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['MetricsReply'];
         };
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2003,17 +2238,23 @@ export interface operations {
     responses: {
       /** @description Mining paused */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining pause error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2031,17 +2272,23 @@ export interface operations {
     responses: {
       /** @description Mining restart */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining restart error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2059,17 +2306,23 @@ export interface operations {
     responses: {
       /** @description Mining resumed */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining resume error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2087,17 +2340,23 @@ export interface operations {
     responses: {
       /** @description Mining started */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining start error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2115,17 +2374,23 @@ export interface operations {
     responses: {
       /** @description Mining stopped */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining stop error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2147,17 +2412,52 @@ export interface operations {
     responses: {
       /** @description Pool was switched successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Mining switch-pool error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrDescr'];
+        };
+      };
+    };
+  };
+  perfSummary: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Chips read successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PerfSummary'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2175,19 +2475,25 @@ export interface operations {
     responses: {
       /** @description Config read successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ViewConfig'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config read error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2209,19 +2515,25 @@ export interface operations {
     responses: {
       /** @description Config saved successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['SaveConfigResult'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Config save error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2239,14 +2551,18 @@ export interface operations {
     responses: {
       /** @description Backup binary */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/octet-stream': string;
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
@@ -2262,19 +2578,25 @@ export interface operations {
     responses: {
       /** @description Settings factory reset done successfully. System will reboot after */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['RebootAfter'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2296,24 +2618,32 @@ export interface operations {
     responses: {
       /** @description Firmware restored successfully. System will reboot after */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['RebootAfter'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Miner have warranty. Cancel warranty first */
       403: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2331,7 +2661,9 @@ export interface operations {
     responses: {
       /** @description success */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['StatusPane'];
         };
@@ -2347,16 +2679,20 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Chips read successfully */
+      /** @description Summary read successfully */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['SummaryAntmMinerStats'];
         };
       };
-      /** @description Config save error */
+      /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['ErrDescr'];
         };
@@ -2374,14 +2710,18 @@ export interface operations {
     responses: {
       /** @description System reboot after */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['RebootAfter'];
         };
       };
       /** @description Unauthorized */
       401: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
@@ -2401,19 +2741,25 @@ export interface operations {
     responses: {
       /** @description Authorized */
       200: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           'application/json': components['schemas']['UnlockSuccess'];
         };
       };
       /** @description Wrong password */
       403: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
       /** @description Internal server error */
       500: {
-        headers: Record<string, unknown>;
+        headers: {
+          [name: string]: unknown;
+        };
         content?: never;
       };
     };
