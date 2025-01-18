@@ -3,12 +3,17 @@ import {
   AsicsService,
   AsicsRepository,
   AsicSummaryResponseDto,
+  UpdateAsicDto,
 } from '@models/asics';
 import { AsicsApiService } from '@api/modules';
 import { AsicsRepositoryMock } from './mocks/asics.repository.mock';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsServiceMock } from './mocks/asics.service.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
+
+jest.mock('@common/utils', () => ({
+  encrypt: jest.fn(() => 'encrypted'),
+}));
 
 describe('AsicsService', () => {
   let service: AsicsService;
@@ -41,6 +46,35 @@ describe('AsicsService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('update', () => {
+    let updateSpy: jest.SpiedFunction<AsicsRepository['update']>;
+
+    beforeEach(() => {
+      updateSpy = jest.spyOn(asicsRepository, 'update');
+    });
+
+    it('should update asic with passed dto', async () => {
+      const dtoMock: UpdateAsicDto = {
+        address: 'home',
+      };
+
+      const result = await service.update(idMock, dtoMock);
+
+      expect(updateSpy).toHaveBeenCalledWith(idMock, dtoMock);
+
+      expect(result).toBe(asicMock);
+    });
+
+    it('should encrypt passed password', async () => {
+      const dtoMock: UpdateAsicDto = { password: 'pass' };
+      const expectedDto: UpdateAsicDto = { password: 'encrypted' };
+
+      await service.update(idMock, dtoMock);
+
+      expect(updateSpy).toHaveBeenCalledWith(idMock, expectedDto);
+    });
   });
 
   describe('getSummary', () => {

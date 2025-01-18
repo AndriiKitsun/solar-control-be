@@ -38,6 +38,10 @@ export class AsicsService {
   }
 
   update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
+    if (updateAsicDto.password) {
+      updateAsicDto.password = encrypt(updateAsicDto.password);
+    }
+
     return this.asicsRepository.update(id, updateAsicDto);
   }
 
