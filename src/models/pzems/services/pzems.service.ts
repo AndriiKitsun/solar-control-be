@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspPzemData } from '@api/modules';
+import { AppConfig, AppConfigType } from '@config/app';
 
 interface CalcPzem {
   count: number;
@@ -13,11 +14,19 @@ interface CalcPzem {
 }
 
 @Injectable()
-export class PzemsService {
+export class PzemsService implements OnModuleInit {
   constructor(
     private readonly pzemsRepository: PzemsRepository,
     private readonly espApiService: EspApiService,
+    @Inject(AppConfig.KEY)
+    private readonly appConfig: AppConfigType,
   ) {}
+
+  async onModuleInit(): Promise<any> {
+    if (this.appConfig.feature.clearPzems) {
+      await this.pzemsRepository.clearPzemTable();
+    }
+  }
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
     await this.getRecentPzems(pzemData, 1);
@@ -39,7 +48,7 @@ export class PzemsService {
     minutes: number,
   ): Promise<Record<string, CalcPzem>> {
     const limit = minutes * 60;
-    const period = limit * 2.5;
+    const period = limit * 2;
 
     const recentPzems = await this.pzemsRepository.findAllBefore(
       pzemData.createdAtGmt,

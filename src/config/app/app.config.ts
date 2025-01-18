@@ -8,6 +8,9 @@ export interface AppConfigType {
   http: {
     timeout: number;
   };
+  feature: {
+    clearPzems: boolean;
+  };
 }
 
 export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
@@ -17,6 +20,9 @@ export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
     port: process.env.PORT ?? '3000',
     http: {
       timeout: parseInt(process.env.HTTP_TIMEOUT ?? '10000'),
+    },
+    feature: {
+      clearPzems: process.env.CLEAR_PZEMS_ON_START === 'true',
     },
   } satisfies AppConfigType;
 });

@@ -52,6 +52,10 @@ export class PzemsRepository {
     });
   }
 
+  async clearPzemTable(): Promise<void> {
+    await this.pzemsRepository.delete({});
+  }
+
   async findRecentForCalc(
     date: string,
     minutes: number,
