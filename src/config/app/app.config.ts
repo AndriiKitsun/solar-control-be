@@ -10,6 +10,7 @@ export interface AppConfigType {
   };
   feature: {
     clearPzems: boolean;
+    pzemCalcPeriod: number;
   };
 }
 
@@ -19,10 +20,11 @@ export const AppConfig = registerAs<AppConfigType>(APP_NAMESPACE, () => {
   return {
     port: process.env.PORT ?? '3000',
     http: {
-      timeout: parseInt(process.env.HTTP_TIMEOUT ?? '10000'),
+      timeout: parseInt(process.env.HTTP_TIMEOUT!) || 10_000,
     },
     feature: {
-      clearPzems: process.env.CLEAR_PZEMS_ON_START === 'true',
+      clearPzems: process.env.PZEMS_CLEAR_ON_START === 'true',
+      pzemCalcPeriod: parseFloat(process.env.PZEMS_PERIOD_TO_CALC!) || 2.5,
     },
   } satisfies AppConfigType;
 });

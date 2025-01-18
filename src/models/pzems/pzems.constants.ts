@@ -1,1 +1,1 @@
-export const PZEM_MINUTES_TO_FETCH = 10;
+export const PZEM_MINUTES_TO_FETCH = 1;

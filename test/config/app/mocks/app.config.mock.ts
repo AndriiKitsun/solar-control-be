@@ -7,5 +7,6 @@ export const AppConfigMock: AppConfigType = {
   },
   feature: {
     clearPzems: false,
+    pzemCalcPeriod: 2,
   },
 };

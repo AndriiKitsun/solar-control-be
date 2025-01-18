@@ -4,6 +4,7 @@ import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspPzemData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
 import { PzemGroup } from '../pzems.types';
+import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
 
 @Injectable()
 export class PzemsService implements OnModuleInit {
@@ -21,7 +22,7 @@ export class PzemsService implements OnModuleInit {
   }
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
-    await this.calcAvgVoltage(pzemData, 1);
+    await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
 
     return this.pzemsRepository.create(pzemData);
   }
@@ -36,7 +37,7 @@ export class PzemsService implements OnModuleInit {
 
   async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
     const limit = minutes * 60;
-    const period = limit * 2;
+    const period = limit * this.appConfig.feature.pzemCalcPeriod;
 
     const recentPzems = await this.pzemsRepository.findAllBefore(
       pzemData.createdAtGmt,

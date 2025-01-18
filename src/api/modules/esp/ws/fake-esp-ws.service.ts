@@ -26,7 +26,7 @@ export class FakeEspWsService implements EspWsServiceInterface {
     pzems.push(this.randomAcPzem('acInput', 1));
     pzems.push(this.randomAcPzem('acOutput', 0.5));
 
-    if (faker.helpers.maybe(() => true, { probability: 0 })) {
+    if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
       pzems.push(this.randomDcPzem('dcBattery'));
     }
 
