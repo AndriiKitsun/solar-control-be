@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Not, IsNull } from 'typeorm';
 import { EspPzemData } from '@api/modules';
 import { toError } from '@common/utils';
-import { RecentPzemForCalc } from './pzems.types';
 
 @Injectable()
 export class PzemsRepository {
@@ -54,32 +53,5 @@ export class PzemsRepository {
 
   async clearPzemTable(): Promise<void> {
     await this.pzemsRepository.delete({});
-  }
-
-  async findRecentForCalc(
-    date: string,
-    minutes: number,
-  ): Promise<Record<string, RecentPzemForCalc>> {
-    const fromDate = new Date(date);
-    fromDate.setMinutes(fromDate.getMinutes() - minutes);
-    fromDate.setMilliseconds(0);
-
-    const pzems = await this.pzemsRepository
-      .createQueryBuilder('pzem')
-      .leftJoinAndSelect('pzem.pzems', 'pzems')
-      .select(['pzems.name as name', 'SUM(pzems.voltageV)', 'COUNT(*)::int'])
-      .where('pzem.createdAtGmt BETWEEN :from AND :to', {
-        from: fromDate,
-        to: new Date(date),
-      })
-      .andWhere('pzems.voltageV IS NOT NULL')
-      .groupBy('pzems.name')
-      .getRawMany<RecentPzemForCalc>();
-
-    return pzems.reduce((acc: Record<string, RecentPzemForCalc>, pzem) => {
-      acc[pzem.name] = pzem;
-
-      return acc;
-    }, {});
   }
 }

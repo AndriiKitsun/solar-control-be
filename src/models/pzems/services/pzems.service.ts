@@ -31,7 +31,6 @@ export class PzemsService implements OnModuleInit {
   async create(pzemData: EspPzemData): Promise<Pzem> {
     await this.getRecentPzems(pzemData, 1);
 
-    // return {} as Pzem;
     return this.pzemsRepository.create(pzemData);
   }
 
