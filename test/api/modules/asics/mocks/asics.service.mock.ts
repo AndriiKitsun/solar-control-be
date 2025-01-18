@@ -4,6 +4,7 @@ import {
   AsicUnlockSuccess,
   AsicSummary,
   AsicSummaryStats,
+  AsicPerfSummary,
 } from '@api/modules/asics/asics.types';
 import { ClassMockWithout } from '@common/types/test.types';
 import { HttpClientService } from '@api/common';
@@ -48,6 +49,7 @@ export class AsicsApiServiceMock
 
   async getInfo(ip: string): Promise<AsicInfo> {
     return {
+      serial: '',
       hr_measure: 'MH/s',
       install_type: 'sd',
       platform: 'xil',
@@ -62,5 +64,9 @@ export class AsicsApiServiceMock
 
   async getSummary(ip: string): Promise<Maybe<AsicSummary>> {
     return AsicsApiServiceMock.asicSummaryMock;
+  }
+
+  async getPerfSummary(ip: string): Promise<Maybe<AsicPerfSummary>> {
+    return;
   }
 }

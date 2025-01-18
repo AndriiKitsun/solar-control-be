@@ -60,16 +60,23 @@ describe('AsicsService', () => {
     });
 
     it('should return partial response', async () => {
-      const expectedResul: AsicSummaryResponseDto = {
+      const expectedResult: AsicSummaryResponseDto = {
         hostname: 'hostname',
         ip: '192.168.55.1',
+        status: {
+          state: undefined,
+          stateTimeDays: 0,
+          stateTimeHours: 0,
+          stateTimeMinutes: 0,
+        },
       };
 
       jest.spyOn(asicsApiService, 'getSummary').mockResolvedValueOnce(null);
+      jest.spyOn(asicsApiService, 'getPerfSummary').mockResolvedValueOnce(null);
 
       const result = await service.getSummary(idMock);
 
-      expect(result).toEqual(expectedResul);
+      expect(result).toEqual(expectedResult);
     });
   });
 });
