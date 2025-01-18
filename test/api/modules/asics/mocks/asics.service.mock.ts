@@ -20,6 +20,7 @@ export class AsicsApiServiceMock
   static readonly asicSummaryMock = {
     miner_status: {
       miner_state: 'mining',
+      miner_state_time: 123,
     },
     average_hashrate: 66.34,
     chip_temp: {
@@ -30,6 +31,12 @@ export class AsicsApiServiceMock
       fan_duty: 55,
     },
   } as AsicSummary;
+
+  static readonly asicPerfSummaryMock = {
+    current_preset: {
+      pretty: '3200W ~ 65 TH',
+    },
+  } as AsicPerfSummary;
 
   static readonly asicSummaryStats: AsicSummaryStats = {
     miner: this.asicSummaryMock,
@@ -67,6 +74,6 @@ export class AsicsApiServiceMock
   }
 
   async getPerfSummary(ip: string): Promise<Maybe<AsicPerfSummary>> {
-    return;
+    return AsicsApiServiceMock.asicPerfSummaryMock;
   }
 }

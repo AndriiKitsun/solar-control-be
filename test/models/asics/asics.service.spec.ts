@@ -47,14 +47,13 @@ describe('AsicsService', () => {
     it('should return mapped summary response', async () => {
       const findOneSpy = jest.spyOn(asicsRepository, 'findOne');
       const getSummarySpy = jest.spyOn(asicsApiService, 'getSummary');
+      const getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
 
       const result = await service.getSummary(idMock);
 
-      expect(findOneSpy).toHaveBeenCalledTimes(1);
       expect(findOneSpy).toHaveBeenCalledWith(idMock);
-
-      expect(getSummarySpy).toHaveBeenCalledTimes(1);
       expect(getSummarySpy).toHaveBeenCalledWith(asicMock.ip);
+      expect(getPerfSummarySpy).toHaveBeenCalledWith(asicMock.ip);
 
       expect(result).toEqual(asicSummaryResponseDtoMock);
     });

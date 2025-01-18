@@ -16,12 +16,13 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
       state: 'mining',
       stateTimeDays: 0,
       stateTimeHours: 0,
-      stateTimeMinutes: 0,
+      stateTimeMinutes: 2,
     },
     avgHashRate: 66.34,
     maxChipTemp: 60,
     powerConsumption: 690,
     avgFanSpeed: 55,
+    currentPreset: '65 TH',
   };
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
