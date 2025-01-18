@@ -2,7 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspPzemData } from '@api/modules';
-import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
+
+interface CalcPzem {
+  count: number;
+  sum: number;
+  debug: {
+    date: Date;
+    voltage?: number;
+  }[];
+}
 
 @Injectable()
 export class PzemsService {
@@ -12,8 +20,9 @@ export class PzemsService {
   ) {}
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
-    await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
+    await this.getRecentPzems(pzemData, 1);
 
+    // return {} as Pzem;
     return this.pzemsRepository.create(pzemData);
   }
 
@@ -25,24 +34,64 @@ export class PzemsService {
     return this.espApiService.resetCounter();
   }
 
-  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
-    const recentPzems = await this.pzemsRepository.findRecentForCalc(
+  async getRecentPzems(
+    pzemData: EspPzemData,
+    minutes: number,
+  ): Promise<Record<string, CalcPzem>> {
+    const limit = minutes * 60;
+    const period = limit * 2.5;
+
+    const recentPzems = await this.pzemsRepository.findAllBefore(
       pzemData.createdAtGmt,
-      minutes,
+      period,
     );
 
-    const secondsToCalc = minutes * 60 - 1;
+    const result: Record<string, CalcPzem> = {};
+
+    for (const recentPzem of recentPzems) {
+      recentPzem.pzems.forEach((pzem) => {
+        if (!result[pzem.name]) {
+          result[pzem.name] = {
+            count: 0,
+            sum: 0,
+            debug: [],
+          };
+        }
+
+        const group = result[pzem.name];
+
+        if (group.count >= limit) {
+          return;
+        }
+
+        group.count++;
+        group.sum += pzem.voltageV!;
+        group.debug.push({
+          date: recentPzem.createdAtGmt,
+          voltage: pzem.voltageV,
+        });
+      });
+    }
+
+    console.log({
+      now: new Date().toJSON(),
+      rawLen: recentPzems.length,
+      ...result,
+      recentPzems,
+    });
 
     for (const pzemDto of pzemData.pzems) {
-      const recentPzem = recentPzems[pzemDto.name];
+      const group = result[pzemDto.name];
 
-      if (!recentPzem || recentPzem.count < secondsToCalc) {
+      if (!group || group.count < limit) {
         (pzemDto as PzemItem).avgVoltageV = 0;
 
         continue;
       }
 
-      (pzemDto as PzemItem).avgVoltageV = recentPzem.sum / recentPzem.count;
+      (pzemDto as PzemItem).avgVoltageV = group.sum / group.count;
     }
+
+    return result;
   }
 }
