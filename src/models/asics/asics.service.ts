@@ -4,6 +4,11 @@ import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt } from '@common/utils';
+import {
+  DAY_MILLISECONDS,
+  HOUR_MILLISECONDS,
+  MINUTE_MILLISECONDS,
+} from './asics.constants';
 
 @Injectable()
 export class AsicsService {
@@ -60,7 +65,10 @@ export class AsicsService {
     const response: AsicSummaryResponseDto = {
       hostname: asic.hostname,
       ip: asic.ip,
-      state: summary?.miner_status.miner_state,
+      status: {
+        state: summary?.miner_status.miner_state,
+        ...this.calcStateTime(summary?.miner_status.miner_state_time),
+      },
       avgHashRate: summary?.average_hashrate,
       maxChipTemp: summary?.chip_temp.max,
       powerConsumption: summary?.power_consumption,
@@ -74,5 +82,22 @@ export class AsicsService {
     }
 
     return response;
+  }
+
+  private calcStateTime(time = 0): AsicSummaryResponseDto['status'] {
+    const start = Date.now() - time * 1000;
+    const res = Date.now();
+
+    const diff = res - start;
+
+    const days = Math.floor(diff / DAY_MILLISECONDS);
+    const hours = Math.floor((diff / HOUR_MILLISECONDS) % 24);
+    const minutes = Math.floor((diff / MINUTE_MILLISECONDS) % 60);
+
+    return {
+      stateTimeDays: days,
+      stateTimeHours: hours,
+      stateTimeMinutes: minutes,
+    };
   }
 }
