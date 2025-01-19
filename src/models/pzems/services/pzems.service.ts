@@ -49,11 +49,7 @@ export class PzemsService implements OnModuleInit {
     for (const recentPzem of recentPzems) {
       recentPzem.pzems.forEach((pzem) => {
         if (!result[pzem.name]) {
-          result[pzem.name] = {
-            count: 0,
-            sum: 0,
-            debug: [],
-          };
+          result[pzem.name] = { count: 0, sum: 0 };
         }
 
         const group = result[pzem.name];
@@ -64,19 +60,8 @@ export class PzemsService implements OnModuleInit {
 
         group.count++;
         group.sum += pzem.voltageV!;
-        group.debug.push({
-          date: recentPzem.createdAtGmt,
-          voltage: pzem.voltageV,
-        });
       });
     }
-
-    console.log({
-      now: new Date().toJSON(),
-      rawLen: recentPzems.length,
-      ...result,
-      recentPzems,
-    });
 
     for (const pzemDto of pzemData.pzems) {
       const group = result[pzemDto.name];
