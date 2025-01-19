@@ -1,6 +1,6 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { EspConfig, EspConfigType } from '@config/esp';
-import { EspPzemCounter } from './esp.types';
+import { EspPzemCounter, EspRelayStatus } from './esp.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
 import { HttpError } from 'src/common/interfaces';
@@ -8,24 +8,32 @@ import { HttpError } from 'src/common/interfaces';
 @Injectable()
 export class EspApiService extends HttpClientService {
   constructor(
-    @Inject(EspConfig.KEY) private readonly espConfig: EspConfigType,
+    @Inject(EspConfig.KEY)
+    private readonly espConfig: EspConfigType,
   ) {
     super();
   }
 
-  checkHealth(): Promise<string> {
-    const url = this.buildUrl(['health']);
-
-    return this.get(url);
-  }
-
   resetCounter(): Promise<EspPzemCounter[]> {
-    const url = this.buildUrl(['pzems', 'counter']);
+    const url = this.buildUrl('pzems', 'counter');
 
     return this.delete(url);
   }
 
-  private buildUrl(path: string[]): string {
+  getRelayStatus(): Promise<EspRelayStatus> {
+    const url = this.buildUrl('relays');
+
+    return this.get(url);
+  }
+
+  switchRelayStatus(status: boolean): Promise<EspRelayStatus> {
+    const endpoint = status ? 'on' : 'off';
+    const url = this.buildUrl('relays', endpoint);
+
+    return this.post(url);
+  }
+
+  private buildUrl(...path: string[]): string {
     return new URL(path.join('/'), this.espConfig.endpoint).toString();
   }
 

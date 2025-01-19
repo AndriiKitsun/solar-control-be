@@ -106,6 +106,74 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/relays': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Returns a status of connected relay */
+    get: operations['getRelayStatus'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/relays/on': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Turns relay ON and returns status */
+    post: operations['turnRelayOn'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/relays/off': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Turns relay OFF and returns status */
+    post: operations['turnRelayOff'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/relays/toggle': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Inverts relay state and returns status */
+    post: operations['toggleRelay'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -138,7 +206,7 @@ export interface components {
       createdAt: string;
     };
     PzemStatus: {
-      /** @description name of PZEM sensor */
+      /** @description The name of the PZEM sensor */
       name: string;
       /** @description true/false indicator when the PZEM is connected */
       isConnected: boolean;
@@ -171,7 +239,7 @@ export interface components {
       pzems: components['schemas']['Pzem'][];
     };
     Pzem: {
-      /** @description name of PZEM sensor */
+      /** @description The name of the PZEM sensor */
       name: string;
       /**
        * Format: float
@@ -215,7 +283,7 @@ export interface components {
       t2EnergyKwh?: number;
     };
     PzemAddress: {
-      /** @description name of PZEM sensor */
+      /** @description The name of the PZEM sensor */
       name: string;
       /**
        * Format: int32
@@ -226,7 +294,7 @@ export interface components {
       isChanged: boolean;
     };
     DcPzemShunt: {
-      /** @description name of PZEM sensor */
+      /** @description The name of the PZEM sensor */
       name: string;
       /**
        * Format: int32
@@ -237,10 +305,14 @@ export interface components {
       isChanged: boolean;
     };
     PzemCounter: {
-      /** @description name of PZEM sensor */
+      /** @description The name of the PZEM sensor */
       name: string;
       /** @description true/false indicators for every PZEM to notify which counters were reset */
       isReset: boolean;
+    };
+    RelayStatus: {
+      /** @description Current status of the relay */
+      status: boolean;
     };
   };
   responses: never;
@@ -314,7 +386,7 @@ export interface operations {
   setPzemAddress: {
     parameters: {
       query: {
-        /** @description name of the PZEM for which the address is changed */
+        /** @description The name of the PZEM for which the address is changed */
         name: string;
         /** @description The address to set in PZEM memory */
         address: number;
@@ -357,7 +429,7 @@ export interface operations {
   setPzemShunt: {
     parameters: {
       query: {
-        /** @description name of the DC PZEM for which the shunt type is changed */
+        /** @description The name of the DC PZEM for which the shunt type is changed */
         name: string;
         /** @description The shunt type to set in PZEM memory */
         shunt: number;
@@ -413,6 +485,86 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['PzemCounter'][];
+        };
+      };
+    };
+  };
+  getRelayStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RelayStatus'];
+        };
+      };
+    };
+  };
+  turnRelayOn: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RelayStatus'];
+        };
+      };
+    };
+  };
+  turnRelayOff: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RelayStatus'];
+        };
+      };
+    };
+  };
+  toggleRelay: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RelayStatus'];
         };
       };
     };

@@ -1,13 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EspApiService } from '@api/modules';
-import { PzemsService, PzemsRepository } from '@models/pzems';
+import {
+  PzemsService,
+  PzemsRepository,
+  PZEM_MINUTES_TO_FETCH,
+} from '@models/pzems';
 import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 import { AppConfig } from '@config/app';
 import { AppConfigMock } from '@config/app/mocks/app.config.mock';
+import { EspWsServiceMock } from '@api/modules/esp/ws/mocks/esp-ws.service.mock';
 
 describe('PzemsService', () => {
   let service: PzemsService;
+  let pzemsRepository: PzemsRepository;
+  let espApiService: EspApiService;
+
+  const { espPzemDataMock } = EspWsServiceMock;
+  const { pzemMock } = PzemsRepositoryMock;
+  const { counterResetResponseMock, relayStatus } = EspApiServiceMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,9 +40,98 @@ describe('PzemsService', () => {
     }).compile();
 
     service = module.get(PzemsService);
+    pzemsRepository = module.get(PzemsRepository);
+    espApiService = module.get(EspApiService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('onModuleInit', () => {
+    let clearPzemTableSpy: jest.SpiedFunction<
+      PzemsRepository['clearPzemTable']
+    >;
+
+    beforeEach(() => {
+      clearPzemTableSpy = jest.spyOn(pzemsRepository, 'clearPzemTable');
+    });
+
+    it('should clear pzems table when this feature is enabled', async () => {
+      AppConfigMock.feature.clearPzems = true;
+
+      await service.onModuleInit();
+
+      expect(clearPzemTableSpy).toHaveBeenCalled();
+    });
+
+    it('should not clear pzems table when this feature is disabled', async () => {
+      AppConfigMock.feature.clearPzems = false;
+
+      await service.onModuleInit();
+
+      expect(clearPzemTableSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('create', () => {
+    let createSpy: jest.SpiedFunction<PzemsRepository['create']>;
+    let calcAvgVoltageSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      createSpy = jest.spyOn(pzemsRepository, 'create');
+      calcAvgVoltageSpy = jest.spyOn(service as any, 'calcAvgVoltage');
+    });
+
+    it('should return created pzem entity', async () => {
+      const result = await service.create(espPzemDataMock);
+
+      expect(calcAvgVoltageSpy).toHaveBeenCalledWith(
+        espPzemDataMock,
+        PZEM_MINUTES_TO_FETCH,
+      );
+      expect(createSpy).toHaveBeenCalledWith(espPzemDataMock);
+
+      expect(result).toBe(pzemMock);
+    });
+  });
+
+  describe('resetEnergyCounter', () => {
+    it('should return reset response', async () => {
+      const resetCounterSpy = jest.spyOn(espApiService, 'resetCounter');
+
+      const result = await service.resetEnergyCounter();
+
+      expect(resetCounterSpy).toHaveBeenCalled();
+
+      expect(result).toBe(counterResetResponseMock);
+    });
+  });
+
+  describe('getPowerStatus', () => {
+    it('should return power status', async () => {
+      const getRelayStatusSpy = jest.spyOn(espApiService, 'getRelayStatus');
+
+      const result = await service.getPowerStatus();
+
+      expect(getRelayStatusSpy).toHaveBeenCalled();
+
+      expect(result).toBe(relayStatus);
+    });
+  });
+
+  describe('switchPower', () => {
+    it('should return status of switching the power', async () => {
+      const switchRelayStatusSpy = jest.spyOn(
+        espApiService,
+        'switchRelayStatus',
+      );
+
+      const result = await service.switchPower(false);
+
+      expect(switchRelayStatusSpy).toHaveBeenCalledWith(false);
+
+      expect(result).toBe(relayStatus);
+    });
   });
 });
