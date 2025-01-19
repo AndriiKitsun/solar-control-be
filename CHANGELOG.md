@@ -1,5 +1,23 @@
 # solar-control-be
 
+## 1.1.0
+
+### Minor Changes
+
+- [#25](https://github.com/AndriiKitsun/solar-control-be/pull/25) [`16a2f82`](https://github.com/AndriiKitsun/solar-control-be/commit/16a2f8284e6840c963c8cf0c7e762742fb4a9bfb) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-72: [Asics]: Return Asic summary stats
+
+- [#24](https://github.com/AndriiKitsun/solar-control-be/pull/24) [`24dbd57`](https://github.com/AndriiKitsun/solar-control-be/commit/24dbd573c1a661bca99a537d1078658493efb2d7) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-73: [Asics]: Extend POST /asics endpoint
+
+- [#29](https://github.com/AndriiKitsun/solar-control-be/pull/29) [`2bddcfc`](https://github.com/AndriiKitsun/solar-control-be/commit/2bddcfcd8acbe522ba6ec03de61a43a912b29552) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-88: [Pzems] 10m voltage calculation should include all 10minutes values
+
+- [#27](https://github.com/AndriiKitsun/solar-control-be/pull/27) [`573130c`](https://github.com/AndriiKitsun/solar-control-be/commit/573130c70bf92410ac35e7fb4eceea27c0151bbd) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-95: Return current preset and duration time
+
+- [#24](https://github.com/AndriiKitsun/solar-control-be/pull/24) [`24dbd57`](https://github.com/AndriiKitsun/solar-control-be/commit/24dbd573c1a661bca99a537d1078658493efb2d7) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-62: [Asics] Implement API error handling
+
+- [#26](https://github.com/AndriiKitsun/solar-control-be/pull/26) [`f92ab53`](https://github.com/AndriiKitsun/solar-control-be/commit/f92ab533e584502b8a19c900b78f5572a4ecbcdf) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-87: Create endpoint to save currency settings
+
+- [#28](https://github.com/AndriiKitsun/solar-control-be/pull/28) [`44277a1`](https://github.com/AndriiKitsun/solar-control-be/commit/44277a17d86390c90b1dbf614d1ae15c75fd8239) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-61: [Asics] Encrypt Asic password on update
+
 ## 1.0.1
 
 ### Patch Changes
