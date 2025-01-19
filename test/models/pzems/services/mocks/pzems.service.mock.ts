@@ -1,5 +1,5 @@
 import { PzemsService, Pzem } from '@models/pzems';
-import { EspPzemData, EspPzemCounter } from '@api/modules';
+import { EspPzemData, EspPzemCounter, EspRelayStatus } from '@api/modules';
 import { PzemsRepositoryMock } from '../../mocks/pzems.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
@@ -13,12 +13,16 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     return PzemsRepositoryMock.pzemMock;
   }
 
-  async checkHealth(): Promise<string> {
-    return EspApiServiceMock.healthCheckResponseMock;
-  }
-
   async resetEnergyCounter(): Promise<EspPzemCounter[]> {
     return EspApiServiceMock.counterResetResponseMock;
+  }
+
+  async getPowerStatus(): Promise<EspRelayStatus> {
+    return EspApiServiceMock.relayStatus;
+  }
+
+  async switchPower(status: boolean): Promise<EspRelayStatus> {
+    return EspApiServiceMock.relayStatus;
   }
 
   async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {

@@ -8,7 +8,8 @@ import { HttpError } from 'src/common/interfaces';
 @Injectable()
 export class EspApiService extends HttpClientService {
   constructor(
-    @Inject(EspConfig.KEY) private readonly espConfig: EspConfigType,
+    @Inject(EspConfig.KEY)
+    private readonly espConfig: EspConfigType,
   ) {
     super();
   }
