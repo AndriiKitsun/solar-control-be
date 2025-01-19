@@ -3,6 +3,8 @@ import { EspApiService } from '@api/modules';
 import { PzemsService, PzemsRepository } from '@models/pzems';
 import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
+import { AppConfig } from '@config/app';
+import { AppConfigMock } from '@config/app/mocks/app.config.mock';
 
 describe('PzemsService', () => {
   let service: PzemsService;
@@ -18,6 +20,10 @@ describe('PzemsService', () => {
         {
           provide: EspApiService,
           useClass: EspApiServiceMock,
+        },
+        {
+          provide: AppConfig.KEY,
+          useValue: AppConfigMock,
         },
       ],
     }).compile();

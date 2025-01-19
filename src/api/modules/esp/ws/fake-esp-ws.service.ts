@@ -23,10 +23,10 @@ export class FakeEspWsService implements EspWsServiceInterface {
   private randomSensor(): EspPzemData {
     const pzems: EspPzem[] = [];
 
-    pzems.push(this.randomAcPzem('acInput'));
-    pzems.push(this.randomAcPzem('acOutput'));
+    pzems.push(this.randomAcPzem('acInput', 1));
+    pzems.push(this.randomAcPzem('acOutput', 0.5));
 
-    if (faker.helpers.maybe(() => true, { probability: 0.8 })) {
+    if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
       pzems.push(this.randomDcPzem('dcBattery'));
     }
 
@@ -36,10 +36,13 @@ export class FakeEspWsService implements EspWsServiceInterface {
     };
   }
 
-  private randomAcPzem(name: string): EspPzem {
+  private randomAcPzem(name: string, prob = 1): EspPzem {
     return {
       name,
-      voltageV: faker.number.float({ min: 170, max: 260 }),
+      voltageV: faker.helpers.maybe(
+        () => faker.number.float({ min: 170, max: 260 }),
+        { probability: prob },
+      ),
       currentA: faker.number.float({ min: 0, max: 5 }),
       powerKw: faker.number.float({
         min: 0,

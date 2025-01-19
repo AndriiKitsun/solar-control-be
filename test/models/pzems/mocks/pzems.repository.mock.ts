@@ -1,4 +1,4 @@
-import { PzemsRepository, Pzem, RecentPzemForCalc } from '@models/pzems';
+import { PzemsRepository, Pzem } from '@models/pzems';
 import { EspPzemData } from '@api/modules';
 import { ClassMock } from '@common/types/test.types';
 
@@ -8,23 +8,17 @@ export class PzemsRepositoryMock implements ClassMock<PzemsRepository> {
     createdAtGmt: new Date(),
     pzems: [],
   };
-
-  static readonly recentPzemsMock: Record<string, RecentPzemForCalc> = {
-    acInput: {
-      name: 'acInput',
-      count: 60,
-      sum: 1200,
-    },
-  };
+  static readonly pzemsMock: Pzem[] = [this.pzemMock];
 
   async create(pzemData: EspPzemData): Promise<Pzem> {
     return PzemsRepositoryMock.pzemMock;
   }
 
-  async findRecentForCalc(
-    date: string,
-    minutes: number,
-  ): Promise<Record<string, RecentPzemForCalc>> {
-    return PzemsRepositoryMock.recentPzemsMock;
+  async findAllBefore(date: string, seconds: number): Promise<Pzem[]> {
+    return PzemsRepositoryMock.pzemsMock;
+  }
+
+  async clearPzemTable(): Promise<void> {
+    return;
   }
 }

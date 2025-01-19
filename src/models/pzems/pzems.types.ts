@@ -1,5 +1,4 @@
-export interface RecentPzemForCalc {
-  name: string;
-  sum: number;
+export interface PzemGroup {
   count: number;
+  sum: number;
 }
