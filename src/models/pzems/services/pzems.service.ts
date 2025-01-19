@@ -1,7 +1,12 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
-import { EspApiService, EspPzemCounter, EspPzemData } from '@api/modules';
+import {
+  EspApiService,
+  EspPzemCounter,
+  EspPzemData,
+  EspRelayStatus,
+} from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
 import { PzemGroup } from '../pzems.types';
 import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
@@ -27,12 +32,16 @@ export class PzemsService implements OnModuleInit {
     return this.pzemsRepository.create(pzemData);
   }
 
-  checkHealth(): Promise<string> {
-    return this.espApiService.checkHealth();
-  }
-
   resetEnergyCounter(): Promise<EspPzemCounter[]> {
     return this.espApiService.resetCounter();
+  }
+
+  getPowerStatus(): Promise<EspRelayStatus> {
+    return this.espApiService.getRelayStatus();
+  }
+
+  switchPower(status: boolean): Promise<EspRelayStatus> {
+    return this.espApiService.switchRelayStatus(status);
   }
 
   async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
