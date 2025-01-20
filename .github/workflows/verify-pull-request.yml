@@ -36,7 +36,7 @@ jobs:
       - name: Build 🏗
         run: npm run build
 
-      - name: Jest Coverage Comment
+      - name: Jest Coverage Comment 📝
         uses: MishaKav/jest-coverage-comment@main
         with:
           coverage-path: ./coverage.txt
