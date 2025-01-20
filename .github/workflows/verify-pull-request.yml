@@ -5,6 +5,9 @@ on: pull_request
 env:
   HUSKY: 0
 
+permissions:
+  pull-requests: write
+
 jobs:
   verify_pull_request:
     name: Verify Pull Request
@@ -27,7 +30,15 @@ jobs:
         run: npm run lint
 
       - name: Test 🧪
-        run: npm test
+        run: |
+          npx jest --coverage --coverageReporters text json-summary | tee ./coverage.txt && exit ${PIPESTATUS[0]}
 
       - name: Build 🏗
         run: npm run build
+
+      - name: Jest Coverage Comment 📝
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          coverage-path: ./coverage.txt
+          summary-title: Coverage summary
+          report-only-changed-files: true
