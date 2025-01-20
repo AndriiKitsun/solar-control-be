@@ -5,6 +5,9 @@ on: pull_request
 env:
   HUSKY: 0
 
+permissions:
+  pull-requests: write
+
 jobs:
   verify_pull_request:
     name: Verify Pull Request
