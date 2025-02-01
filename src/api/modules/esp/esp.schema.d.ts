@@ -203,11 +203,8 @@ export interface components {
        * @description Address saved in PZEM memory
        */
       savedAddress: number;
-      /**
-       * Format: int32
-       * @description Shunt type saved in PZEM memory
-       */
-      savedShuntType?: number;
+      /** @description true/false indicator to include reactive power param into calculation */
+      isFullPower?: boolean;
     };
     EepromStatus: {
       /** @description true/false indicator when the EEPROM module is connected */
@@ -228,27 +225,27 @@ export interface components {
        * Format: float
        * @description AC/DC voltage in Volts
        */
-      voltageV?: number;
+      voltage?: number;
       /**
        * Format: float
        * @description AC/DC current in Amps
        */
-      currentA?: number;
+      current?: number;
       /**
        * Format: float
        * @description AC/DC active power in kW
        */
-      powerKw?: number;
+      power?: number;
       /**
        * Format: float
        * @description AC/DC active energy in kWh since last reset
        */
-      energyKwh?: number;
+      energy?: number;
       /**
        * Format: float
        * @description AC frequency in Hz
        */
-      frequencyHz?: number;
+      frequency?: number;
       /**
        * Format: float
        * @description AC power factor of the load
@@ -258,12 +255,12 @@ export interface components {
        * Format: float
        * @description Calculated value of active energy during T1 zone
        */
-      t1EnergyKwh?: number;
+      t1Energy?: number;
       /**
        * Format: float
        * @description Calculated value of active energy during T2 zone
        */
-      t2EnergyKwh?: number;
+      t2Energy?: number;
     };
     PzemAddress: {
       /** @description The name of the PZEM sensor */

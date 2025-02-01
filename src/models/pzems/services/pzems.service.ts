@@ -58,7 +58,7 @@ export class PzemsService implements OnModuleInit {
         }
 
         group.count++;
-        group.sum += pzem.voltageV!;
+        group.sum += pzem.voltage!;
       });
     }
 
@@ -66,12 +66,12 @@ export class PzemsService implements OnModuleInit {
       const group = result[pzemDto.name];
 
       if (!group || group.count < limit) {
-        (pzemDto as PzemItem).avgVoltageV = 0;
+        (pzemDto as PzemItem).avgVoltage = 0;
 
         continue;
       }
 
-      (pzemDto as PzemItem).avgVoltageV = group.sum / group.count;
+      (pzemDto as PzemItem).avgVoltage = group.sum / group.count;
     }
   }
 }

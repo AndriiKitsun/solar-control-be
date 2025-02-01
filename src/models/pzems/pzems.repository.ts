@@ -33,7 +33,7 @@ export class PzemsRepository {
         createdAtGmt: true,
         pzems: {
           name: true,
-          voltageV: true,
+          voltage: true,
         },
       },
       relations: {
@@ -42,7 +42,7 @@ export class PzemsRepository {
       where: {
         createdAtGmt: Between(fromDate, toDate),
         pzems: {
-          voltageV: Not(IsNull()),
+          voltage: Not(IsNull()),
         },
       },
       order: {
