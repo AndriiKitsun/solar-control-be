@@ -1,5 +1,13 @@
 # solar-control-be
 
+## 1.2.0
+
+### Minor Changes
+
+- [#31](https://github.com/AndriiKitsun/solar-control-be/pull/31) [`dba0e7a`](https://github.com/AndriiKitsun/solar-control-be/commit/dba0e7a37cbac4e7be8d6c6559cdecc1fee62422) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-96: Add endpoints to control ESP relay
+
+- [#33](https://github.com/AndriiKitsun/solar-control-be/pull/33) [`f2d05c7`](https://github.com/AndriiKitsun/solar-control-be/commit/f2d05c77b38f1578fef86daf7d666b3c44d82174) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-94: Update ESP schema
+
 ## 1.1.0
 
 ### Minor Changes
