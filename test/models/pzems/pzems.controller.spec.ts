@@ -7,7 +7,7 @@ describe('PzemsController', () => {
   let controller: PzemsController;
   let pzemsService: PzemsService;
 
-  const { counterResetResponseMock, relayStatus } = EspApiServiceMock;
+  const { counterResetResponseMock } = EspApiServiceMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,30 +40,6 @@ describe('PzemsController', () => {
       expect(resetEnergyCounterSpy).toHaveBeenCalled();
 
       expect(result).toBe(counterResetResponseMock);
-    });
-  });
-
-  describe('getPowerStatus', () => {
-    it('should return power status', async () => {
-      const getPowerStatusSpy = jest.spyOn(pzemsService, 'getPowerStatus');
-
-      const result = await controller.getPowerStatus();
-
-      expect(getPowerStatusSpy).toHaveBeenCalled();
-
-      expect(result).toBe(relayStatus);
-    });
-  });
-
-  describe('switchPower', () => {
-    it('should return status of switching the power', async () => {
-      const switchPowerSpy = jest.spyOn(pzemsService, 'switchPower');
-
-      const result = await controller.switchPower(false);
-
-      expect(switchPowerSpy).toHaveBeenCalledWith(false);
-
-      expect(result).toBe(relayStatus);
     });
   });
 });

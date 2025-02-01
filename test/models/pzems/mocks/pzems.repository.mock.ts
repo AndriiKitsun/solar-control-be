@@ -6,7 +6,7 @@ export class PzemsRepositoryMock implements ClassMock<PzemsRepository> {
   static readonly pzemMock: Pzem = {
     id: 'id',
     createdAtGmt: new Date(),
-    pzems: [],
+    sensors: [],
   };
   static readonly pzemsMock: Pzem[] = [this.pzemMock];
 

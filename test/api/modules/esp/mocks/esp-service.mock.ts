@@ -25,7 +25,7 @@ export class EspApiServiceMock
     return EspApiServiceMock.relayStatus;
   }
 
-  async switchRelayStatus(status: boolean): Promise<EspRelayStatus> {
+  async updatePowerRelay(status: boolean): Promise<EspRelayStatus> {
     return EspApiServiceMock.relayStatus;
   }
 }

@@ -9,6 +9,6 @@ export class EspWsServiceMock implements EspWsServiceInterface {
 
   static readonly espPzemDataMock: EspSensorsData = {
     createdAtGmt: '2025-01-19T16:26:30.550Z',
-    pzems: [],
+    sensors: [],
   };
 }
