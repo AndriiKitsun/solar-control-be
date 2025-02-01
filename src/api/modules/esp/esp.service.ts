@@ -26,7 +26,7 @@ export class EspApiService extends HttpClientService {
     return this.get(url);
   }
 
-  switchRelayStatus(status: boolean): Promise<EspRelayStatus> {
+  updatePowerRelay(status: boolean): Promise<EspRelayStatus> {
     const endpoint = status ? 'on' : 'off';
     const url = this.buildUrl('relays', endpoint);
 

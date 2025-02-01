@@ -1,12 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
-import {
-  EspApiService,
-  EspPzemCounter,
-  EspPzemData,
-  EspRelayStatus,
-} from '@api/modules';
+import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
 import { PzemGroup } from '../pzems.types';
 import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
@@ -26,7 +21,7 @@ export class PzemsService implements OnModuleInit {
     }
   }
 
-  async create(pzemData: EspPzemData): Promise<Pzem> {
+  async create(pzemData: EspSensorsData): Promise<Pzem> {
     await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
 
     return this.pzemsRepository.create(pzemData);
@@ -36,15 +31,10 @@ export class PzemsService implements OnModuleInit {
     return this.espApiService.resetCounter();
   }
 
-  getPowerStatus(): Promise<EspRelayStatus> {
-    return this.espApiService.getRelayStatus();
-  }
-
-  switchPower(status: boolean): Promise<EspRelayStatus> {
-    return this.espApiService.switchRelayStatus(status);
-  }
-
-  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
+  async calcAvgVoltage(
+    pzemData: EspSensorsData,
+    minutes: number,
+  ): Promise<void> {
     const limit = minutes * 60;
     const period = limit * this.appConfig.feature.pzemCalcPeriod;
 
@@ -56,7 +46,7 @@ export class PzemsService implements OnModuleInit {
     const result: Record<string, PzemGroup> = {};
 
     for (const recentPzem of recentPzems) {
-      recentPzem.pzems.forEach((pzem) => {
+      recentPzem.sensors.forEach((pzem) => {
         if (!result[pzem.name]) {
           result[pzem.name] = { count: 0, sum: 0 };
         }
@@ -68,20 +58,20 @@ export class PzemsService implements OnModuleInit {
         }
 
         group.count++;
-        group.sum += pzem.voltageV!;
+        group.sum += pzem.voltage!;
       });
     }
 
-    for (const pzemDto of pzemData.pzems) {
+    for (const pzemDto of pzemData.sensors) {
       const group = result[pzemDto.name];
 
       if (!group || group.count < limit) {
-        (pzemDto as PzemItem).avgVoltageV = 0;
+        (pzemDto as PzemItem).avgVoltage = 0;
 
         continue;
       }
 
-      (pzemDto as PzemItem).avgVoltageV = group.sum / group.count;
+      (pzemDto as PzemItem).avgVoltage = group.sum / group.count;
     }
   }
 }

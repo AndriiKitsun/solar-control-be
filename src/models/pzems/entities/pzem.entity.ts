@@ -12,6 +12,6 @@ export class Pzem {
   createdAtGmt!: Date;
 
   @Type(() => PzemItem)
-  @OneToMany(() => PzemItem, (item) => item.pzem, { cascade: true })
-  pzems!: PzemItem[];
+  @OneToMany(() => PzemItem, (item) => item.sensor, { cascade: true })
+  sensors!: PzemItem[];
 }

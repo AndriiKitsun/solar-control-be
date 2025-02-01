@@ -1,4 +1,4 @@
-import { EspWsServiceInterface, EspPzem, EspPzemData } from '../esp.types';
+import { EspWsServiceInterface, EspSensor, EspSensorsData } from '../esp.types';
 import { EventEmitter } from 'node:events';
 import { faker } from '@faker-js/faker';
 import { Observable, interval, map } from 'rxjs';
@@ -7,61 +7,58 @@ export class FakeEspWsService implements EspWsServiceInterface {
   events = new EventEmitter();
 
   constructor() {
-    this.broadcastPzems();
+    this.broadcastSensors();
   }
 
-  broadcastPzems(): void {
-    this.getSensorsData().subscribe((data: EspPzemData) => {
+  broadcastSensors(): void {
+    this.getSensorsData().subscribe((data: EspSensorsData) => {
       this.events.emit('message', data, JSON.stringify(data));
     });
   }
 
-  getSensorsData(): Observable<EspPzemData> {
+  getSensorsData(): Observable<EspSensorsData> {
     return interval(1000).pipe(map(() => this.randomSensor()));
   }
 
-  private randomSensor(): EspPzemData {
-    const pzems: EspPzem[] = [];
+  private randomSensor(): EspSensorsData {
+    const sensors: EspSensor[] = [];
 
-    pzems.push(this.randomAcPzem('acInput', 1));
-    pzems.push(this.randomAcPzem('acOutput', 0.5));
-
-    if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
-      pzems.push(this.randomDcPzem('dcBattery'));
-    }
+    sensors.push(this.randomAcSensor('acInput', 1));
+    sensors.push(this.randomAcSensor('acOutput', 0.5));
+    sensors.push(this.randomDcSensor('dcBattery'));
 
     return {
       createdAtGmt: new Date().toJSON(),
-      pzems,
+      sensors,
     };
   }
 
-  private randomAcPzem(name: string, prob = 1): EspPzem {
+  private randomAcSensor(name: string, prob = 1): EspSensor {
     return {
       name,
-      voltageV: faker.helpers.maybe(
+      voltage: faker.helpers.maybe(
         () => faker.number.float({ min: 170, max: 260 }),
         { probability: prob },
       ),
-      currentA: faker.number.float({ min: 0, max: 5 }),
-      powerKw: faker.number.float({
+      current: faker.number.float({ min: 0, max: 5 }),
+      power: faker.number.float({
         min: 0,
         max: 10,
         fractionDigits: faker.number.int({ min: 2, max: 4 }),
       }),
-      energyKwh: faker.number.float({
+      energy: faker.number.float({
         min: 0,
         max: 50,
         fractionDigits: faker.number.int({ min: 3, max: 5 }),
       }),
-      frequencyHz: faker.number.int({ min: 50, max: 60 }),
+      frequency: faker.number.int({ min: 50, max: 60 }),
       powerFactor: faker.number.float({ min: 0, max: 1 }),
-      t1EnergyKwh: faker.number.float({
+      t1Energy: faker.number.float({
         min: 0,
         max: 50,
         fractionDigits: faker.number.int({ min: 0, max: 3 }),
       }),
-      t2EnergyKwh: faker.number.float({
+      t2Energy: faker.number.float({
         min: 0,
         max: 50,
         fractionDigits: faker.number.int({ min: 0, max: 3 }),
@@ -69,21 +66,10 @@ export class FakeEspWsService implements EspWsServiceInterface {
     };
   }
 
-  private randomDcPzem(name: string): EspPzem {
+  private randomDcSensor(name: string): EspSensor {
     return {
       name,
-      voltageV: faker.number.float({ min: 10, max: 36, fractionDigits: 2 }),
-      currentA: faker.number.float({ min: 0, max: 5, fractionDigits: 2 }),
-      powerKw: faker.number.float({
-        min: 0,
-        max: 2,
-        fractionDigits: faker.number.int({ min: 2, max: 4 }),
-      }),
-      energyKwh: faker.number.float({
-        min: 0,
-        max: 6,
-        fractionDigits: faker.number.int({ min: 3, max: 5 }),
-      }),
+      voltage: faker.number.float({ min: 10, max: 70, fractionDigits: 3 }),
     };
   }
 }

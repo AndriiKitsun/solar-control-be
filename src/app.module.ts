@@ -14,6 +14,7 @@ import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { PostgresProvider } from '@providers/postgres';
 import { convertToHttpException } from '@common/utils';
 import { SettingsModule } from '@models/settings/settings.module';
+import { RelaysModule } from '@models/relays/relays.module';
 
 @Module({
   imports: [
@@ -24,8 +25,9 @@ import { SettingsModule } from '@models/settings/settings.module';
     TypeOrmModule.forRootAsync({
       useClass: PostgresProvider,
     }),
-    PzemsModule,
     AsicsModule,
+    PzemsModule,
+    RelaysModule,
     SettingsModule,
   ],
   providers: [

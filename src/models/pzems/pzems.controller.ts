@@ -1,13 +1,6 @@
-import {
-  Controller,
-  Get,
-  Delete,
-  Post,
-  Query,
-  ParseBoolPipe,
-} from '@nestjs/common';
+import { Controller, Delete } from '@nestjs/common';
 import { PzemsService } from './services';
-import { EspPzemCounter, EspRelayStatus } from '@api/modules';
+import { EspPzemCounter } from '@api/modules';
 
 @Controller('pzems')
 export class PzemsController {
@@ -16,17 +9,5 @@ export class PzemsController {
   @Delete('counter')
   resetEnergyCounter(): Promise<EspPzemCounter[]> {
     return this.pzemsService.resetEnergyCounter();
-  }
-
-  @Get('power')
-  getPowerStatus(): Promise<EspRelayStatus> {
-    return this.pzemsService.getPowerStatus();
-  }
-
-  @Post('power')
-  switchPower(
-    @Query('status', ParseBoolPipe) status: boolean,
-  ): Promise<EspRelayStatus> {
-    return this.pzemsService.switchPower(status);
   }
 }

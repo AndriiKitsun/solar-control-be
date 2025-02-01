@@ -2,9 +2,9 @@ import { Injectable, Inject } from '@nestjs/common';
 import { PzemsGateway } from '../pzems.gateway';
 import { PzemsService } from './pzems.service';
 import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
-import { EspWsServiceInterface, EspPzemData } from '@api/modules';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { EspWsServiceInterface, EspSensorsData } from '@api/modules';
 import { Pzem } from '../entities';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PzemsWsService {
@@ -16,23 +16,22 @@ export class PzemsWsService {
   ) {
     espWsService.events.on(
       'message',
-      (data: EspPzemData, rawMessage: string) => {
+      (data: EspSensorsData, rawMessage: string) => {
         void this.handleMessage(data, rawMessage);
       },
     );
   }
 
-  async handleMessage(data: EspPzemData, rawMessage: string): Promise<void> {
-    if (!data.pzems.length) {
+  async handleMessage(data: EspSensorsData, rawMessage: string): Promise<void> {
+    if (!data.sensors.length) {
       this.pzemsGateway.emitData(rawMessage);
 
       return;
     }
 
     const pzem = await this.pzemsService.create(data);
+    const mapped = instanceToPlain(plainToInstance(Pzem, pzem));
 
-    this.pzemsGateway.emitData(
-      JSON.stringify(instanceToPlain(plainToInstance(Pzem, pzem))),
-    );
+    this.pzemsGateway.emitData(JSON.stringify(mapped));
   }
 }

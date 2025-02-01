@@ -1,16 +1,16 @@
 import { PzemsRepository, Pzem } from '@models/pzems';
-import { EspPzemData } from '@api/modules';
+import { EspSensorsData } from '@api/modules';
 import { ClassMock } from '@common/types/test.types';
 
 export class PzemsRepositoryMock implements ClassMock<PzemsRepository> {
   static readonly pzemMock: Pzem = {
     id: 'id',
     createdAtGmt: new Date(),
-    pzems: [],
+    sensors: [],
   };
   static readonly pzemsMock: Pzem[] = [this.pzemMock];
 
-  async create(pzemData: EspPzemData): Promise<Pzem> {
+  async create(pzemData: EspSensorsData): Promise<Pzem> {
     return PzemsRepositoryMock.pzemMock;
   }
 

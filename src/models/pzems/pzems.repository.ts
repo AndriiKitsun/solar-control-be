@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { Pzem } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Not, IsNull } from 'typeorm';
-import { EspPzemData } from '@api/modules';
+import { EspSensorsData } from '@api/modules';
 import { toError } from '@common/utils';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class PzemsRepository {
     private readonly pzemsRepository: Repository<Pzem>,
   ) {}
 
-  async create(pzemData: EspPzemData): Promise<Pzem> {
+  async create(pzemData: EspSensorsData): Promise<Pzem> {
     try {
       return await this.pzemsRepository.save(pzemData);
     } catch (error) {
@@ -31,18 +31,18 @@ export class PzemsRepository {
     return this.pzemsRepository.find({
       select: {
         createdAtGmt: true,
-        pzems: {
+        sensors: {
           name: true,
-          voltageV: true,
+          voltage: true,
         },
       },
       relations: {
-        pzems: true,
+        sensors: true,
       },
       where: {
         createdAtGmt: Between(fromDate, toDate),
-        pzems: {
-          voltageV: Not(IsNull()),
+        sensors: {
+          voltage: Not(IsNull()),
         },
       },
       order: {

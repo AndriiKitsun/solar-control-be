@@ -8,36 +8,36 @@ export class PzemItem {
   @PrimaryGeneratedColumn('uuid')
   pid!: string;
 
-  @ManyToOne(() => Pzem, (pzem) => pzem.pzems, { onDelete: 'CASCADE' })
-  pzem!: Pzem;
+  @ManyToOne(() => Pzem, (pzem) => pzem.sensors, { onDelete: 'CASCADE' })
+  sensor!: Pzem;
 
   @Column()
   name!: string;
 
   @Column({ type: 'float', nullable: true })
-  voltageV?: number;
+  voltage?: number;
 
   @Column({ type: 'float', nullable: true })
-  currentA?: number;
+  current?: number;
 
   @Column({ type: 'float', nullable: true })
-  powerKw?: number;
+  power?: number;
 
   @Column({ type: 'float', nullable: true })
-  energyKwh?: number;
+  energy?: number;
 
   @Column({ type: 'float', nullable: true })
-  frequencyHz?: number;
+  frequency?: number;
 
   @Column({ type: 'float', nullable: true })
   powerFactor?: number;
 
   @Column({ type: 'float', nullable: true })
-  t1EnergyKwh?: number;
+  t1Energy?: number;
 
   @Column({ type: 'float', nullable: true })
-  t2EnergyKwh?: number;
+  t2Energy?: number;
 
   @Column({ type: 'float', nullable: true })
-  avgVoltageV?: number;
+  avgVoltage?: number;
 }

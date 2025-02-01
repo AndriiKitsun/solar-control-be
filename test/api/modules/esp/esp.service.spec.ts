@@ -68,9 +68,9 @@ describe('EspApiService', () => {
     });
   });
 
-  describe('switchRelayStatus', () => {
+  describe('updatePowerRelay', () => {
     it('should make request to turn relay on', async () => {
-      const result = await service.switchRelayStatus(true);
+      const result = await service.updatePowerRelay(true);
 
       expect(buildUrlSpy).toHaveBeenCalledWith('relays', 'on');
       expect(postSpy).toHaveBeenCalledWith(urlMock);
@@ -79,7 +79,7 @@ describe('EspApiService', () => {
     });
 
     it('should make request to turn relay off', async () => {
-      const result = await service.switchRelayStatus(false);
+      const result = await service.updatePowerRelay(false);
 
       expect(buildUrlSpy).toHaveBeenCalledWith('relays', 'off');
       expect(postSpy).toHaveBeenCalledWith(urlMock);
