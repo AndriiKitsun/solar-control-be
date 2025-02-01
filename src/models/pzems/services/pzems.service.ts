@@ -1,12 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
-import {
-  EspApiService,
-  EspPzemCounter,
-  EspPzemData,
-  EspRelayStatus,
-} from '@api/modules';
+import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
 import { PzemGroup } from '../pzems.types';
 import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
@@ -26,7 +21,7 @@ export class PzemsService implements OnModuleInit {
     }
   }
 
-  async create(pzemData: EspPzemData): Promise<Pzem> {
+  async create(pzemData: EspSensorsData): Promise<Pzem> {
     await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
 
     return this.pzemsRepository.create(pzemData);
@@ -36,15 +31,10 @@ export class PzemsService implements OnModuleInit {
     return this.espApiService.resetCounter();
   }
 
-  getPowerStatus(): Promise<EspRelayStatus> {
-    return this.espApiService.getRelayStatus();
-  }
-
-  switchPower(status: boolean): Promise<EspRelayStatus> {
-    return this.espApiService.switchRelayStatus(status);
-  }
-
-  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
+  async calcAvgVoltage(
+    pzemData: EspSensorsData,
+    minutes: number,
+  ): Promise<void> {
     const limit = minutes * 60;
     const period = limit * this.appConfig.feature.pzemCalcPeriod;
 
@@ -72,7 +62,7 @@ export class PzemsService implements OnModuleInit {
       });
     }
 
-    for (const pzemDto of pzemData.pzems) {
+    for (const pzemDto of pzemData.sensors) {
       const group = result[pzemDto.name];
 
       if (!group || group.count < limit) {

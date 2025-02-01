@@ -1,4 +1,4 @@
-import { EspWsServiceInterface, EspPzem, EspPzemData } from '../esp.types';
+import { EspWsServiceInterface, EspSensor, EspSensorsData } from '../esp.types';
 import { EventEmitter } from 'node:events';
 import { faker } from '@faker-js/faker';
 import { Observable, interval, map } from 'rxjs';
@@ -11,32 +11,32 @@ export class FakeEspWsService implements EspWsServiceInterface {
   }
 
   broadcastPzems(): void {
-    this.getSensorsData().subscribe((data: EspPzemData) => {
+    this.getSensorsData().subscribe((data: EspSensorsData) => {
       this.events.emit('message', data, JSON.stringify(data));
     });
   }
 
-  getSensorsData(): Observable<EspPzemData> {
+  getSensorsData(): Observable<EspSensorsData> {
     return interval(1000).pipe(map(() => this.randomSensor()));
   }
 
-  private randomSensor(): EspPzemData {
-    const pzems: EspPzem[] = [];
+  private randomSensor(): EspSensorsData {
+    const sensors: EspSensor[] = [];
 
-    pzems.push(this.randomAcPzem('acInput', 1));
-    pzems.push(this.randomAcPzem('acOutput', 0.5));
+    sensors.push(this.randomAcPzem('acInput', 1));
+    sensors.push(this.randomAcPzem('acOutput', 0.5));
 
     if (faker.helpers.maybe(() => true, { probability: 0.7 })) {
-      pzems.push(this.randomDcPzem('dcBattery'));
+      sensors.push(this.randomDcPzem('dcBattery'));
     }
 
     return {
       createdAtGmt: new Date().toJSON(),
-      pzems,
+      sensors,
     };
   }
 
-  private randomAcPzem(name: string, prob = 1): EspPzem {
+  private randomAcPzem(name: string, prob = 1): EspSensor {
     return {
       name,
       voltageV: faker.helpers.maybe(
@@ -69,7 +69,7 @@ export class FakeEspWsService implements EspWsServiceInterface {
     };
   }
 
-  private randomDcPzem(name: string): EspPzem {
+  private randomDcPzem(name: string): EspSensor {
     return {
       name,
       voltageV: faker.number.float({ min: 10, max: 36, fractionDigits: 2 }),

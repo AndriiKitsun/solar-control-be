@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EspConfigType, EspConfig } from '@config/esp';
 import { WsClientService } from '../../../common';
 import { EventEmitter } from 'node:events';
-import { EspWsServiceInterface, EspPzemData } from '../esp.types';
+import { EspWsServiceInterface, EspSensorsData } from '../esp.types';
 
 @Injectable()
 export class EspWsService
@@ -20,7 +20,7 @@ export class EspWsService
     super(espConfig.wsEndpoint);
   }
 
-  handleMessage(data: EspPzemData, rawMessage: string): void {
+  handleMessage(data: EspSensorsData, rawMessage: string): void {
     this.events.emit('message', data, rawMessage);
   }
 }

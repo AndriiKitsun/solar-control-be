@@ -1,5 +1,5 @@
 import { PzemsService, Pzem } from '@models/pzems';
-import { EspPzemData, EspPzemCounter, EspRelayStatus } from '@api/modules';
+import { EspSensorsData, EspPzemCounter, EspRelayStatus } from '@api/modules';
 import { PzemsRepositoryMock } from '../../mocks/pzems.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
@@ -9,7 +9,7 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     return;
   }
 
-  async create(pzemData: EspPzemData): Promise<Pzem> {
+  async create(pzemData: EspSensorsData): Promise<Pzem> {
     return PzemsRepositoryMock.pzemMock;
   }
 
@@ -25,7 +25,10 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     return EspApiServiceMock.relayStatus;
   }
 
-  async calcAvgVoltage(pzemData: EspPzemData, minutes: number): Promise<void> {
+  async calcAvgVoltage(
+    pzemData: EspSensorsData,
+    minutes: number,
+  ): Promise<void> {
     return;
   }
 }

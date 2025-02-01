@@ -38,15 +38,15 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/pzems': {
+  '/sensors': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    /** Returns values of all connected PZEMs */
-    get: operations['getPzemValues'];
+    /** Returns values of all connected sensors */
+    get: operations['getSensorsValues'];
     put?: never;
     post?: never;
     delete?: never;
@@ -70,23 +70,6 @@ export interface paths {
     head?: never;
     /** Sets the address to PZEM */
     patch: operations['setPzemAddress'];
-    trace?: never;
-  };
-  '/pzems/shunt': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Sets the shunt type to DC PZEM */
-    patch: operations['setPzemShunt'];
     trace?: never;
   };
   '/pzems/counter': {
@@ -230,16 +213,16 @@ export interface components {
       /** @description true/false indicator when the EEPROM module is connected */
       isConnected: boolean;
     };
-    PzemData: {
+    SensorsData: {
       /**
        * Format: date-time
        * @description Data collection date in UTC
        */
       createdAtGmt: string;
-      pzems: components['schemas']['Pzem'][];
+      sensors: components['schemas']['Sensor'][];
     };
-    Pzem: {
-      /** @description The name of the PZEM sensor */
+    Sensor: {
+      /** @description The name of the sensor */
       name: string;
       /**
        * Format: float
@@ -291,17 +274,6 @@ export interface components {
        */
       addressToSet: number;
       /** @description true/false indicator when the address is set */
-      isChanged: boolean;
-    };
-    DcPzemShunt: {
-      /** @description The name of the PZEM sensor */
-      name: string;
-      /**
-       * Format: int32
-       * @description Shunt type to save in PZEM memory
-       */
-      shuntTypeToSet: number;
-      /** @description true/false indicator when the shunt type is set */
       isChanged: boolean;
     };
     PzemCounter: {
@@ -363,7 +335,7 @@ export interface operations {
       };
     };
   };
-  getPzemValues: {
+  getSensorsValues: {
     parameters: {
       query?: never;
       header?: never;
@@ -378,7 +350,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['PzemData'];
+          'application/json': components['schemas']['SensorsData'];
         };
       };
     };
@@ -404,49 +376,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['PzemAddress'];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/plain': string;
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/plain': string;
-        };
-      };
-    };
-  };
-  setPzemShunt: {
-    parameters: {
-      query: {
-        /** @description The name of the DC PZEM for which the shunt type is changed */
-        name: string;
-        /** @description The shunt type to set in PZEM memory */
-        shunt: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['DcPzemShunt'];
         };
       };
       /** @description Bad Request */
