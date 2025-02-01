@@ -8,8 +8,8 @@ export class PzemItem {
   @PrimaryGeneratedColumn('uuid')
   pid!: string;
 
-  @ManyToOne(() => Pzem, (pzem) => pzem.pzems, { onDelete: 'CASCADE' })
-  pzem!: Pzem;
+  @ManyToOne(() => Pzem, (pzem) => pzem.sensors, { onDelete: 'CASCADE' })
+  sensor!: Pzem;
 
   @Column()
   name!: string;

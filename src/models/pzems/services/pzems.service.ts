@@ -46,7 +46,7 @@ export class PzemsService implements OnModuleInit {
     const result: Record<string, PzemGroup> = {};
 
     for (const recentPzem of recentPzems) {
-      recentPzem.pzems.forEach((pzem) => {
+      recentPzem.sensors.forEach((pzem) => {
         if (!result[pzem.name]) {
           result[pzem.name] = { count: 0, sum: 0 };
         }

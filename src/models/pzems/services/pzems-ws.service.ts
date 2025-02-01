@@ -3,8 +3,8 @@ import { PzemsGateway } from '../pzems.gateway';
 import { PzemsService } from './pzems.service';
 import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
 import { EspWsServiceInterface, EspSensorsData } from '@api/modules';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { Pzem } from '../entities';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PzemsWsService {
@@ -30,9 +30,8 @@ export class PzemsWsService {
     }
 
     const pzem = await this.pzemsService.create(data);
+    const mapped = instanceToPlain(plainToInstance(Pzem, pzem));
 
-    this.pzemsGateway.emitData(
-      JSON.stringify(instanceToPlain(plainToInstance(Pzem, pzem))),
-    );
+    this.pzemsGateway.emitData(JSON.stringify(mapped));
   }
 }
