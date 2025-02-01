@@ -21,7 +21,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json",
-    "types:esp": "npx openapi-typescript https://raw.githubusercontent.com/AndriiKitsun/solar-control-arduino/5e581e199c2a0306776a1572f802bd04e17dd2cc/api/openapi.yaml -o src/api/modules/esp/esp.schema.d.ts",
+    "types:esp": "npx openapi-typescript https://raw.githubusercontent.com/AndriiKitsun/solar-control-arduino/main/api/openapi.yaml -o src/api/modules/esp/esp.schema.d.ts",
     "types:asics": "npx openapi-typescript http://192.168.1.21/docs/api-doc.json -o src/api/modules/asics/asics.schema.d.ts",
     "prepare": "husky",
     "changeset:add": "changeset",
