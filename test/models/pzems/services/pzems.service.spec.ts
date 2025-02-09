@@ -3,7 +3,7 @@ import { EspApiService } from '@api/modules';
 import {
   PzemsService,
   PzemsRepository,
-  PZEM_MINUTES_TO_FETCH,
+  SENSORS_AVG_VOLTAGE_CONFIG,
 } from '@models/pzems';
 import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
@@ -88,7 +88,7 @@ describe('PzemsService', () => {
 
       expect(calcAvgVoltageSpy).toHaveBeenCalledWith(
         espPzemDataMock,
-        PZEM_MINUTES_TO_FETCH,
+        SENSORS_AVG_VOLTAGE_CONFIG,
       );
       expect(createSpy).toHaveBeenCalledWith(espPzemDataMock);
 

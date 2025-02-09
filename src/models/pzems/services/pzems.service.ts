@@ -3,8 +3,11 @@ import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app';
-import { PzemGroup } from '../pzems.types';
-import { PZEM_MINUTES_TO_FETCH } from '../pzems.constants';
+import {
+  SensorsAvgVoltageGroup,
+  SensorsAvgVoltageConfig,
+} from '../pzems.types';
+import { SENSORS_AVG_VOLTAGE_CONFIG } from '../pzems.constants';
 
 @Injectable()
 export class PzemsService implements OnModuleInit {
@@ -22,7 +25,7 @@ export class PzemsService implements OnModuleInit {
   }
 
   async create(pzemData: EspSensorsData): Promise<Pzem> {
-    await this.calcAvgVoltage(pzemData, PZEM_MINUTES_TO_FETCH);
+    await this.calcAvgVoltage(pzemData, SENSORS_AVG_VOLTAGE_CONFIG);
 
     return this.pzemsRepository.create(pzemData);
   }
@@ -33,17 +36,16 @@ export class PzemsService implements OnModuleInit {
 
   async calcAvgVoltage(
     pzemData: EspSensorsData,
-    minutes: number,
+    config: SensorsAvgVoltageConfig,
   ): Promise<void> {
-    const limit = minutes * 60;
-    const period = limit * this.appConfig.feature.pzemCalcPeriod;
+    const period = config.fetchLimit * this.appConfig.feature.pzemCalcPeriod;
 
     const recentPzems = await this.pzemsRepository.findAllBefore(
       pzemData.createdAtGmt,
       period,
     );
 
-    const result: Record<string, PzemGroup> = {};
+    const result: Record<string, SensorsAvgVoltageGroup> = {};
 
     for (const recentPzem of recentPzems) {
       recentPzem.sensors.forEach((pzem) => {
@@ -53,7 +55,7 @@ export class PzemsService implements OnModuleInit {
 
         const group = result[pzem.name];
 
-        if (group.count >= limit) {
+        if (group.count >= config.countLimit[pzem.name]) {
           return;
         }
 
@@ -65,7 +67,7 @@ export class PzemsService implements OnModuleInit {
     for (const pzemDto of pzemData.sensors) {
       const group = result[pzemDto.name];
 
-      if (!group || group.count < limit) {
+      if (!group || group.count < config.countLimit[pzemDto.name]) {
         (pzemDto as PzemItem).avgVoltage = 0;
 
         continue;

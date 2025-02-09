@@ -1,4 +1,4 @@
-import { PzemsService, Pzem } from '@models/pzems';
+import { PzemsService, Pzem, SensorsAvgVoltageConfig } from '@models/pzems';
 import { EspSensorsData, EspPzemCounter, EspRelayStatus } from '@api/modules';
 import { PzemsRepositoryMock } from '../../mocks/pzems.repository.mock';
 import { ClassMock } from '@common/types/test.types';
@@ -27,7 +27,7 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
 
   async calcAvgVoltage(
     pzemData: EspSensorsData,
-    minutes: number,
+    config: SensorsAvgVoltageConfig,
   ): Promise<void> {
     return;
   }
