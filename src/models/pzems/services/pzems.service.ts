@@ -18,9 +18,9 @@ export class PzemsService implements OnModuleInit {
     private readonly appConfig: AppConfigType,
   ) {}
 
-  async onModuleInit(): Promise<void> {
+  onModuleInit(): void {
     if (this.appConfig.feature.clearPzems) {
-      await this.pzemsRepository.clearPzemTable();
+      void this.pzemsRepository.clearPzemTable();
     }
   }
 
