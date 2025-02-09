@@ -5,7 +5,7 @@ import { ClassMock } from '@common/types/test.types';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 
 export class PzemsServiceMock implements ClassMock<PzemsService> {
-  async onModuleInit(): Promise<void> {
+  onModuleInit(): void {
     return;
   }
 
