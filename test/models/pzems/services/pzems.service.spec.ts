@@ -57,18 +57,18 @@ describe('PzemsService', () => {
       clearPzemTableSpy = jest.spyOn(pzemsRepository, 'clearPzemTable');
     });
 
-    it('should clear pzems table when this feature is enabled', async () => {
+    it('should clear pzems table when this feature is enabled', () => {
       AppConfigMock.feature.clearPzems = true;
 
-      await service.onModuleInit();
+      service.onModuleInit();
 
       expect(clearPzemTableSpy).toHaveBeenCalled();
     });
 
-    it('should not clear pzems table when this feature is disabled', async () => {
+    it('should not clear pzems table when this feature is disabled', () => {
       AppConfigMock.feature.clearPzems = false;
 
-      await service.onModuleInit();
+      service.onModuleInit();
 
       expect(clearPzemTableSpy).not.toHaveBeenCalled();
     });
