@@ -29,6 +29,6 @@ export class PzemsServiceMock implements ClassMock<PzemsService> {
     pzemData: EspSensorsData,
     config: SensorsAvgVoltageConfig,
   ): Promise<void> {
-    return Promise.resolve(undefined);
+    return;
   }
 }
