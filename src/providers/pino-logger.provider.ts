@@ -51,6 +51,7 @@ export function PinoLoggerProvider(appConfig: AppConfigType): Params {
             level: appConfig.logLevel,
             options: {
               destination: `./logs/${new Date().toJSON().split('T')[0]}.log`,
+              mkdir: true,
             },
           },
           ...transports,
