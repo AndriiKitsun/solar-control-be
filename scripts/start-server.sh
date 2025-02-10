@@ -19,3 +19,5 @@ fi
 
 echo "Starting a server..."
 npm run start:prod
+
+exec $SHELL
