@@ -11,10 +11,12 @@ import { AppConfig } from '@config/app';
 import { EspConfig } from '@config/esp';
 import { PostgresConfig } from '@config/postgres';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { PostgresProvider } from '@providers/postgres';
+import { PostgresProvider } from '@providers/index';
 import { convertToHttpException } from '@common/utils';
 import { SettingsModule } from '@models/settings/settings.module';
 import { RelaysModule } from '@models/relays/relays.module';
+import { LoggerModule } from 'nestjs-pino';
+import { PinoLoggerProvider } from '@providers/pino-logger.provider';
 
 @Module({
   imports: [
@@ -24,6 +26,11 @@ import { RelaysModule } from '@models/relays/relays.module';
     }),
     TypeOrmModule.forRootAsync({
       useClass: PostgresProvider,
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [AppConfig.KEY],
+      useFactory: PinoLoggerProvider,
     }),
     AsicsModule,
     PzemsModule,
