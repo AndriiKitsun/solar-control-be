@@ -20,3 +20,5 @@ echo "Building the application..."
 npm run build
 
 echo "Done"
+
+exec $SHELL
