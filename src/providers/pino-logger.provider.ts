@@ -57,7 +57,7 @@ export function PinoLoggerProvider(appConfig: AppConfigType): Params {
           ...transports,
         ],
       },
-      customLogLevel: function (req, res, err?): LevelWithSilent {
+      customLogLevel: (req, res, err?): LevelWithSilent => {
         if (res.statusCode >= 400 && res.statusCode < 500) {
           return 'warn';
         } else if (res.statusCode >= 500 || err) {
