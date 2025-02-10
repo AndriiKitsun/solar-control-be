@@ -30,13 +30,18 @@ export function PinoLoggerProvider(appConfig: AppConfigType): Params {
       base: null,
       serializers: {
         req: (req: SerializedRequest): Partial<SerializedRequest> => {
-          return {
+          const reqLog: Partial<SerializedRequest> = {
             id: req.id,
             method: req.method,
             url: req.url,
             query: req.query,
-            params: req.params,
           };
+
+          if (req.params) {
+            reqLog.params = req.params;
+          }
+
+          return reqLog;
         },
         res: (res: SerializedResponse): Partial<SerializedResponse> => {
           return {
