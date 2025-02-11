@@ -3,6 +3,7 @@ import { AsicsApiService } from '@api/modules';
 import { HttpService } from '@nestjs/axios';
 import { HttpServiceMock } from '../../common/services/mocks/http-service.mock';
 import { AsicsApiServiceMock } from './mocks/asics.service.mock';
+import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
 
 describe('AsicsApiService', () => {
   let service: AsicsApiService;
@@ -25,6 +26,8 @@ describe('AsicsApiService', () => {
         },
       ],
     }).compile();
+
+    module.useLogger(new LoggerServiceMock());
 
     service = module.get(AsicsApiService);
 
