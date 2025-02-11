@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PzemsRepository } from '../pzems.repository';
 import { Pzem, PzemItem } from '../entities';
 import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
-import { AppConfig, AppConfigType } from '@config/app';
+import { AppConfig, AppConfigType } from '@config/app.config';
 import {
   SensorsAvgVoltageGroup,
   SensorsAvgVoltageConfig,

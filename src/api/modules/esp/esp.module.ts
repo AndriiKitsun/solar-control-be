@@ -1,11 +1,21 @@
 import { Module } from '@nestjs/common';
 import { EspApiService } from './esp.service';
 import { ESP_WS_SERVICE } from './esp.constants';
-import { HttpClientModule } from '../../common';
+import { AppConfig, AppConfigType } from '@config/app.config';
+import { HttpModule } from '@nestjs/axios';
 import { EspWsService } from './ws/esp-ws.service';
 
 @Module({
-  imports: [HttpClientModule],
+  imports: [
+    HttpModule.registerAsync({
+      useFactory: (config: AppConfigType) => {
+        return {
+          timeout: config.http.espTimeout,
+        };
+      },
+      inject: [AppConfig.KEY],
+    }),
+  ],
   providers: [
     EspApiService,
     {

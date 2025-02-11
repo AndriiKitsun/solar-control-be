@@ -5,7 +5,7 @@ import {
   FastifyAdapter,
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
-import { AppConfigType, APP_NAMESPACE } from '@config/app';
+import { AppConfigType, APP_NAMESPACE } from '@config/app.config';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 

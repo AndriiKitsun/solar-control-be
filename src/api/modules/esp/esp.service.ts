@@ -1,5 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { EspConfig, EspConfigType } from '@config/esp';
+import { EspConfigType, EspConfig } from '@config/esp.config';
 import { EspPzemCounter, EspRelayStatus } from './esp.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';

@@ -1,4 +1,4 @@
-import { EspConfigType } from '@config/esp';
+import { EspConfigType } from '@config/esp.config';
 
 export const EspConfigMock: EspConfigType = {
   endpoint: 'restEndpoint',

@@ -7,8 +7,8 @@ import {
 } from '@models/pzems';
 import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
-import { AppConfig } from '@config/app';
-import { AppConfigMock } from '@config/app/mocks/app.config.mock';
+import { AppConfig } from '@config/app.config';
+import { AppConfigMock } from '@config/mocks/app.config.mock';
 import { EspWsServiceMock } from '@api/modules/esp/ws/mocks/esp-ws.service.mock';
 
 describe('PzemsService', () => {
