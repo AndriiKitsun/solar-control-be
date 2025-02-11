@@ -1,4 +1,4 @@
-import { AppConfigType } from '@config/app';
+import { AppConfigType } from '@config/app.config';
 import { Params } from 'nestjs-pino/params';
 import pino, {
   stdTimeFunctions,

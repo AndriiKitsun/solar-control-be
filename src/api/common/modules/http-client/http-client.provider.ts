@@ -3,7 +3,7 @@ import {
   HttpModuleOptionsFactory,
   HttpModuleOptions,
 } from '@nestjs/axios/dist/interfaces/http-module.interface';
-import { AppConfig, AppConfigType } from '@config/app';
+import { AppConfig, AppConfigType } from '@config/app.config';
 
 @Injectable()
 export class HttpClientProvider implements HttpModuleOptionsFactory {
@@ -14,7 +14,7 @@ export class HttpClientProvider implements HttpModuleOptionsFactory {
 
   createHttpOptions(): HttpModuleOptions {
     return {
-      timeout: this.appConfig.http.timeout,
+      timeout: this.appConfig.http.espTimeout,
     };
   }
 }
