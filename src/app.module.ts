@@ -10,12 +10,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '@config/app.config';
 import { EspConfig } from '@config/esp.config';
 import { PostgresConfig } from '@config/postgres.config';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { PostgresProvider, PinoLoggerProvider } from '@providers/index';
 import { convertToHttpException } from '@common/utils';
 import { SettingsModule } from './modules/settings/settings.module';
 import { RelaysModule } from './modules/relays/relays.module';
 import { LoggerModule } from 'nestjs-pino';
+import { TypeORMExceptionFilter } from '@common/filters';
 
 @Module({
   imports: [
@@ -40,6 +41,10 @@ import { LoggerModule } from 'nestjs-pino';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeORMExceptionFilter,
     },
     {
       provide: APP_PIPE,

@@ -1,14 +1,9 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, EntityNotFoundError } from 'typeorm';
 import { Setting } from './entities';
 import { SaveSettingsDto } from './dto';
 import { plainToInstance } from 'class-transformer';
-import { toError } from '@common/utils';
 
 @Injectable()
 export class SettingsRepository {
@@ -18,13 +13,9 @@ export class SettingsRepository {
   ) {}
 
   async create(saveSettingsDto: SaveSettingsDto): Promise<Setting> {
-    try {
-      await this.settingRepository.insert(saveSettingsDto);
+    await this.settingRepository.insert(saveSettingsDto);
 
-      return plainToInstance(Setting, saveSettingsDto);
-    } catch (error) {
-      throw new BadRequestException(toError((error as Error).message));
-    }
+    return plainToInstance(Setting, saveSettingsDto);
   }
 
   async getSettings(): Promise<Setting> {
@@ -41,9 +32,7 @@ export class SettingsRepository {
     const result = await this.settingRepository.update(id, saveSettingsDto);
 
     if (!result.affected) {
-      throw new NotFoundException(
-        toError(`Setting with '${id}' id does not exist`),
-      );
+      throw new EntityNotFoundError(Setting, { id });
     }
 
     return this.getSettings();

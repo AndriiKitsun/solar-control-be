@@ -1,9 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Pzem } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Not, IsNull } from 'typeorm';
 import { EspSensorsData } from '@api/modules';
-import { toError } from '@common/utils';
 
 @Injectable()
 export class PzemsRepository {
@@ -12,12 +11,8 @@ export class PzemsRepository {
     private readonly pzemsRepository: Repository<Pzem>,
   ) {}
 
-  async create(pzemData: EspSensorsData): Promise<Pzem> {
-    try {
-      return await this.pzemsRepository.save(pzemData);
-    } catch (error) {
-      throw new BadRequestException(toError((error as Error).message));
-    }
+  create(pzemData: EspSensorsData): Promise<Pzem> {
+    return this.pzemsRepository.save(pzemData);
   }
 
   findAllBefore(date: string, seconds: number): Promise<Pzem[]> {

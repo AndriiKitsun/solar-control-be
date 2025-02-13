@@ -1,13 +1,8 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Asic } from './entities';
 import { UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
-import { toError } from '@common/utils';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -18,40 +13,24 @@ export class AsicsRepository {
   ) {}
 
   async create(createAsicDto: Partial<Asic>): Promise<Asic> {
-    try {
-      await this.asicsRepository.insert(createAsicDto);
+    await this.asicsRepository.insert(createAsicDto);
 
-      return plainToInstance(Asic, createAsicDto);
-    } catch (error) {
-      throw new BadRequestException(toError((error as Error).message));
-    }
+    return plainToInstance(Asic, createAsicDto);
   }
 
   findAll(): Promise<Asic[]> {
     return this.asicsRepository.find();
   }
 
-  async findOne(id: string): Promise<Asic> {
-    try {
-      return await this.asicsRepository.findOneByOrFail({ id });
-    } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new NotFoundException(
-          toError(`Asic with '${id}' id does not exist`),
-        );
-      }
-
-      throw new BadRequestException((error as Error).message);
-    }
+  findOne(id: string): Promise<Asic> {
+    return this.asicsRepository.findOneByOrFail({ id });
   }
 
   async update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
     const result = await this.asicsRepository.update(id, updateAsicDto);
 
     if (!result.affected) {
-      throw new NotFoundException(
-        toError(`Asic with '${id}' id does not exist`),
-      );
+      throw new EntityNotFoundError(Asic, { id });
     }
 
     return this.findOne(id);
@@ -61,9 +40,7 @@ export class AsicsRepository {
     const result = await this.asicsRepository.delete(id);
 
     if (!result.affected) {
-      throw new NotFoundException(
-        toError(`Asic with '${id}' id does not exist`),
-      );
+      throw new EntityNotFoundError(Asic, { id });
     }
   }
 }
