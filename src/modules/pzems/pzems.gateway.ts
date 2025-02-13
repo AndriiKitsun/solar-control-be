@@ -1,34 +1,18 @@
-import {
-  WebSocketGateway,
-  WebSocketServer,
-  OnGatewayInit,
-} from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WebSocketServer as WsServer } from 'ws';
-import { EspWsServiceInterface, EspSensorsData } from '@api/modules';
-import { Inject } from '@nestjs/common';
-import { ESP_WS_SERVICE } from '@api/modules/esp/esp.constants';
+import { EspSensorsData } from '@api/modules';
+import { ESP_SENSORS_EVENT } from '@api/modules/esp/esp.constants';
 import { PzemsService } from './pzems.service';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @WebSocketGateway({ path: 'pzems' })
-export class PzemsGateway implements OnGatewayInit {
+export class PzemsGateway {
   @WebSocketServer()
   private server!: WsServer;
 
-  constructor(
-    @Inject(ESP_WS_SERVICE)
-    private readonly espWsService: EspWsServiceInterface,
-    private readonly pzemsService: PzemsService,
-  ) {}
+  constructor(private readonly pzemsService: PzemsService) {}
 
-  afterInit(): void {
-    this.espWsService.events.on(
-      'message',
-      (data: EspSensorsData, raw: string) => {
-        void this.handleEspMessage(data, raw);
-      },
-    );
-  }
-
+  @OnEvent(ESP_SENSORS_EVENT)
   async handleEspMessage(data: EspSensorsData, raw: string): Promise<void> {
     const message = await this.pzemsService.handleSensors(data, raw);
 

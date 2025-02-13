@@ -17,6 +17,7 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { RelaysModule } from './modules/relays/relays.module';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeORMExceptionFilter } from '@common/filters';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TypeORMExceptionFilter } from '@common/filters';
       inject: [AppConfig.KEY],
       useFactory: PinoLoggerProvider,
     }),
+    EventEmitterModule.forRoot(),
     AsicsModule,
     PzemsModule,
     RelaysModule,

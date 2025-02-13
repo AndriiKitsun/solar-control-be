@@ -80,5 +80,5 @@ export abstract class WsClientService {
     this.client = undefined;
   }
 
-  protected abstract handleMessage(data: any, rawMessage: string): void;
+  protected abstract handleMessage(data: any, raw: string): void;
 }
