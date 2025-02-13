@@ -9,8 +9,14 @@ import {
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
-import { HttpError } from '@common/interfaces';
+import { NewHttpError, NewHttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
+import { randomUUID } from 'node:crypto';
+import { NewSystemName, ErrorCode } from '@common/enums';
+import {
+  HttpErrorByCode,
+  ErrorHttpStatusCode,
+} from '@nestjs/common/utils/http-error-by-code.util';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
@@ -75,23 +81,32 @@ export class AsicsApiService extends HttpClientService {
   }
 
   didEncounterError(error: AxiosError): any {
-    const response: HttpError = {
-      timestamp: new Date().toJSON(),
-      code: error.code,
-    };
+    const status: ErrorHttpStatusCode =
+      error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    let message: string;
 
     if (!error.response?.data) {
-      response.message = error.message;
-
-      return new HttpException(response, status);
+      message = error.message;
+    } else if (typeof error.response.data === 'string') {
+      message = error.response.data;
+    } else {
+      message = JSON.stringify(error.response.data);
     }
 
-    response.message =
-      typeof error.response.data === 'string'
-        ? error.response.data
-        : JSON.stringify(error.response.data);
+    const response: NewHttpError<NewHttpSubError> = {
+      id: randomUUID(),
+      errors: [
+        {
+          code: error.code ?? ErrorCode.HTTP_UNKNOWN,
+          message,
+          type: HttpErrorByCode[status].name,
+        },
+      ],
+      status,
+      system: NewSystemName.ASIC,
+      timestamp: new Date().toJSON(),
+    };
 
     return new HttpException(response, status);
   }

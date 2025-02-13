@@ -3,12 +3,8 @@ import {
   ValidationError,
   HttpStatus,
 } from '@nestjs/common';
-import {
-  NewValidationSubError,
-  NewHttpError,
-  NewSystemName,
-} from '../interfaces';
-import { HttpErrorType } from '../enums';
+import { NewValidationSubError, NewHttpError } from '../interfaces';
+import { NewSystemName } from '../enums';
 import { randomUUID } from 'node:crypto';
 
 export function convertToHttpException(
@@ -29,7 +25,7 @@ export function convertToHttpException(
         message: `The '${error.property}' field is ${reason}`,
         property: error.property,
         reason,
-        type: HttpErrorType.VALIDATION,
+        type: error.constructor.name,
       };
     }),
     system: NewSystemName.SERVER,

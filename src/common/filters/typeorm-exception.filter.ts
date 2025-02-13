@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { TypeORMError } from 'typeorm';
 import { FastifyReply } from 'fastify';
-import { NewHttpError, NewSystemName } from '../interfaces';
+import { NewHttpError } from '../interfaces';
 import { randomUUID } from 'node:crypto';
+import { NewSystemName } from '../enums';
 
 @Catch(TypeORMError)
 export class TypeORMExceptionFilter implements ExceptionFilter<TypeORMError> {

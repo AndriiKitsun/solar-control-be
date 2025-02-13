@@ -1,4 +1,4 @@
-import { HttpErrorType } from '../enums';
+import { NewSystemName, ErrorCode } from '../enums';
 
 export interface HttpError {
   timestamp: string;
@@ -8,7 +8,7 @@ export interface HttpError {
 }
 
 export interface HttpSubError {
-  type: HttpErrorType;
+  type: string;
   message: string;
   reason: string;
   details: HttpErrorDetails[];
@@ -20,14 +20,7 @@ export interface HttpErrorDetails {
   value: string;
 }
 
-export enum NewSystemName {
-  SERVER = 'Server',
-  ASIC = 'Asic',
-  ESP = 'ESP',
-  DATABASE = 'Database',
-}
-
-export interface NewHttpError<T = NewHttpSubError> {
+export interface NewHttpError<T = NewSubError> {
   id: string;
   errors: T[];
   status: number;
@@ -35,13 +28,16 @@ export interface NewHttpError<T = NewHttpSubError> {
   timestamp: string;
 }
 
-export interface NewHttpSubError {
-  errorCode?: string;
+export interface NewSubError {
   message: string;
-  type: HttpErrorType | string;
+  type: string;
 }
 
-export interface NewValidationSubError extends NewHttpSubError {
+export interface NewHttpSubError extends NewSubError {
+  code: ErrorCode | string;
+}
+
+export interface NewValidationSubError extends NewSubError {
   details: HttpErrorDetails[];
   property: string;
   reason: string;
