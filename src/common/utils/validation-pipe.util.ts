@@ -1,28 +1,40 @@
-import { BadRequestException, ValidationError } from '@nestjs/common';
-import { HttpSubError, HttpError } from '../interfaces';
+import {
+  BadRequestException,
+  ValidationError,
+  HttpStatus,
+} from '@nestjs/common';
+import {
+  NewValidationSubError,
+  NewHttpError,
+  NewSystemName,
+} from '../interfaces';
 import { HttpErrorType } from '../enums';
-import { AxiosError } from 'axios';
+import { randomUUID } from 'node:crypto';
 
 export function convertToHttpException(
   errors: ValidationError[],
 ): BadRequestException {
-  const response: HttpError = {
-    timestamp: new Date().toJSON(),
-    code: AxiosError.ERR_BAD_REQUEST,
-    errors: errors
-      .map((error) => {
-        const constraints = Object.values(error.constraints ?? {});
+  const response: NewHttpError<NewValidationSubError> = {
+    id: randomUUID(),
+    errors: errors.map((error: ValidationError): NewValidationSubError => {
+      const reason = error.value ? 'invalid' : 'missing';
 
-        return constraints.map((message) => {
-          return {
-            type: HttpErrorType.VALIDATION,
-            message,
-            reason: error.value ? 'invalid' : 'missing',
-            details: [{ key: 'subject', value: error.property }],
-          } satisfies HttpSubError;
-        });
-      })
-      .flat(),
+      return {
+        details: Object.entries(error.constraints ?? {}).map(
+          ([key, value]) => ({
+            key,
+            value,
+          }),
+        ),
+        message: `The '${error.property}' field is ${reason}`,
+        property: error.property,
+        reason,
+        type: HttpErrorType.VALIDATION,
+      };
+    }),
+    system: NewSystemName.SERVER,
+    status: HttpStatus.BAD_REQUEST,
+    timestamp: new Date().toJSON(),
   };
 
   return new BadRequestException(response);

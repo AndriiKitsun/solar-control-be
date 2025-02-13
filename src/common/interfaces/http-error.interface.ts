@@ -27,10 +27,6 @@ export enum NewSystemName {
   DATABASE = 'Database',
 }
 
-export enum NewHttpErrorCode {
-  DATABASE_001 = 'DATABASE_001',
-}
-
 export interface NewHttpError<T = NewHttpSubError> {
   id: string;
   errors: T[];
@@ -40,12 +36,13 @@ export interface NewHttpError<T = NewHttpSubError> {
 }
 
 export interface NewHttpSubError {
-  errorCode: NewHttpErrorCode;
+  errorCode?: string;
   message: string;
-  type: string;
+  type: HttpErrorType | string;
 }
 
 export interface NewValidationSubError extends NewHttpSubError {
   details: HttpErrorDetails[];
+  property: string;
   reason: string;
 }
