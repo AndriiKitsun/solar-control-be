@@ -13,10 +13,6 @@ import { NewHttpError, NewHttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
 import { randomUUID } from 'node:crypto';
 import { NewSystemName, ErrorCode } from '@common/enums';
-import {
-  HttpErrorByCode,
-  ErrorHttpStatusCode,
-} from '@nestjs/common/utils/http-error-by-code.util';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
@@ -81,8 +77,7 @@ export class AsicsApiService extends HttpClientService {
   }
 
   didEncounterError(error: AxiosError): any {
-    const status: ErrorHttpStatusCode =
-      error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
     let message: string;
 
@@ -100,7 +95,7 @@ export class AsicsApiService extends HttpClientService {
         {
           code: error.code ?? ErrorCode.HTTP_UNKNOWN,
           message,
-          type: HttpErrorByCode[status].name,
+          type: error.constructor.name,
         },
       ],
       status,
