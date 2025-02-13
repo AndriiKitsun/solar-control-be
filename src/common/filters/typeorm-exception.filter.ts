@@ -9,12 +9,15 @@ import { FastifyReply } from 'fastify';
 import { NewHttpError } from '../interfaces';
 import { randomUUID } from 'node:crypto';
 import { NewSystemName } from '../enums';
+import { TYPEORM_ERROR_STATUS } from '../constants';
 
 @Catch(TypeORMError)
 export class TypeORMExceptionFilter implements ExceptionFilter<TypeORMError> {
   catch(exception: TypeORMError, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
+    const status =
+      TYPEORM_ERROR_STATUS[exception.name] ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
     const error: NewHttpError = {
       id: randomUUID(),
@@ -24,19 +27,11 @@ export class TypeORMExceptionFilter implements ExceptionFilter<TypeORMError> {
           type: exception.name,
         },
       ],
-      status: this.resolveStatusCode(exception),
+      status,
       system: NewSystemName.DATABASE,
       timestamp: new Date().toJSON(),
     };
 
-    response.status(error.status).send(error);
-  }
-
-  private resolveStatusCode(exception: TypeORMError): HttpStatus {
-    if (exception.name === 'EntityNotFoundError') {
-      return HttpStatus.NOT_FOUND;
-    }
-
-    return HttpStatus.INTERNAL_SERVER_ERROR;
+    response.status(status).send(error);
   }
 }
