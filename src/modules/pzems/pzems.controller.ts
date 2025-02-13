@@ -1,5 +1,5 @@
 import { Controller, Delete } from '@nestjs/common';
-import { PzemsService } from './services';
+import { PzemsService } from './pzems.service';
 import { EspPzemCounter } from '@api/modules';
 
 @Controller('pzems')

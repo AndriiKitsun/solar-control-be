@@ -84,7 +84,7 @@ describe('PzemsService', () => {
     });
 
     it('should return created pzem entity', async () => {
-      const result = await service.create(espPzemDataMock);
+      const result = await service.saveSensors(espPzemDataMock);
 
       expect(calcAvgVoltageSpy).toHaveBeenCalledWith(
         espPzemDataMock,

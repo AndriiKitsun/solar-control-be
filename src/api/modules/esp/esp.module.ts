@@ -20,6 +20,7 @@ import { FakeEspWsService } from './ws/fake-esp-ws.service';
     EspApiService,
     {
       provide: ESP_WS_SERVICE,
+      // useClass: EspWsService,
       useClass: FakeEspWsService,
     },
   ],

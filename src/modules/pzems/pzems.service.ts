@@ -1,13 +1,11 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
-import { PzemsRepository } from '../pzems.repository';
-import { Pzem, PzemItem } from '../entities';
+import { PzemsRepository } from './pzems.repository';
+import { Pzem, PzemItem } from './entities';
 import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app.config';
-import {
-  SensorsAvgVoltageGroup,
-  SensorsAvgVoltageConfig,
-} from '../pzems.types';
-import { SENSORS_AVG_VOLTAGE_CONFIG } from '../pzems.constants';
+import { SensorsAvgVoltageGroup, SensorsAvgVoltageConfig } from './pzems.types';
+import { SENSORS_AVG_VOLTAGE_CONFIG } from './pzems.constants';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PzemsService implements OnModuleInit {
@@ -24,8 +22,23 @@ export class PzemsService implements OnModuleInit {
     }
   }
 
-  async create(pzemData: EspSensorsData): Promise<Pzem> {
+  async handleSensors(data: EspSensorsData, raw: string): Promise<string> {
+    if (!data.sensors.length) {
+      return raw;
+    }
+
+    const pzem = await this.saveSensors(data);
+    const mapped = instanceToPlain(plainToInstance(Pzem, pzem));
+
+    return JSON.stringify(mapped);
+  }
+
+  async saveSensors(pzemData: EspSensorsData): Promise<Pzem> {
     await this.calcAvgVoltage(pzemData, SENSORS_AVG_VOLTAGE_CONFIG);
+
+    // if (Math.random() > 0.5) {
+    //   throw new EntityNotFoundError(Pzem, 'kekw');
+    // }
 
     return this.pzemsRepository.create(pzemData);
   }
