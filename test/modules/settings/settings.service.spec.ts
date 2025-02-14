@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SettingsService } from '../../../src/modules/settings/settings.service';
-import { SettingsRepository } from '../../../src/modules/settings/settings.repository';
+import { SettingsService } from '@modules/settings/settings.service';
+import { SettingsRepository } from '@modules/settings/settings.repository';
 import { SettingsRepositoryMock } from './mocks/settings.repository.mock';
 import { SettingEntityMock } from './entities/mocks/setting.entity.mock';
 import { SaveSettingsDtoMock } from './dto/mocks/save-settings.dto.mock';

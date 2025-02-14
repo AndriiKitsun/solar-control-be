@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RelaysServiceMock } from './mocks/relays.service.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
-import { RelaysController } from '../../../src/modules/relays/relays.controller';
-import { RelaysService } from '../../../src/modules/relays/relays.service';
+import { RelaysController } from '@modules/relays/relays.controller';
+import { RelaysService } from '@modules/relays/relays.service';
 
 describe('RelaysController', () => {
   let controller: RelaysController;

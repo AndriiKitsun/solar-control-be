@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EspApiService } from '@api/modules';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
-import { RelaysService } from '../../../src/modules/relays/relays.service';
+import { RelaysService } from '@modules/relays/relays.service';
 
 describe('RelaysService', () => {
   let service: RelaysService;

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AsicsRepository, Asic } from '../../../src/modules/asics';
+import { AsicsRepository, Asic } from '@modules/asics';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('AsicsRepository', () => {

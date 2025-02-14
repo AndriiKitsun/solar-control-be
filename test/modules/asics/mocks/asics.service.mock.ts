@@ -4,7 +4,7 @@ import {
   CreateAsicDto,
   Asic,
   AsicSummaryResponseDto,
-} from '../../../../src/modules/asics';
+} from '@modules/asics';
 import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 

@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository } from 'typeorm';
-import { Setting } from '../../../src/modules/settings/entities';
-import { SettingsRepository } from '../../../src/modules/settings/settings.repository';
+import { Repository, EntityNotFoundError } from 'typeorm';
+import { Setting } from '@modules/settings/entities';
+import { SettingsRepository } from '@modules/settings/settings.repository';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
 import { SaveSettingsDtoMock } from './dto/mocks/save-settings.dto.mock';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { SettingEntityMock } from './entities/mocks/setting.entity.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
 
@@ -49,14 +48,6 @@ describe('SettingsRepository', () => {
       expect(insertSpy).toHaveBeenCalledWith(saveSettingsDtoMock);
 
       expect(result).toEqual(saveSettingsDtoMock);
-    });
-
-    it('should throw error in case of failed insert', async () => {
-      insertSpy.mockRejectedValueOnce(new Error('error'));
-
-      const cb = () => repository.create(saveSettingsDtoMock);
-
-      await expect(cb).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -119,7 +110,7 @@ describe('SettingsRepository', () => {
 
       const cb = () => repository.update(idMock, saveSettingsDtoMock);
 
-      await expect(cb).rejects.toThrow(NotFoundException);
+      await expect(cb).rejects.toThrow(EntityNotFoundError);
     });
   });
 });

@@ -4,19 +4,17 @@ import {
   PzemsService,
   PzemsRepository,
   SENSORS_AVG_VOLTAGE_CONFIG,
-} from '../../../../src/modules/pzems';
-import { PzemsRepositoryMock } from '../mocks/pzems.repository.mock';
+} from '@modules/pzems';
+import { PzemsRepositoryMock } from './mocks/pzems.repository.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 import { AppConfig } from '@config/app.config';
 import { AppConfigMock } from '@config/mocks/app.config.mock';
-import { EspWsServiceMock } from '@api/modules/esp/ws/mocks/esp-ws.service.mock';
 
 describe('PzemsService', () => {
   let service: PzemsService;
   let pzemsRepository: PzemsRepository;
   let espApiService: EspApiService;
 
-  const { espPzemDataMock } = EspWsServiceMock;
   const { pzemMock } = PzemsRepositoryMock;
   const { counterResetResponseMock } = EspApiServiceMock;
 
@@ -74,23 +72,23 @@ describe('PzemsService', () => {
     });
   });
 
-  describe('create', () => {
-    let createSpy: jest.SpiedFunction<PzemsRepository['create']>;
+  describe('saveSensors', () => {
+    let createSpy: jest.SpiedFunction<PzemsRepository['save']>;
     let calcAvgVoltageSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      createSpy = jest.spyOn(pzemsRepository, 'create');
-      calcAvgVoltageSpy = jest.spyOn(service as any, 'calcAvgVoltage');
+      createSpy = jest.spyOn(pzemsRepository, 'save');
+      calcAvgVoltageSpy = jest.spyOn(service, 'calcAvgVoltage');
     });
 
     it('should return created pzem entity', async () => {
-      const result = await service.saveSensors(espPzemDataMock);
+      const result = await service.saveSensors(pzemMock);
 
       expect(calcAvgVoltageSpy).toHaveBeenCalledWith(
-        espPzemDataMock,
+        pzemMock,
         SENSORS_AVG_VOLTAGE_CONFIG,
       );
-      expect(createSpy).toHaveBeenCalledWith(espPzemDataMock);
+      expect(createSpy).toHaveBeenCalledWith(pzemMock);
 
       expect(result).toBe(pzemMock);
     });

@@ -60,7 +60,7 @@ export class PzemsService implements OnModuleInit {
   async saveSensors(sensorsData: Pzem): Promise<Pzem> {
     await this.calcAvgVoltage(sensorsData, SENSORS_AVG_VOLTAGE_CONFIG);
 
-    return this.pzemsRepository.create(sensorsData);
+    return this.pzemsRepository.save(sensorsData);
   }
 
   resetEnergyCounter(): Promise<EspPzemCounter[]> {

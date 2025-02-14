@@ -3,7 +3,7 @@ import {
   Asic,
   CreateAsicDto,
   UpdateAsicDto,
-} from '../../../../src/modules/asics';
+} from '@modules/asics';
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {

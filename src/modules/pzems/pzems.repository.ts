@@ -10,7 +10,7 @@ export class PzemsRepository {
     private readonly pzemsRepository: Repository<Pzem>,
   ) {}
 
-  create(sensorsData: Pzem): Promise<Pzem> {
+  save(sensorsData: Pzem): Promise<Pzem> {
     return this.pzemsRepository.save(sensorsData);
   }
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PzemsController, PzemsService } from '../../../src/modules/pzems';
-import { PzemsServiceMock } from './services/mocks/pzems.service.mock';
+import { PzemsController, PzemsService } from '@modules/pzems';
+import { PzemsServiceMock } from './mocks/pzems.service.mock';
 import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 
 describe('PzemsController', () => {

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PzemsRepository, Pzem } from '../../../src/modules/pzems';
+import { PzemsRepository, Pzem } from '@modules/pzems';
 
 describe('PzemsRepository', () => {
   let repository: PzemsRepository;

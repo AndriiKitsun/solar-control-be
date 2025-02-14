@@ -1,4 +1,4 @@
-import { SaveSettingsDto } from '../../../../../src/modules/settings/dto';
+import { SaveSettingsDto } from '@modules/settings/dto';
 
 export class SaveSettingsDtoMock {
   static readonly saveSettingsDtoMock: SaveSettingsDto = {

@@ -4,7 +4,7 @@ import {
   AsicsRepository,
   AsicSummaryResponseDto,
   UpdateAsicDto,
-} from '../../../src/modules/asics';
+} from '@modules/asics';
 import { AsicsApiService } from '@api/modules';
 import { AsicsRepositoryMock } from './mocks/asics.repository.mock';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';

@@ -1,12 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PzemsGateway } from '../../../src/modules/pzems';
+import { PzemsGateway, PzemsService } from '@modules/pzems';
+import { PzemsServiceMock } from './mocks/pzems.service.mock';
 
 describe('PzemsGateway', () => {
   let gateway: PzemsGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PzemsGateway],
+      providers: [
+        PzemsGateway,
+        {
+          provide: PzemsService,
+          useClass: PzemsServiceMock,
+        },
+      ],
     }).compile();
 
     gateway = module.get(PzemsGateway);

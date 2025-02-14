@@ -1,4 +1,4 @@
-import { Setting } from '../../../../../src/modules/settings/entities';
+import { Setting } from '@modules/settings/entities';
 
 export class SettingEntityMock {
   static readonly settingMock: Setting = {
