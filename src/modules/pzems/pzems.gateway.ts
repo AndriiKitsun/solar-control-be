@@ -14,7 +14,7 @@ export class PzemsGateway {
 
   @OnEvent(ESP_SENSORS_EVENT)
   async handleEspMessage(data: EspSensorsData, raw: string): Promise<void> {
-    const message = await this.pzemsService.handleSensors(data, raw);
+    const message = await this.pzemsService.handleEspMessage(data, raw);
 
     if (!this.server.clients.size) {
       return;

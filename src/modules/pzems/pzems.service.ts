@@ -1,14 +1,16 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { PzemsRepository } from './pzems.repository';
-import { Pzem, PzemItem } from './entities';
+import { Pzem } from './entities';
 import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { SensorsAvgVoltageGroup, SensorsAvgVoltageConfig } from './pzems.types';
 import { SENSORS_AVG_VOLTAGE_CONFIG } from './pzems.constants';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PzemsService implements OnModuleInit {
+  private readonly logger = new Logger(PzemsService.name);
+
   constructor(
     private readonly pzemsRepository: PzemsRepository,
     private readonly espApiService: EspApiService,
@@ -22,25 +24,39 @@ export class PzemsService implements OnModuleInit {
     }
   }
 
-  async handleSensors(data: EspSensorsData, raw: string): Promise<string> {
-    if (!data.sensors.length) {
+  async handleEspMessage(
+    espSensors: EspSensorsData,
+    raw: string,
+  ): Promise<string> {
+    const sensorsData = plainToInstance(Pzem, espSensors, {
+      excludeExtraneousValues: true,
+    });
+
+    if (!sensorsData.sensors.length) {
       return raw;
     }
 
-    const pzem = await this.saveSensors(data);
-    const mapped = instanceToPlain(plainToInstance(Pzem, pzem));
+    try {
+      const pzem = await this.saveSensors(sensorsData);
+      const response = plainToInstance(Pzem, pzem);
 
-    return JSON.stringify(mapped);
+      return JSON.stringify(response);
+    } catch (err) {
+      const fallback: Partial<Pzem> = {
+        createdAtGmt: new Date().toJSON(),
+        sensors: [],
+      };
+
+      this.logger.error(err);
+
+      return JSON.stringify(fallback);
+    }
   }
 
-  async saveSensors(pzemData: EspSensorsData): Promise<Pzem> {
-    await this.calcAvgVoltage(pzemData, SENSORS_AVG_VOLTAGE_CONFIG);
+  async saveSensors(sensorsData: Pzem): Promise<Pzem> {
+    await this.calcAvgVoltage(sensorsData, SENSORS_AVG_VOLTAGE_CONFIG);
 
-    // if (Math.random() > 0.5) {
-    //   throw new EntityNotFoundError(Pzem, 'kekw');
-    // }
-
-    return this.pzemsRepository.create(pzemData);
+    return this.pzemsRepository.create(sensorsData);
   }
 
   resetEnergyCounter(): Promise<EspPzemCounter[]> {
@@ -48,20 +64,24 @@ export class PzemsService implements OnModuleInit {
   }
 
   async calcAvgVoltage(
-    pzemData: EspSensorsData,
+    sensorsData: Pzem,
     config: SensorsAvgVoltageConfig,
   ): Promise<void> {
     const period = config.fetchLimit * this.appConfig.feature.pzemCalcPeriod;
 
-    const recentPzems = await this.pzemsRepository.findAllBefore(
-      pzemData.createdAtGmt,
+    const recentSensors = await this.pzemsRepository.findAllBefore(
+      sensorsData.createdAtGmt,
       period,
     );
 
     const result: Record<string, SensorsAvgVoltageGroup> = {};
 
-    for (const recentPzem of recentPzems) {
-      recentPzem.sensors.forEach((pzem) => {
+    for (const recent of recentSensors) {
+      recent.sensors.forEach((pzem) => {
+        if (!pzem.name) {
+          return;
+        }
+
         if (!result[pzem.name]) {
           result[pzem.name] = { count: 0, sum: 0 };
         }
@@ -77,16 +97,22 @@ export class PzemsService implements OnModuleInit {
       });
     }
 
-    for (const pzemDto of pzemData.sensors) {
-      const group = result[pzemDto.name];
-
-      if (!group || group.count < config.countLimit[pzemDto.name]) {
-        (pzemDto as PzemItem).avgVoltage = 0;
+    for (const espSensor of sensorsData.sensors) {
+      if (!espSensor.name) {
+        espSensor.avgVoltage = 0;
 
         continue;
       }
 
-      (pzemDto as PzemItem).avgVoltage = group.sum / group.count;
+      const group = result[espSensor.name];
+
+      if (!group || group.count < config.countLimit[espSensor.name]) {
+        espSensor.avgVoltage = 0;
+
+        continue;
+      }
+
+      espSensor.avgVoltage = group.sum / group.count;
     }
   }
 }

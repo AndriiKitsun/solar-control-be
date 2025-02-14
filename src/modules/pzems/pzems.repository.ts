@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Pzem } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Not, IsNull } from 'typeorm';
-import { EspSensorsData } from '@api/modules';
 
 @Injectable()
 export class PzemsRepository {
@@ -11,11 +10,11 @@ export class PzemsRepository {
     private readonly pzemsRepository: Repository<Pzem>,
   ) {}
 
-  create(pzemData: EspSensorsData): Promise<Pzem> {
-    return this.pzemsRepository.save(pzemData);
+  create(sensorsData: Pzem): Promise<Pzem> {
+    return this.pzemsRepository.save(sensorsData);
   }
 
-  findAllBefore(date: string, seconds: number): Promise<Pzem[]> {
+  findAllBefore(date: Date | string, seconds: number): Promise<Pzem[]> {
     const fromDate = new Date(date);
     fromDate.setSeconds(fromDate.getSeconds() - seconds);
     fromDate.setMilliseconds(0);
