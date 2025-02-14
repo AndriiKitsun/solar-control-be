@@ -1,18 +1,19 @@
-import { EspWsServiceInterface, EspSensor, EspSensorsData } from '../esp.types';
-import { EventEmitter } from 'node:events';
+import { EspSensor, EspSensorsData } from '../esp.types';
 import { faker } from '@faker-js/faker';
 import { Observable, interval, map } from 'rxjs';
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ESP_SENSORS_EVENT } from '../esp.constants';
 
-export class FakeEspWsService implements EspWsServiceInterface {
-  events = new EventEmitter();
-
-  constructor() {
+@Injectable()
+export class FakeEspWsService {
+  constructor(private readonly eventEmitter: EventEmitter2) {
     this.broadcastSensors();
   }
 
   broadcastSensors(): void {
     this.getSensorsData().subscribe((data: EspSensorsData) => {
-      this.events.emit('message', data, JSON.stringify(data));
+      this.eventEmitter.emit(ESP_SENSORS_EVENT, data, JSON.stringify(data));
     });
   }
 

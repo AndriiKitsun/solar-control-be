@@ -3,7 +3,9 @@ import { EspConfigType, EspConfig } from '@config/esp.config';
 import { EspPzemCounter, EspRelayStatus } from './esp.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
-import { HttpError } from 'src/common/interfaces';
+import { ServerError, HttpSubError } from 'src/common/interfaces';
+import { SystemName, ErrorCode } from '@common/enums';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class EspApiService extends HttpClientService {
@@ -38,25 +40,24 @@ export class EspApiService extends HttpClientService {
   }
 
   didEncounterError(error: AxiosError): HttpException {
-    let status: HttpStatus;
-
-    if (error.response?.status) {
-      status = error.response.status;
-    } else if (error.code === 'ECONNABORTED' || error.code === 'EHOSTDOWN') {
-      status = HttpStatus.GATEWAY_TIMEOUT;
-    } else {
-      status = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
-
+    const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
     const message =
       typeof error.response?.data === 'string'
         ? error.response.data
         : error.message;
 
-    const response: HttpError = {
+    const response: ServerError<HttpSubError> = {
+      id: randomUUID(),
+      errors: [
+        {
+          code: error.code ?? ErrorCode.HTTP_UNKNOWN,
+          message,
+          type: error.constructor.name,
+        },
+      ],
+      status,
+      system: SystemName.ESP,
       timestamp: new Date().toJSON(),
-      code: error.code,
-      message,
     };
 
     return new HttpException(response, status);

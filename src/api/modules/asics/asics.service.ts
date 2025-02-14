@@ -9,8 +9,10 @@ import {
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
-import { HttpError } from '@common/interfaces';
+import { ServerError, HttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
+import { randomUUID } from 'node:crypto';
+import { SystemName, ErrorCode } from '@common/enums';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
@@ -75,23 +77,31 @@ export class AsicsApiService extends HttpClientService {
   }
 
   didEncounterError(error: AxiosError): any {
-    const response: HttpError = {
-      timestamp: new Date().toJSON(),
-      code: error.code,
-    };
-
     const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (!error.response?.data) {
-      response.message = error.message;
+    let message: string;
 
-      return new HttpException(response, status);
+    if (!error.response?.data) {
+      message = error.message;
+    } else if (typeof error.response.data === 'string') {
+      message = error.response.data;
+    } else {
+      message = JSON.stringify(error.response.data);
     }
 
-    response.message =
-      typeof error.response.data === 'string'
-        ? error.response.data
-        : JSON.stringify(error.response.data);
+    const response: ServerError<HttpSubError> = {
+      id: randomUUID(),
+      errors: [
+        {
+          code: error.code ?? ErrorCode.HTTP_UNKNOWN,
+          message,
+          type: error.constructor.name,
+        },
+      ],
+      status,
+      system: SystemName.ASIC,
+      timestamp: new Date().toJSON(),
+    };
 
     return new HttpException(response, status);
   }

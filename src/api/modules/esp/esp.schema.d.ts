@@ -220,7 +220,7 @@ export interface components {
     };
     Sensor: {
       /** @description The name of the sensor */
-      name: string;
+      name?: string;
       /**
        * Format: float
        * @description AC/DC voltage in Volts

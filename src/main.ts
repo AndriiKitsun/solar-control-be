@@ -8,6 +8,15 @@ import { ConfigService } from '@nestjs/config';
 import { AppConfigType, APP_NAMESPACE } from '@config/app.config';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
+import { Logger as NestLogger } from '@nestjs/common';
+
+process.on('uncaughtException', (error) => {
+  NestLogger.error(error, 'uncaughtException');
+});
+
+process.on('unhandledRejection', (reason) => {
+  NestLogger.error(reason, 'unhandledRejection');
+});
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestFastifyApplication>(

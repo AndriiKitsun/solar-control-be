@@ -22,7 +22,7 @@
       "@api/*": ["src/api/*", "test/api/*"],
       "@common/*": ["src/common/*", "test/common/*"],
       "@config/*": ["src/config/*", "test/config/*"],
-      "@models/*": ["src/models/*", "test/models/*"],
+      "@modules/*": ["src/modules/*", "test/modules/*"],
       "@providers/*": ["src/providers/*", "test/providers/*"]
     }
   }

@@ -3,19 +3,21 @@ import {
   ClassSerializerInterceptor,
   ValidationPipe,
 } from '@nestjs/common';
-import { PzemsModule } from '@models/pzems';
-import { AsicsModule } from '@models/asics';
+import { PzemsModule } from './modules/pzems';
+import { AsicsModule } from './modules/asics';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '@config/app.config';
 import { EspConfig } from '@config/esp.config';
 import { PostgresConfig } from '@config/postgres.config';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { PostgresProvider, PinoLoggerProvider } from '@providers/index';
 import { convertToHttpException } from '@common/utils';
-import { SettingsModule } from '@models/settings/settings.module';
-import { RelaysModule } from '@models/relays/relays.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { RelaysModule } from './modules/relays/relays.module';
 import { LoggerModule } from 'nestjs-pino';
+import { TypeORMExceptionFilter } from '@common/filters';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { LoggerModule } from 'nestjs-pino';
       inject: [AppConfig.KEY],
       useFactory: PinoLoggerProvider,
     }),
+    EventEmitterModule.forRoot(),
     AsicsModule,
     PzemsModule,
     RelaysModule,
@@ -40,6 +43,10 @@ import { LoggerModule } from 'nestjs-pino';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeORMExceptionFilter,
     },
     {
       provide: APP_PIPE,
