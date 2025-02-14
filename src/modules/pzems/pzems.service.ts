@@ -37,6 +37,10 @@ export class PzemsService implements OnModuleInit {
     }
 
     try {
+      if (isNaN(new Date(sensorsData.createdAtGmt).getTime())) {
+        throw new Error(`Timestamp '${espSensors.createdAtGmt}' is invalid`);
+      }
+
       const pzem = await this.saveSensors(sensorsData);
       const response = plainToInstance(Pzem, pzem);
 
