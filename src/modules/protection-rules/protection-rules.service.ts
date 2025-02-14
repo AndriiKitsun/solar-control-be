@@ -9,10 +9,8 @@ export class ProtectionRulesService {
     private readonly protectionRulesRepository: ProtectionRulesRepository,
   ) {}
 
-  upsertRule(protectionRuleDto: ProtectionRuleDto) {
-    console.log(`protectionRuleDto -->`, protectionRuleDto);
-
-    return 'This action adds a new protectionRule';
+  saveRule(protectionRuleDto: ProtectionRuleDto): Promise<ProtectionRule> {
+    return this.protectionRulesRepository.saveRule(protectionRuleDto);
   }
 
   getRules(): Promise<ProtectionRule[]> {

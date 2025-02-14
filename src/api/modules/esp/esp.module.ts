@@ -3,7 +3,7 @@ import { EspApiService } from './esp.service';
 import { ESP_WS_SERVICE } from './esp.constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
-import { EspWsService } from './ws/esp-ws.service';
+import { FakeEspWsService } from './ws/fake-esp-ws.service';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { EspWsService } from './ws/esp-ws.service';
     EspApiService,
     {
       provide: ESP_WS_SERVICE,
-      useClass: EspWsService,
+      useClass: FakeEspWsService,
     },
   ],
   exports: [EspApiService, ESP_WS_SERVICE],

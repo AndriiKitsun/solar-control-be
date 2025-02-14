@@ -1,10 +1,10 @@
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { ProtectionRuleId, ProtectionActionId } from '../enums';
+import { IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
 
 export class ProtectionRuleDto {
   @IsEnum(ProtectionRuleId)
   @IsNotEmpty()
-  groupId!: ProtectionRuleId;
+  id!: ProtectionRuleId;
 
   @IsNumber()
   @IsNotEmpty()

@@ -3,7 +3,7 @@ import { ProtectionRuleId, ProtectionActionId } from '../enums';
 
 @Entity()
 export class ProtectionRule {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'enum', enum: ProtectionRuleId })
   id!: ProtectionRuleId;
 
   @Column()
@@ -12,6 +12,6 @@ export class ProtectionRule {
   @Column()
   max!: number;
 
-  @Column()
+  @Column({ type: 'enum', enum: ProtectionActionId, array: true })
   actions!: ProtectionActionId[];
 }
