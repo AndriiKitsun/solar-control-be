@@ -6,10 +6,10 @@ export class ProtectionRule {
   @PrimaryColumn({ type: 'enum', enum: ProtectionRuleId })
   id!: ProtectionRuleId;
 
-  @Column()
+  @Column({ type: 'float' })
   min!: number;
 
-  @Column()
+  @Column({ type: 'float' })
   max!: number;
 
   @Column({ type: 'enum', enum: ProtectionActionId, array: true })

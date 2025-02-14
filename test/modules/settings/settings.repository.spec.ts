@@ -36,13 +36,9 @@ describe('SettingsRepository', () => {
   });
 
   describe('create', () => {
-    let insertSpy: jest.SpyInstance;
-
-    beforeEach(() => {
-      insertSpy = jest.spyOn(settingRepository, 'insert');
-    });
-
     it('should return added entity', async () => {
+      const insertSpy = jest.spyOn(settingRepository, 'insert');
+
       const result = await repository.create(saveSettingsDtoMock);
 
       expect(insertSpy).toHaveBeenCalledWith(saveSettingsDtoMock);
