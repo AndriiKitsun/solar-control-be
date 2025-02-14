@@ -1,15 +1,15 @@
 import { BadRequestException, HttpStatus } from '@nestjs/common';
-import { NewValidationSubError, NewHttpError } from '../interfaces';
-import { NewSystemName } from '../enums';
+import { ValidationSubError, ServerError } from '../interfaces';
+import { SystemName } from '../enums';
 import { randomUUID } from 'node:crypto';
 import { ValidationError } from 'class-validator';
 
 export function convertToHttpException(
   errors: ValidationError[],
 ): BadRequestException {
-  const response: NewHttpError<NewValidationSubError> = {
+  const response: ServerError<ValidationSubError> = {
     id: randomUUID(),
-    errors: errors.map((error: ValidationError): NewValidationSubError => {
+    errors: errors.map((error: ValidationError): ValidationSubError => {
       const reason = error.value ? 'invalid' : 'missing';
 
       return {
@@ -25,7 +25,7 @@ export function convertToHttpException(
         type: error.constructor.name,
       };
     }),
-    system: NewSystemName.SERVER,
+    system: SystemName.SERVER,
     status: HttpStatus.BAD_REQUEST,
     timestamp: new Date().toJSON(),
   };

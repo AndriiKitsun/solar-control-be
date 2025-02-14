@@ -1,4 +1,4 @@
-export enum NewSystemName {
+export enum SystemName {
   SERVER = 'Server',
   ASIC = 'Asic',
   ESP = 'ESP',

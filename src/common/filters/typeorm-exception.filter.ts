@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { TypeORMError } from 'typeorm';
 import { FastifyReply } from 'fastify';
-import { NewHttpError } from '../interfaces';
+import { ServerError } from '../interfaces';
 import { randomUUID } from 'node:crypto';
-import { NewSystemName } from '../enums';
+import { SystemName } from '../enums';
 import { TYPEORM_ERROR_STATUS } from '../constants';
 
 @Catch(TypeORMError)
@@ -19,7 +19,7 @@ export class TypeORMExceptionFilter implements ExceptionFilter<TypeORMError> {
     const status =
       TYPEORM_ERROR_STATUS[exception.name] ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const error: NewHttpError = {
+    const error: ServerError = {
       id: randomUUID(),
       errors: [
         {
@@ -28,7 +28,7 @@ export class TypeORMExceptionFilter implements ExceptionFilter<TypeORMError> {
         },
       ],
       status,
-      system: NewSystemName.DATABASE,
+      system: SystemName.DATABASE,
       timestamp: new Date().toJSON(),
     };
 

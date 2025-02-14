@@ -3,8 +3,8 @@ import { EspConfigType, EspConfig } from '@config/esp.config';
 import { EspPzemCounter, EspRelayStatus } from './esp.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
-import { NewHttpError, NewHttpSubError } from 'src/common/interfaces';
-import { NewSystemName, ErrorCode } from '@common/enums';
+import { ServerError, HttpSubError } from 'src/common/interfaces';
+import { SystemName, ErrorCode } from '@common/enums';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
@@ -46,7 +46,7 @@ export class EspApiService extends HttpClientService {
         ? error.response.data
         : error.message;
 
-    const response: NewHttpError<NewHttpSubError> = {
+    const response: ServerError<HttpSubError> = {
       id: randomUUID(),
       errors: [
         {
@@ -56,7 +56,7 @@ export class EspApiService extends HttpClientService {
         },
       ],
       status,
-      system: NewSystemName.ESP,
+      system: SystemName.ESP,
       timestamp: new Date().toJSON(),
     };
 

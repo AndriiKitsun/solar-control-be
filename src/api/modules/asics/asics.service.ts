@@ -9,10 +9,10 @@ import {
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { HttpClientService } from '../../common';
-import { NewHttpError, NewHttpSubError } from '@common/interfaces';
+import { ServerError, HttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
 import { randomUUID } from 'node:crypto';
-import { NewSystemName, ErrorCode } from '@common/enums';
+import { SystemName, ErrorCode } from '@common/enums';
 
 @Injectable()
 export class AsicsApiService extends HttpClientService {
@@ -89,7 +89,7 @@ export class AsicsApiService extends HttpClientService {
       message = JSON.stringify(error.response.data);
     }
 
-    const response: NewHttpError<NewHttpSubError> = {
+    const response: ServerError<HttpSubError> = {
       id: randomUUID(),
       errors: [
         {
@@ -99,7 +99,7 @@ export class AsicsApiService extends HttpClientService {
         },
       ],
       status,
-      system: NewSystemName.ASIC,
+      system: SystemName.ASIC,
       timestamp: new Date().toJSON(),
     };
 

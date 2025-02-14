@@ -1,1 +1,1 @@
-export * from './http-error.interface';
+export * from './server-error.interface';
