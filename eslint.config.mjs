@@ -8,7 +8,7 @@ export default tseslint.config(
   {
     ignores: [
       'eslint.config.mjs',
-      'src/api/modules/esp/esp.schema.d.ts',
+      'src/api/modules/esp/types/esp.schema.d.ts',
       'src/api/modules/asics/asics.schema.d.ts',
     ],
   },

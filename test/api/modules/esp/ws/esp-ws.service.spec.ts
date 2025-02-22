@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EspWsService } from '@api/modules/esp/ws/esp-ws.service';
+import { EspSensorsWsService } from '@api/modules/esp/ws/sensors/sensors.service';
 import { EspConfig } from '@config/esp.config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 jest.mock('ws');
 
 describe('EspWsService', () => {
-  let service: EspWsService;
+  let service: EspSensorsWsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EspWsService,
+        EspSensorsWsService,
         {
           provide: EspConfig.KEY,
           useValue: {},
@@ -23,7 +23,7 @@ describe('EspWsService', () => {
       ],
     }).compile();
 
-    service = module.get(EspWsService);
+    service = module.get(EspSensorsWsService);
   });
 
   it('should be defined', () => {

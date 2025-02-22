@@ -1,9 +1,9 @@
-import { HttpClientService } from '@api/common/services/http-client.service';
+import { AbstractHttpService } from '@api/services/abstract-http.service';
 import { AxiosRequestConfig, AxiosError } from 'axios';
 import { ClassMock } from '@common/types/test.types';
 import { HttpException } from '@nestjs/common';
 
-export class HttpClientServiceMock implements ClassMock<HttpClientService> {
+export class HttpClientServiceMock implements ClassMock<AbstractHttpService> {
   static readonly responseMock = 'response';
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

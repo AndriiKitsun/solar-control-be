@@ -1,13 +1,13 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EspConfigType, EspConfig } from '@config/esp.config';
-import { WsClientService } from '../../../common';
-import { EspSensorsData } from '../esp.types';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ESP_SENSORS_EVENT } from '../esp.constants';
+import { ESP_SENSORS_EVENT } from '../../constants';
+import { EspSensorsData } from './sensors.types';
+import { AbstractWsService } from '../../../../services';
 
 @Injectable()
-export class EspWsService extends WsClientService {
-  protected override logger = new Logger(EspWsService.name);
+export class EspSensorsWsService extends AbstractWsService {
+  protected override logger = new Logger(EspSensorsWsService.name);
 
   constructor(
     @Inject(EspConfig.KEY)

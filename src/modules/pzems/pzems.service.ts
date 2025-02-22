@@ -1,7 +1,11 @@
 import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { PzemsRepository } from './pzems.repository';
 import { Pzem } from './entities';
-import { EspApiService, EspPzemCounter, EspSensorsData } from '@api/modules';
+import {
+  EspPzemCounter,
+  EspSensorsData,
+  EspPzemsService,
+} from '@api/modules/esp';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { SensorsAvgVoltageGroup, SensorsAvgVoltageConfig } from './pzems.types';
 import { SENSORS_AVG_VOLTAGE_CONFIG } from './pzems.constants';
@@ -13,7 +17,7 @@ export class PzemsService implements OnModuleInit {
 
   constructor(
     private readonly pzemsRepository: PzemsRepository,
-    private readonly espApiService: EspApiService,
+    private readonly espPzemsService: EspPzemsService,
     @Inject(AppConfig.KEY)
     private readonly appConfig: AppConfigType,
   ) {}
@@ -64,7 +68,7 @@ export class PzemsService implements OnModuleInit {
   }
 
   resetEnergyCounter(): Promise<EspPzemCounter[]> {
-    return this.espApiService.resetCounter();
+    return this.espPzemsService.resetCounter();
   }
 
   async calcAvgVoltage(

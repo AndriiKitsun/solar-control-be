@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { EspApiService } from './esp.service';
-import { ESP_WS_SERVICE } from './esp.constants';
+import { ESP_WS_SERVICE } from './constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
-import { FakeEspWsService } from './ws/fake-esp-ws.service';
+import { EspFakeSensorsWsService } from './ws';
+import { EspPzemsService, EspRelaysService } from './collections';
+
+const PROVIDERS = [EspPzemsService, EspRelaysService];
 
 @Module({
   imports: [
@@ -17,12 +19,12 @@ import { FakeEspWsService } from './ws/fake-esp-ws.service';
     }),
   ],
   providers: [
-    EspApiService,
+    ...PROVIDERS,
     {
       provide: ESP_WS_SERVICE,
-      useClass: FakeEspWsService,
+      useClass: EspFakeSensorsWsService,
     },
   ],
-  exports: [EspApiService, ESP_WS_SERVICE],
+  exports: [...PROVIDERS, ESP_WS_SERVICE],
 })
 export class EspApiModule {}

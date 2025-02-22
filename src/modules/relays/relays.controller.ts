@@ -1,5 +1,5 @@
 import { Controller, Get, Put, Body } from '@nestjs/common';
-import { EspRelayStatus } from '@api/modules';
+import { EspRelayStatus } from '@api/modules/esp';
 import { RelaysService } from './relays.service';
 import { UpdateRelayDto } from './dto';
 

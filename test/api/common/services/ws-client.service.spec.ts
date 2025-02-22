@@ -1,8 +1,8 @@
-import { WsClientService } from '@api/common/services/ws-client.service';
+import { AbstractWsService } from '@api/services/abstract-ws.service';
 
 jest.mock('ws');
 
-class TestService extends WsClientService {
+class TestService extends AbstractWsService {
   constructor() {
     super('url');
   }
@@ -11,7 +11,7 @@ class TestService extends WsClientService {
 }
 
 describe('WsClientService', () => {
-  let service: WsClientService;
+  let service: AbstractWsService;
 
   beforeEach(() => {
     service = new TestService();

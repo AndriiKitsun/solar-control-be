@@ -2,7 +2,7 @@ import { HttpException, Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig, AxiosError } from 'axios';
 
-export abstract class HttpClientService {
+export abstract class AbstractHttpService {
   @Inject(HttpService)
   private readonly httpService!: HttpService;
 
@@ -45,5 +45,5 @@ export abstract class HttpClientService {
     }
   }
 
-  abstract didEncounterError(error: AxiosError): HttpException;
+  protected abstract didEncounterError(error: AxiosError): HttpException;
 }

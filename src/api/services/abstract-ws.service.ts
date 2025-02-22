@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { WebSocket } from 'ws';
 
-export abstract class WsClientService {
+export abstract class AbstractWsService {
   protected logger?: Logger;
   protected heartbeatInterval = 30000;
   protected client?: WebSocket;

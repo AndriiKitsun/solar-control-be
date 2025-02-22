@@ -1,9 +1,9 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { WebSocketServer as WsServer } from 'ws';
-import { EspSensorsData } from '@api/modules';
-import { ESP_SENSORS_EVENT } from '@api/modules/esp/esp.constants';
+import { ESP_SENSORS_EVENT } from '@api/modules/esp/constants/esp.constants';
 import { PzemsService } from './pzems.service';
 import { OnEvent } from '@nestjs/event-emitter';
+import { EspSensorsData } from '@api/modules/esp';
 
 @WebSocketGateway({ path: 'pzems' })
 export class PzemsGateway {

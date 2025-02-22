@@ -2,7 +2,7 @@ import { Controller, Get, Body, Put, Param } from '@nestjs/common';
 import { ProtectionRulesService } from './protection-rules.service';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleDto } from './dto';
-import { ProtectionRuleParams } from './params/protection-rule.params';
+import { ProtectionRuleParams } from './params';
 
 @Controller('protection-rules')
 export class ProtectionRulesController {

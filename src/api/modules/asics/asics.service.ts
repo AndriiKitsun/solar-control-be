@@ -8,14 +8,14 @@ import {
   AsicPerfSummary,
 } from './asics.types';
 import { AxiosError } from 'axios';
-import { HttpClientService } from '../../common';
 import { ServerError, HttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
 import { randomUUID } from 'node:crypto';
 import { SystemName, ErrorCode } from '@common/enums';
+import { AbstractHttpService } from '../../services';
 
 @Injectable()
-export class AsicsApiService extends HttpClientService {
+export class AsicsApiService extends AbstractHttpService {
   private logger = new Logger(AsicsApiService.name);
 
   login(ip: string, password: string): Promise<AsicUnlockSuccess> {
