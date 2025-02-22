@@ -55,6 +55,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/protection-rules': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Returns values of all registered protection rules */
+    get: operations['getProtectionRules'];
+    /** Save protection rule */
+    put: operations['saveProtectionRule'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/pzems/address': {
     parameters: {
       query?: never;
@@ -215,7 +233,7 @@ export interface components {
        * Format: date-time
        * @description Data collection date in UTC
        */
-      createdAtGmt: string;
+      createdAt: string;
       sensors: components['schemas']['Sensor'][];
     };
     Sensor: {
@@ -261,6 +279,18 @@ export interface components {
        * @description Calculated value of active energy during T2 zone
        */
       t2Energy?: number;
+      /** @description Object with registered protection rules */
+      protection?: {
+        [key: string]: boolean;
+      };
+    };
+    ProtectionRule: {
+      /** @description The id of the protection rule */
+      id: string;
+      /** @description Min value of rule */
+      min: number;
+      /** @description Max value of rule */
+      max: number;
     };
     PzemAddress: {
       /** @description The name of the PZEM sensor */
@@ -348,6 +378,75 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['SensorsData'];
+        };
+      };
+    };
+  };
+  getProtectionRules: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProtectionRule'][];
+        };
+      };
+    };
+  };
+  saveProtectionRule: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['ProtectionRule'];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/plain': string;
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/plain': string;
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/plain': string;
         };
       };
     };

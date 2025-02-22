@@ -10,7 +10,7 @@ export class Pzem {
 
   @Expose()
   @Column({ type: 'timestamptz', precision: 3 })
-  createdAtGmt!: Date | string;
+  createdAt!: Date | string;
 
   @Expose()
   @Type(() => PzemItem)

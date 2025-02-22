@@ -4,7 +4,7 @@ import { ClassMock } from '@common/types/test.types';
 export class PzemsRepositoryMock implements ClassMock<PzemsRepository> {
   static readonly pzemMock: Pzem = {
     id: 'id',
-    createdAtGmt: new Date(),
+    createdAt: new Date(),
     sensors: [],
   };
   static readonly pzemsMock: Pzem[] = [this.pzemMock];

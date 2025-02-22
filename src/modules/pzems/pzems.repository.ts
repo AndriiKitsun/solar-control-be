@@ -24,7 +24,7 @@ export class PzemsRepository {
 
     return this.pzemsRepository.find({
       select: {
-        createdAtGmt: true,
+        createdAt: true,
         sensors: {
           name: true,
           voltage: true,
@@ -34,13 +34,13 @@ export class PzemsRepository {
         sensors: true,
       },
       where: {
-        createdAtGmt: Between(fromDate, toDate),
+        createdAt: Between(fromDate, toDate),
         sensors: {
           voltage: Not(IsNull()),
         },
       },
       order: {
-        createdAtGmt: 'DESC',
+        createdAt: 'DESC',
       },
     });
   }

@@ -37,8 +37,8 @@ export class PzemsService implements OnModuleInit {
     }
 
     try {
-      if (isNaN(new Date(sensorsData.createdAtGmt).getTime())) {
-        throw new Error(`Timestamp '${espSensors.createdAtGmt}' is invalid`);
+      if (isNaN(new Date(sensorsData.createdAt).getTime())) {
+        throw new Error(`Timestamp '${espSensors.createdAt}' is invalid`);
       }
 
       const pzem = await this.saveSensors(sensorsData);
@@ -47,7 +47,7 @@ export class PzemsService implements OnModuleInit {
       return JSON.stringify(response);
     } catch (err) {
       const fallback: Partial<Pzem> = {
-        createdAtGmt: new Date().toJSON(),
+        createdAt: new Date().toJSON(),
         sensors: [],
       };
 
@@ -74,7 +74,7 @@ export class PzemsService implements OnModuleInit {
     const period = config.fetchLimit * this.appConfig.feature.pzemCalcPeriod;
 
     const recentSensors = await this.pzemsRepository.findAllBefore(
-      sensorsData.createdAtGmt,
+      sensorsData.createdAt,
       period,
     );
 

@@ -29,7 +29,7 @@ export class FakeEspWsService {
     sensors.push(this.randomDcSensor('dcBattery'));
 
     return {
-      createdAtGmt: new Date().toJSON(),
+      createdAt: new Date().toJSON(),
       sensors,
     };
   }
