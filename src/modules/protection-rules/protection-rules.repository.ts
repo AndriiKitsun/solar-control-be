@@ -15,7 +15,16 @@ export class ProtectionRulesRepository {
 
   getRules(): Promise<ProtectionRule[]> {
     return this.repository.find({
-      cache: PROTECTION_RULES_CACHE_CONFIG.protectionRules,
+      cache: PROTECTION_RULES_CACHE_CONFIG.getRules,
+    });
+  }
+
+  getEnabledRules(): Promise<ProtectionRule[]> {
+    return this.repository.find({
+      where: {
+        enabled: true,
+      },
+      cache: PROTECTION_RULES_CACHE_CONFIG.getEnabledRules,
     });
   }
 
@@ -23,15 +32,13 @@ export class ProtectionRulesRepository {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    const payload: ProtectionRule = {
-      id,
-      ...ruleDto,
-    };
+    const payload: ProtectionRule = { id, ...ruleDto };
 
     const rule = await this.repository.save(payload);
 
     await this.repository.manager.connection.queryResultCache?.remove([
-      PROTECTION_RULES_CACHE_CONFIG.protectionRules.id,
+      PROTECTION_RULES_CACHE_CONFIG.getRules.id,
+      PROTECTION_RULES_CACHE_CONFIG.getEnabledRules.id,
     ]);
 
     return rule;

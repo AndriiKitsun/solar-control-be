@@ -23,7 +23,7 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
   override run(sensor: SensorItem, rules: ProtectionRule[]): boolean {
     const result = super.run(sensor, rules);
 
-    console.log(`result -->`, result);
+    console.log(`dc result -->`, result);
 
     return result;
   }

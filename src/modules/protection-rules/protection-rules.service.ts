@@ -2,14 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { ProtectionRuleDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
-import { ProtectionRuleId, ProtectionActionId } from './enums';
+import { ProtectionRuleId } from './enums';
 import { EspProtectionRulesService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT, Sensor } from '../sensors';
-import { ProtectionRulesExecutor } from './strategies/protection-rules.executor';
+import { ProtectionRulesExecutor } from './strategies';
 
 @Injectable()
 export class ProtectionRulesService {
+  private readonly allowedRulesToSave: ProtectionRuleId[] = [
+    ProtectionRuleId.AC_OUTPUT_FREQUENCY,
+    ProtectionRuleId.AC_OUTPUT_VOLTAGE,
+    ProtectionRuleId.DC_BATTERY_VOLTAGE,
+  ];
+
   constructor(
     private readonly protectionRulesRepository: ProtectionRulesRepository,
     private readonly espProtectionRulesService: EspProtectionRulesService,
@@ -22,7 +28,11 @@ export class ProtectionRulesService {
       return;
     }
 
-    const rules = await this.getRules();
+    const rules = await this.protectionRulesRepository.getEnabledRules();
+
+    if (!rules.length) {
+      return;
+    }
 
     this.protectionStrategyExecutor.execute(sensor.sensors, rules);
   }
@@ -37,11 +47,12 @@ export class ProtectionRulesService {
   ): Promise<ProtectionRule> {
     const rule = await this.protectionRulesRepository.saveRule(id, ruleDto);
 
-    if (ruleDto.actions.includes(ProtectionActionId.POWER_OFF)) {
+    if (this.allowedRulesToSave.includes(id)) {
       await this.espProtectionRulesService.saveProtectionRule({
-        id: id,
+        id,
         min: ruleDto.min,
         max: ruleDto.max,
+        enabled: ruleDto.enabled,
       });
     }
 

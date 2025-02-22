@@ -27,7 +27,7 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
   override run(sensor: SensorItem, rules: ProtectionRule[]): boolean {
     const result = super.run(sensor, rules);
 
-    console.log(`result -->`, result);
+    console.log(`ac result -->`, result);
 
     return result;
   }

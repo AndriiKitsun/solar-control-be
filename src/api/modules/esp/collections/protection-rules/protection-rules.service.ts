@@ -1,12 +1,25 @@
 import { EspHttpBaseService } from '../../services';
 import { Injectable } from '@nestjs/common';
-import { EspProtectionRule } from './protection-rules.types';
+import {
+  EspProtectionRule,
+  EspProtectionRuleBody,
+} from './protection-rules.types';
 
 @Injectable()
 export class EspProtectionRulesService extends EspHttpBaseService {
-  saveProtectionRule(rule: EspProtectionRule): Promise<EspProtectionRule> {
+  saveProtectionRule(rule: EspProtectionRuleBody): Promise<EspProtectionRule> {
     const url = this.buildUrl('protection-rules');
+    const body: EspProtectionRule = {
+      id: rule.id,
+      min: rule.min,
+      max: rule.max,
+    };
 
-    return this.put(url, rule);
+    if (!rule.enabled) {
+      body.min = 0;
+      body.max = 0;
+    }
+
+    return this.put(url, body);
   }
 }

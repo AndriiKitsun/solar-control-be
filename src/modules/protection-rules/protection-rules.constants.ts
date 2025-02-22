@@ -8,8 +8,12 @@ export const PROTECTION_RULES_CACHE_CONFIG: Record<
   ProtectionRulesCacheKey,
   TypeormCacheConfig
 > = {
-  [ProtectionRulesCacheKey.PROTECTION_RULES]: {
-    id: ProtectionRulesCacheKey.PROTECTION_RULES,
+  [ProtectionRulesCacheKey.GET_RULES]: {
+    id: ProtectionRulesCacheKey.GET_RULES,
+    milliseconds: DateMilliseconds.DAY,
+  },
+  [ProtectionRulesCacheKey.GET_ENABLED_RULES]: {
+    id: ProtectionRulesCacheKey.GET_ENABLED_RULES,
     milliseconds: DateMilliseconds.DAY,
   },
 };

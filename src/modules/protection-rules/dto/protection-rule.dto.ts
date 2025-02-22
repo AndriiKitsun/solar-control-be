@@ -1,5 +1,4 @@
-import { ProtectionActionId } from '../enums';
-import { IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
 
 export class ProtectionRuleDto {
   @IsNumber()
@@ -10,7 +9,7 @@ export class ProtectionRuleDto {
   @IsNotEmpty()
   max!: number;
 
-  @IsEnum(ProtectionActionId, { each: true })
-  @IsNotEmpty({ each: true })
-  actions!: ProtectionActionId[];
+  @IsBoolean()
+  @IsNotEmpty()
+  enabled!: boolean;
 }

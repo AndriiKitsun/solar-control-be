@@ -5,12 +5,7 @@ export enum ProtectionRuleId {
   DC_BATTERY_VOLTAGE = 'dcBatteryVoltage',
 }
 
-export enum ProtectionActionId {
-  DISABLE_ASICS = 'disableAsics',
-  ALARM = 'alarm',
-  POWER_OFF = 'powerOff',
-}
-
-export enum ProtectionRulesCacheKey {
-  PROTECTION_RULES = 'protectionRules',
+export const enum ProtectionRulesCacheKey {
+  GET_RULES = 'getRules',
+  GET_ENABLED_RULES = 'getEnabledRules',
 }
