@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { SensorsRepository } from './sensors.repository';
 import { Sensor } from './entities';
-import { EspSensorsData } from '@api/modules/esp';
+import { EspSensorsData, ESP_SENSORS_EVENT } from '@api/modules/esp';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import {
   SensorsAvgVoltageGroup,
@@ -17,7 +17,7 @@ import {
   SENSORS_AVG_VOLTAGE_CONFIG,
   SENSORS_DATA_EVENT,
 } from './sensors.constants';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Observable, Subject, map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 
@@ -33,7 +33,7 @@ export class SensorsService implements OnModuleInit {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  // @OnEvent(ESP_SENSORS_EVENT)
+  @OnEvent(ESP_SENSORS_EVENT)
   async onSensorsEvent(sensorsMessage: EspSensorsData): Promise<void> {
     const sensor = await this.saveSensors(sensorsMessage);
 

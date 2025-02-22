@@ -6,21 +6,25 @@ import { ProtectionRuleId, ProtectionActionId } from './enums';
 import { EspProtectionRulesService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT, Sensor } from '../sensors';
+import { ProtectionRulesExecutor } from './strategies/protection-rules.executor';
 
 @Injectable()
 export class ProtectionRulesService {
   constructor(
     private readonly protectionRulesRepository: ProtectionRulesRepository,
     private readonly espProtectionRulesService: EspProtectionRulesService,
+    private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
   ) {}
 
   @OnEvent(SENSORS_DATA_EVENT)
-  onSensorsEvent(sensor: Sensor): void {
+  async onSensorsEvent(sensor: Sensor): Promise<void> {
     if (!sensor.sensors.length) {
       return;
     }
 
-    console.log(`sensor -->`, sensor);
+    const rules = await this.getRules();
+
+    this.protectionStrategyExecutor.execute(sensor.sensors, rules);
   }
 
   getRules(): Promise<ProtectionRule[]> {

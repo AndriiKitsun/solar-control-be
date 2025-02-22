@@ -23,15 +23,17 @@ export class ProtectionRulesRepository {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    const rule: ProtectionRule = {
+    const payload: ProtectionRule = {
       id,
       ...ruleDto,
     };
+
+    const rule = await this.repository.save(payload);
 
     await this.repository.manager.connection.queryResultCache?.remove([
       PROTECTION_RULES_CACHE_CONFIG.protectionRules.id,
     ]);
 
-    return this.repository.save(rule);
+    return rule;
   }
 }
