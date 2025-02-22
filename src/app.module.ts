@@ -19,6 +19,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { TypeORMExceptionFilter } from '@common/filters';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProtectionRulesModule } from '@modules/protection-rules';
+import { SensorsModule } from '@modules/sensors';
 
 @Module({
   imports: [
@@ -36,10 +37,11 @@ import { ProtectionRulesModule } from '@modules/protection-rules';
     }),
     EventEmitterModule.forRoot(),
     AsicsModule,
+    ProtectionRulesModule,
     PzemsModule,
     RelaysModule,
+    SensorsModule,
     SettingsModule,
-    ProtectionRulesModule,
   ],
   providers: [
     {

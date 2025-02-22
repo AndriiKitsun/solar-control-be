@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { SensorsService } from './sensors.service';
 import { SensorsRepository } from './sensors.repository';
-import { EspApiModule } from '@api/modules/esp';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Sensor, SensorItem } from './entities';
-import { SensorsGateway } from './sensors.gateway';
+import { SensorsController } from './sensors.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sensor, SensorItem]), EspApiModule],
-  providers: [SensorsService, SensorsRepository, SensorsGateway],
+  imports: [TypeOrmModule.forFeature([Sensor, SensorItem])],
+  controllers: [SensorsController],
+  providers: [SensorsService, SensorsRepository],
 })
 export class SensorsModule {}
