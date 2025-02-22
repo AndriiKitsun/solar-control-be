@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProtectionRuleDto } from './dto';
 import { ProtectionRuleId } from './enums';
+import { PROTECTION_RULES_CACHE_CONFIG } from './protection-rules.constants';
 
 @Injectable()
 export class ProtectionRulesRepository {
@@ -12,7 +13,13 @@ export class ProtectionRulesRepository {
     private readonly repository: Repository<ProtectionRule>,
   ) {}
 
-  saveRule(
+  getRules(): Promise<ProtectionRule[]> {
+    return this.repository.find({
+      cache: PROTECTION_RULES_CACHE_CONFIG.protectionRules,
+    });
+  }
+
+  async saveRule(
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
@@ -21,10 +28,10 @@ export class ProtectionRulesRepository {
       ...ruleDto,
     };
 
-    return this.repository.save(rule);
-  }
+    await this.repository.manager.connection.queryResultCache?.remove([
+      PROTECTION_RULES_CACHE_CONFIG.protectionRules.id,
+    ]);
 
-  getRules(): Promise<ProtectionRule[]> {
-    return this.repository.find();
+    return this.repository.save(rule);
   }
 }

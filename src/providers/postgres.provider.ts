@@ -21,6 +21,10 @@ export class PostgresProvider implements TypeOrmOptionsFactory {
       database,
       autoLoadEntities: true,
       synchronize: true,
+      cache: {
+        type: 'database',
+        tableName: 'cache-table',
+      },
     };
   }
 }

@@ -10,3 +10,7 @@ export enum ProtectionActionId {
   ALARM = 'alarm',
   POWER_OFF = 'powerOff',
 }
+
+export enum ProtectionRulesCacheKey {
+  PROTECTION_RULES = 'protectionRules',
+}

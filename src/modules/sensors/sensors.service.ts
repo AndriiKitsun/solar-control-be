@@ -7,14 +7,17 @@ import {
 } from '@nestjs/common';
 import { SensorsRepository } from './sensors.repository';
 import { Sensor } from './entities';
-import { EspSensorsData, ESP_SENSORS_EVENT } from '@api/modules/esp';
+import { EspSensorsData } from '@api/modules/esp';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import {
   SensorsAvgVoltageGroup,
   SensorsAvgVoltageConfig,
 } from './sensors.types';
-import { SENSORS_AVG_VOLTAGE_CONFIG } from './sensors.constants';
-import { OnEvent } from '@nestjs/event-emitter';
+import {
+  SENSORS_AVG_VOLTAGE_CONFIG,
+  SENSORS_DATA_EVENT,
+} from './sensors.constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Observable, Subject, map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 
@@ -27,37 +30,15 @@ export class SensorsService implements OnModuleInit {
     private readonly pzemsRepository: SensorsRepository,
     @Inject(AppConfig.KEY)
     private readonly appConfig: AppConfigType,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @OnEvent(ESP_SENSORS_EVENT)
+  // @OnEvent(ESP_SENSORS_EVENT)
   async onSensorsEvent(sensorsMessage: EspSensorsData): Promise<void> {
-    const sensors = plainToInstance(Sensor, sensorsMessage, {
-      excludeExtraneousValues: true,
-    });
+    const sensor = await this.saveSensors(sensorsMessage);
 
-    if (!sensors.sensors.length) {
-      this.sensors$.next(sensors);
-
-      return;
-    }
-
-    try {
-      if (isNaN(new Date(sensorsMessage.createdAt).getTime())) {
-        throw new Error(`Timestamp '${sensorsMessage.createdAt}' is invalid`);
-      }
-
-      const sensor = await this.saveSensors(sensors);
-
-      this.sensors$.next(sensor);
-    } catch (err) {
-      this.sensors$.next({
-        id: '',
-        createdAt: new Date().toJSON(),
-        sensors: [],
-      });
-
-      this.logger.error(err);
-    }
+    this.sensors$.next(sensor);
+    this.eventEmitter.emit(SENSORS_DATA_EVENT, sensor);
   }
 
   onModuleInit(): void {
@@ -70,10 +51,34 @@ export class SensorsService implements OnModuleInit {
     return this.sensors$.pipe(map((data) => ({ data })));
   }
 
-  async saveSensors(sensorsData: Sensor): Promise<Sensor> {
-    await this.calcAvgVoltage(sensorsData, SENSORS_AVG_VOLTAGE_CONFIG);
+  async saveSensors(sensorsMessage: EspSensorsData): Promise<Sensor> {
+    const sensors = plainToInstance(Sensor, sensorsMessage, {
+      excludeExtraneousValues: true,
+    });
 
-    return this.pzemsRepository.save(sensorsData);
+    if (!sensors.sensors.length) {
+      return sensors;
+    }
+
+    try {
+      if (isNaN(new Date(sensorsMessage.createdAt).getTime())) {
+        throw new Error(`Timestamp '${sensorsMessage.createdAt}' is invalid`);
+      }
+
+      await this.calcAvgVoltage(sensors, SENSORS_AVG_VOLTAGE_CONFIG);
+
+      return await this.pzemsRepository.save(sensors);
+    } catch (err) {
+      const fallbackSensor: Sensor = {
+        id: '',
+        createdAt: new Date().toJSON(),
+        sensors: [],
+      };
+
+      this.logger.error(err);
+
+      return fallbackSensor;
+    }
   }
 
   async calcAvgVoltage(

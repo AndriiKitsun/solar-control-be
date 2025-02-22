@@ -10,16 +10,16 @@ export class ProtectionRulesController {
     private readonly protectionRulesService: ProtectionRulesService,
   ) {}
 
+  @Get()
+  getRules(): Promise<ProtectionRule[]> {
+    return this.protectionRulesService.getRules();
+  }
+
   @Put(':id')
   saveRule(
     @Param() params: ProtectionRuleParams,
     @Body() ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
     return this.protectionRulesService.saveRule(params.id, ruleDto);
-  }
-
-  @Get()
-  getRules(): Promise<ProtectionRule[]> {
-    return this.protectionRulesService.getRules();
   }
 }

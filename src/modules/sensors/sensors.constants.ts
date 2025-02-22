@@ -8,3 +8,5 @@ export const SENSORS_AVG_VOLTAGE_CONFIG: SensorsAvgVoltageConfig = {
     dcBattery: 50,
   },
 };
+
+export const SENSORS_DATA_EVENT = 'sensors.data';
