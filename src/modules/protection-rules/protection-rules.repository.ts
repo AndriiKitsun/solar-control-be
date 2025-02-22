@@ -3,6 +3,7 @@ import { ProtectionRule } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProtectionRuleDto } from './dto';
+import { ProtectionRuleId } from './enums';
 
 @Injectable()
 export class ProtectionRulesRepository {
@@ -11,8 +12,16 @@ export class ProtectionRulesRepository {
     private readonly repository: Repository<ProtectionRule>,
   ) {}
 
-  saveRule(protectionRuleDto: ProtectionRuleDto): Promise<ProtectionRule> {
-    return this.repository.save(protectionRuleDto);
+  saveRule(
+    id: ProtectionRuleId,
+    ruleDto: ProtectionRuleDto,
+  ): Promise<ProtectionRule> {
+    const rule: ProtectionRule = {
+      id,
+      ...ruleDto,
+    };
+
+    return this.repository.save(rule);
   }
 
   getRules(): Promise<ProtectionRule[]> {

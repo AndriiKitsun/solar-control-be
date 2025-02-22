@@ -1,7 +1,8 @@
-import { Controller, Get, Body, Put } from '@nestjs/common';
+import { Controller, Get, Body, Put, Param } from '@nestjs/common';
 import { ProtectionRulesService } from './protection-rules.service';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleDto } from './dto';
+import { ProtectionRuleParams } from './params/protection-rule.params';
 
 @Controller('protection-rules')
 export class ProtectionRulesController {
@@ -9,11 +10,12 @@ export class ProtectionRulesController {
     private readonly protectionRulesService: ProtectionRulesService,
   ) {}
 
-  @Put()
+  @Put(':id')
   saveRule(
-    @Body() protectionRuleDto: ProtectionRuleDto,
+    @Param() params: ProtectionRuleParams,
+    @Body() ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    return this.protectionRulesService.saveRule(protectionRuleDto);
+    return this.protectionRulesService.saveRule(params.id, ruleDto);
   }
 
   @Get()
