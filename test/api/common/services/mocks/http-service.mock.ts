@@ -10,6 +10,10 @@ export class HttpServiceMock implements ClassMock<HttpService> {
     data: this.responseDataMock,
   } as AxiosResponse;
 
+  get axiosRef(): AxiosInstance {
+    return {} as AxiosInstance;
+  }
+
   request<T>(config: AxiosRequestConfig): Observable<AxiosResponse<T>> {
     return of(HttpServiceMock.axiosResponseMock);
   }
@@ -81,9 +85,5 @@ export class HttpServiceMock implements ClassMock<HttpService> {
     config?: AxiosRequestConfig<D>,
   ): Observable<AxiosResponse<T, D>> {
     return of(HttpServiceMock.axiosResponseMock);
-  }
-
-  get axiosRef(): AxiosInstance {
-    return {} as AxiosInstance;
   }
 }

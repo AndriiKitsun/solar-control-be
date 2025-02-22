@@ -3,9 +3,17 @@ import { ESP_WS_SERVICE } from './constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
 import { EspFakeSensorsWsService } from './ws';
-import { EspPzemsService, EspRelaysService } from './collections';
+import {
+  EspPzemsService,
+  EspRelaysService,
+  EspProtectionRulesService,
+} from './collections';
 
-const PROVIDERS = [EspPzemsService, EspRelaysService];
+const PROVIDERS = [
+  EspProtectionRulesService,
+  EspPzemsService,
+  EspRelaysService,
+];
 
 @Module({
   imports: [

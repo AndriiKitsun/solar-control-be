@@ -29,6 +29,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       'sonarjs/todo-tag': 'warn',

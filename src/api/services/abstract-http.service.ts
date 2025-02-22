@@ -1,4 +1,4 @@
-import { HttpException, Inject } from '@nestjs/common';
+import { HttpException, Inject, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig, AxiosError } from 'axios';
 
@@ -6,7 +6,7 @@ export abstract class AbstractHttpService {
   @Inject(HttpService)
   private readonly httpService!: HttpService;
 
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  protected get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.fetch({
       url,
       method: 'get',
@@ -14,7 +14,7 @@ export abstract class AbstractHttpService {
     });
   }
 
-  post<T = any, D = any>(
+  protected post<T = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>,
@@ -27,7 +27,23 @@ export abstract class AbstractHttpService {
     });
   }
 
-  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  protected put<T = any, D = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig<D>,
+  ): Promise<T> {
+    return this.fetch({
+      url,
+      method: 'put',
+      data,
+      ...config,
+    });
+  }
+
+  protected delete<T = any>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
     return this.fetch({
       url,
       method: 'delete',
@@ -35,7 +51,19 @@ export abstract class AbstractHttpService {
     });
   }
 
-  async fetch<T = any>(config: AxiosRequestConfig): Promise<T> {
+  protected mapStatusCode(statusCode: number | undefined): HttpStatus {
+    if (!statusCode) {
+      return HttpStatus.GATEWAY_TIMEOUT;
+    }
+
+    if (statusCode >= 500) {
+      return HttpStatus.BAD_GATEWAY;
+    }
+
+    return statusCode;
+  }
+
+  private async fetch<T = any>(config: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.httpService.axiosRef.request<T>(config);
 

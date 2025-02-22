@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { HttpException, HttpStatus, Inject } from '@nestjs/common';
+import { HttpException, Inject } from '@nestjs/common';
 import { ServerError, HttpSubError } from '@common/interfaces';
 import { randomUUID } from 'node:crypto';
 import { ErrorCode, SystemName } from '@common/enums';
@@ -15,7 +15,7 @@ export abstract class EspHttpBaseService extends AbstractHttpService {
   }
 
   protected didEncounterError(error: AxiosError): HttpException {
-    const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = this.mapStatusCode(error.response?.status);
     const message =
       typeof error.response?.data === 'string'
         ? error.response.data

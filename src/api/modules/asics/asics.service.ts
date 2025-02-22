@@ -72,11 +72,7 @@ export class AsicsApiService extends AbstractHttpService {
     }
   }
 
-  private buildUrl(ip: string, path: string[]): string {
-    return `http://${ip}/api/v1/${path.join('/')}`;
-  }
-
-  didEncounterError(error: AxiosError): any {
+  protected didEncounterError(error: AxiosError): any {
     const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
     let message: string;
@@ -104,5 +100,9 @@ export class AsicsApiService extends AbstractHttpService {
     };
 
     return new HttpException(response, status);
+  }
+
+  private buildUrl(ip: string, path: string[]): string {
+    return `http://${ip}/api/v1/${path.join('/')}`;
   }
 }
