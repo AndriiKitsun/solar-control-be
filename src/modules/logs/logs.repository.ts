@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Log } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
+import { LogDto } from './dto';
+import { LogParams } from './params';
 
 @Injectable()
 export class LogsRepository {
@@ -10,22 +12,33 @@ export class LogsRepository {
     private readonly repository: Repository<Log>,
   ) {}
 
-  // getRules(): Promise<Log[]> {
-  //   return this.repository.find({
-  //     cache: PROTECTION_RULES_CACHE_CONFIG.getRules,
-  //   });
-  // }
-  //
-  // async saveRule(id: ProtectionRuleId, ruleDto: LogDto): Promise<Log> {
-  //   const payload: Log = { id, ...ruleDto };
-  //
-  //   const rule = await this.repository.save(payload);
-  //
-  //   await this.repository.manager.connection.queryResultCache?.remove([
-  //     PROTECTION_RULES_CACHE_CONFIG.getRules.id,
-  //     PROTECTION_RULES_CACHE_CONFIG.getEnabledRules.id,
-  //   ]);
-  //
-  //   return rule;
-  // }
+  getLogs(params: LogParams): Promise<Log[]> {
+    if (!params.from && !params.to) {
+      return this.repository.find({
+        where: {
+          type: params.type,
+        },
+      });
+    }
+
+    const to = params.to ? new Date(params.to) : new Date();
+    const from = params.from ? new Date(params.from) : new Date();
+
+    return this.repository.find({
+      where: {
+        type: params.type,
+        createdAt: Between(from, to),
+      },
+    });
+  }
+
+  async saveLog(logDto: LogDto): Promise<Log> {
+    await this.repository.insert(logDto);
+
+    return logDto as Log;
+  }
+
+  async deleteAll(): Promise<void> {
+    await this.repository.delete({});
+  }
 }

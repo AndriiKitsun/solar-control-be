@@ -20,6 +20,7 @@ import { TypeORMExceptionFilter } from '@common/filters';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProtectionRulesModule } from '@modules/protection-rules';
 import { SensorsModule } from '@modules/sensors';
+import { LogsModule } from '@modules/logs';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SensorsModule } from '@modules/sensors';
     }),
     EventEmitterModule.forRoot(),
     AsicsModule,
+    LogsModule,
     ProtectionRulesModule,
     PzemsModule,
     RelaysModule,

@@ -34,7 +34,7 @@ export class ProtectionRulesService {
       return;
     }
 
-    this.protectionStrategyExecutor.execute(sensor.sensors, rules);
+    // this.protectionStrategyExecutor.execute(sensor.sensors, rules);
   }
 
   getRules(): Promise<ProtectionRule[]> {
