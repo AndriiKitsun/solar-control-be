@@ -1,4 +1,4 @@
-import { SensorsAvgVoltageConfig } from './pzems.types';
+import { SensorsAvgVoltageConfig } from './sensors.types';
 
 export const SENSORS_AVG_VOLTAGE_CONFIG: SensorsAvgVoltageConfig = {
   fetchLimit: 600,

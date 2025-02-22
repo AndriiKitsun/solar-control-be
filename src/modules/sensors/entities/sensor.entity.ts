@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PzemItem } from './pzem-item.entity';
+import { SensorItem } from './sensor-item.entity';
 import { Exclude, Type, Expose } from 'class-transformer';
 
 @Entity()
-export class Pzem {
+export class Sensor {
   @Exclude()
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -13,7 +13,7 @@ export class Pzem {
   createdAt!: Date | string;
 
   @Expose()
-  @Type(() => PzemItem)
-  @OneToMany(() => PzemItem, (item) => item.sensor, { cascade: true })
-  sensors!: PzemItem[];
+  @Type(() => SensorItem)
+  @OneToMany(() => SensorItem, (item) => item.sensor, { cascade: true })
+  sensors!: SensorItem[];
 }

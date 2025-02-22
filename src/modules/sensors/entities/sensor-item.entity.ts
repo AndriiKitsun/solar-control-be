@@ -1,15 +1,15 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Pzem } from './pzem.entity';
+import { Sensor } from './sensor.entity';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
-export class PzemItem {
+export class SensorItem {
   @Exclude()
   @PrimaryGeneratedColumn('uuid')
   pid!: string;
 
-  @ManyToOne(() => Pzem, (pzem) => pzem.sensors, { onDelete: 'CASCADE' })
-  sensor!: Pzem;
+  @ManyToOne(() => Sensor, (sensor) => sensor.sensors, { onDelete: 'CASCADE' })
+  sensor!: Sensor;
 
   @Expose()
   @Column({ nullable: true })

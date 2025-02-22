@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Pzem } from './entities';
+import { Sensor } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Not, IsNull } from 'typeorm';
 
 @Injectable()
-export class PzemsRepository {
+export class SensorsRepository {
   constructor(
-    @InjectRepository(Pzem)
-    private readonly pzemsRepository: Repository<Pzem>,
+    @InjectRepository(Sensor)
+    private readonly pzemsRepository: Repository<Sensor>,
   ) {}
 
-  save(sensorsData: Pzem): Promise<Pzem> {
+  save(sensorsData: Sensor): Promise<Sensor> {
     return this.pzemsRepository.save(sensorsData);
   }
 
-  findAllBefore(date: Date | string, seconds: number): Promise<Pzem[]> {
+  findAllBefore(date: Date | string, seconds: number): Promise<Sensor[]> {
     const fromDate = new Date(date);
     fromDate.setSeconds(fromDate.getSeconds() - seconds);
     fromDate.setMilliseconds(0);
