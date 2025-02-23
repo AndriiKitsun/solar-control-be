@@ -1,4 +1,4 @@
-export interface TypeormCacheConfig {
+export interface TypeORMRequestCacheConfig {
   id: string;
   milliseconds: number;
 }
