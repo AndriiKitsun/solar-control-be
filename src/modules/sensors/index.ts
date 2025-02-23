@@ -1,4 +1,5 @@
 export * from './entities';
+export * from './enums';
 export * from './sensors.constants';
 export * from './sensors.controller';
 export * from './sensors.module';

@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ProtectionRuleId } from '../enums';
-import { SensorItem } from '../../sensors';
-import { EspSensorId } from '@api/modules/esp';
+import { SensorItem, SensorId } from '../../sensors';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../logs';
 
 @Injectable()
 export class AcOutputProtectionStrategy extends ProtectionStrategy {
-  readonly name: EspSensorId = EspSensorId.AC_OUTPUT;
+  readonly name: SensorId = SensorId.AC_OUTPUT;
 
   protected readonly allowedRules: ProtectionRuleId[] = [
     ProtectionRuleId.AC_OUTPUT_FREQUENCY,

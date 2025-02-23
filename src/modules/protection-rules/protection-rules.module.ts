@@ -4,7 +4,7 @@ import { ProtectionRulesController } from './protection-rules.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProtectionRule } from './entities';
 import { ProtectionRulesRepository } from './protection-rules.repository';
-import { EspApiModule, EspSensorId } from '@api/modules/esp';
+import { EspApiModule } from '@api/modules/esp';
 import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';
 import {
   DcBatteryProtectionStrategy,
@@ -13,6 +13,7 @@ import {
   ProtectionStrategy,
 } from './strategies';
 import { LogsModule } from '../logs';
+import { SensorId } from '../sensors';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
 
@@ -31,14 +32,14 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
       provide: PROTECTION_STRATEGY_CONFIG,
       useFactory: (
         ...strategies: ProtectionStrategy[]
-      ): Record<EspSensorId, ProtectionStrategy> => {
+      ): Record<SensorId, ProtectionStrategy> => {
         return strategies.reduce(
           (acc, strategy) => {
             acc[strategy.name] = strategy;
 
             return acc;
           },
-          {} as Record<EspSensorId, ProtectionStrategy>,
+          {} as Record<SensorId, ProtectionStrategy>,
         );
       },
       inject: STRATEGIES,

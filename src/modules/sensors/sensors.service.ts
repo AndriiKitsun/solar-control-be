@@ -13,13 +13,13 @@ import {
   SensorsAvgVoltageGroup,
   SensorsAvgVoltageConfig,
 } from './sensors.types';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { Observable, Subject, map } from 'rxjs';
+import { plainToInstance } from 'class-transformer';
 import {
   SENSORS_AVG_VOLTAGE_CONFIG,
   SENSORS_DATA_EVENT,
 } from './sensors.constants';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { Observable, Subject, map } from 'rxjs';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class SensorsService implements OnModuleInit {

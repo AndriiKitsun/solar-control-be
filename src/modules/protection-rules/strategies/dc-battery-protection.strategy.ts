@@ -1,5 +1,4 @@
-import { EspSensorId } from '@api/modules/esp';
-import { SensorItem } from '../../sensors';
+import { SensorItem, SensorId } from '../../sensors';
 import { Injectable } from '@nestjs/common';
 import { ProtectionRuleId } from '../enums';
 import { ProtectionStrategy } from './protection.strategy';
@@ -7,7 +6,7 @@ import { LogsService } from '../../logs';
 
 @Injectable()
 export class DcBatteryProtectionStrategy extends ProtectionStrategy {
-  readonly name: EspSensorId = EspSensorId.DC_BATTERY;
+  readonly name: SensorId = SensorId.DC_BATTERY;
 
   protected readonly allowedRules: ProtectionRuleId[] = [
     ProtectionRuleId.DC_BATTERY_VOLTAGE,

@@ -1,11 +1,10 @@
 import { ProtectionRuleId } from '../enums';
-import { SensorItem } from '../../sensors';
+import { SensorItem, SensorId } from '../../sensors';
 import { ProtectionRule } from '../entities';
-import { EspSensorId } from '@api/modules/esp';
 import { LogDto, LogType, LogsService } from '../../logs';
 
 export abstract class ProtectionStrategy {
-  abstract readonly name: EspSensorId;
+  abstract readonly name: SensorId;
 
   protected abstract readonly allowedRules: ProtectionRuleId[];
   protected abstract readonly valueMapper: Record<

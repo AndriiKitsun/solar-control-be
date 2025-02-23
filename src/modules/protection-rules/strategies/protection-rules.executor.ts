@@ -1,16 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SensorItem } from '../../sensors';
+import { SensorItem, SensorId } from '../../sensors';
 import { ProtectionRule } from '../entities';
 import { ProtectionStrategy } from './protection.strategy';
 import { PROTECTION_STRATEGY_CONFIG } from '../protection-rules.constants';
 import { ProtectionRuleId } from '../enums';
-import { EspSensorId } from '@api/modules/esp';
 
 @Injectable()
 export class ProtectionRulesExecutor {
   constructor(
     @Inject(PROTECTION_STRATEGY_CONFIG)
-    private readonly strategyConfig: Record<EspSensorId, ProtectionStrategy>,
+    private readonly strategyConfig: Record<SensorId, ProtectionStrategy>,
   ) {}
 
   async execute(sensors: SensorItem[], rules: ProtectionRule[]): Promise<void> {

@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Sensor } from './sensor.entity';
-import { Exclude, Expose } from 'class-transformer';
-import { EspSensorId } from '@api/modules/esp';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { SensorProtection } from './sensor-protection.entity';
+import { SensorId } from '../enums';
 
 @Entity()
 export class SensorItem {
@@ -14,7 +15,7 @@ export class SensorItem {
 
   @Expose()
   @Column({ nullable: true })
-  name?: EspSensorId;
+  name?: SensorId;
 
   @Expose()
   @Column({ type: 'float', nullable: true })
@@ -51,4 +52,9 @@ export class SensorItem {
   @Expose()
   @Column({ type: 'float', nullable: true })
   avgVoltage?: number;
+
+  @Type(() => SensorProtection)
+  @Expose()
+  @Column({ type: 'simple-json' })
+  protection!: SensorProtection;
 }
