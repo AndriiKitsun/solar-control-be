@@ -24,8 +24,8 @@ export class EspFakeSensorsWsService {
   private randomSensor(): EspSensorsData {
     const sensors: EspSensor[] = [];
 
-    // sensors.push(this.randomAcSensor('acInput', 1));
-    // sensors.push(this.randomAcSensor('acOutput', 0.5));
+    sensors.push(this.randomAcSensor('acInput', 1));
+    sensors.push(this.randomAcSensor('acOutput', 0.5));
     sensors.push(this.randomDcSensor('dcBattery'));
 
     return {
@@ -64,6 +64,10 @@ export class EspFakeSensorsWsService {
         max: 50,
         fractionDigits: faker.number.int({ min: 0, max: 3 }),
       }),
+      protection: {
+        acOutputFrequency: faker.datatype.boolean(),
+        acOutputVoltage: faker.datatype.boolean(),
+      },
     };
   }
 

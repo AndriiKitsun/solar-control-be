@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ESP_WS_SERVICE } from './constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
-import { EspFakeSensorsWsService } from './ws';
+import { EspSensorsWsService } from './ws';
 import {
   EspPzemsService,
   EspRelaysService,
@@ -30,7 +30,7 @@ const PROVIDERS = [
     ...PROVIDERS,
     {
       provide: ESP_WS_SERVICE,
-      useClass: EspFakeSensorsWsService,
+      useClass: EspSensorsWsService,
     },
   ],
   exports: [...PROVIDERS, ESP_WS_SERVICE],

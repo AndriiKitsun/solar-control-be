@@ -1,38 +1,12 @@
-import { ProtectionRuleId } from '../enums';
-import { SensorItem, SensorId } from '../../sensors';
+import { SensorId, SensorItem } from '../../sensors';
 import { ProtectionRule } from '../entities';
-import { LogDto, LogType, LogsService } from '../../logs';
+import { LogType, LogsService } from '../../logs';
+import { ProtectionRuleId } from '../enums';
 
 export abstract class ProtectionStrategy {
   abstract readonly name: SensorId;
 
-  protected abstract readonly allowedRules: ProtectionRuleId[];
-  protected abstract readonly valueMapper: Record<
-    string,
-    (sensor: SensorItem) => number | undefined
-  >;
-
   protected constructor(protected readonly logsService: LogsService) {}
-
-  async run(
-    sensor: SensorItem,
-    rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): Promise<void> {
-    for (const id of this.allowedRules) {
-      const rule = rules[id];
-      const value = this.valueMapper[id]?.(sensor);
-
-      const result = this.checkRule(rule, value);
-
-      if (!result) {
-        continue;
-      }
-
-      await this.logsService.saveLog(
-        this.prepareLog(rule, sensor.name!, value!),
-      );
-    }
-  }
 
   protected checkRule(
     rule: ProtectionRule | undefined,
@@ -45,14 +19,18 @@ export abstract class ProtectionStrategy {
     return value < rule.min || value > rule.max;
   }
 
-  protected prepareLog(
+  protected logRule(
     rule: ProtectionRule,
-    name: string,
-    value: number,
-  ): LogDto {
-    return {
+    value: number | undefined,
+  ): Promise<void> {
+    return this.logsService.saveLog({
       type: LogType.PROTECTION,
-      message: `Rule '${rule.id}' was triggered for '${name}' sensor. Value: ${value}. Min: ${rule.min}. Min: ${rule.max}`,
-    };
+      message: `Rule '${rule.id}' was triggered for '${this.name}' sensor. Value: ${value}. Min: ${rule.min}. Max: ${rule.max}`,
+    });
   }
+
+  abstract run(
+    sensor: SensorItem,
+    rules: Record<ProtectionRuleId, ProtectionRule>,
+  ): Promise<void>;
 }

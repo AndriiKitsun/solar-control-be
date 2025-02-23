@@ -55,6 +55,6 @@ export class SensorItem {
 
   @Type(() => SensorProtection)
   @Expose()
-  @Column({ type: 'simple-json' })
-  protection!: SensorProtection;
+  @Column({ type: 'simple-json', nullable: true })
+  protection?: SensorProtection;
 }

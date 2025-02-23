@@ -45,12 +45,11 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    if (this.allowedRulesToSave.includes(id)) {
+    if (this.allowedRulesToSave.includes(id) && ruleDto.enabled) {
       await this.espProtectionRulesService.saveProtectionRule({
         id,
         min: ruleDto.min,
         max: ruleDto.max,
-        enabled: ruleDto.enabled,
       });
     }
 
