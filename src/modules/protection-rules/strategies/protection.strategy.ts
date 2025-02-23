@@ -2,6 +2,7 @@ import { SensorId, SensorItem } from '../../sensors';
 import { ProtectionRule } from '../entities';
 import { LogType, LogsService } from '../../logs';
 import { ProtectionRuleId } from '../enums';
+import { ProtectionRuleResult } from '../protection-rules.types';
 
 export abstract class ProtectionStrategy {
   abstract readonly name: SensorId;
@@ -29,5 +30,5 @@ export abstract class ProtectionStrategy {
   abstract run(
     sensor: SensorItem,
     rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): boolean;
+  ): ProtectionRuleResult;
 }

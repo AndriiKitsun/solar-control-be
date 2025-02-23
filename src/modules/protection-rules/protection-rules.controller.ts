@@ -1,8 +1,17 @@
-import { Controller, Get, Body, Put, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Put,
+  Param,
+  Sse,
+  MessageEvent,
+} from '@nestjs/common';
 import { ProtectionRulesService } from './protection-rules.service';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleDto } from './dto';
 import { ProtectionRuleParams } from './params';
+import { Observable } from 'rxjs';
 
 @Controller('protection-rules')
 export class ProtectionRulesController {
@@ -13,6 +22,11 @@ export class ProtectionRulesController {
   @Get()
   getRules(): Promise<ProtectionRule[]> {
     return this.protectionRulesService.getRules();
+  }
+
+  @Sse('sse')
+  getRulesResult(): Observable<MessageEvent> {
+    return this.protectionRulesService.getRulesResult();
   }
 
   @Put(':id')

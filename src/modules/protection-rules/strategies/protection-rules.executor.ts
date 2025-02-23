@@ -4,6 +4,7 @@ import { ProtectionRule } from '../entities';
 import { ProtectionStrategy } from './protection.strategy';
 import { PROTECTION_STRATEGY_CONFIG } from '../protection-rules.constants';
 import { ProtectionRuleId } from '../enums';
+import { ProtectionResultDto } from '../dto';
 
 @Injectable()
 export class ProtectionRulesExecutor {
@@ -12,7 +13,7 @@ export class ProtectionRulesExecutor {
     private readonly strategyConfig: Record<SensorId, ProtectionStrategy>,
   ) {}
 
-  execute(sensors: SensorItem[], rules: ProtectionRule[]): boolean {
+  execute(sensors: SensorItem[], rules: ProtectionRule[]): ProtectionResultDto {
     const mappedRules = rules.reduce(
       (acc, rule) => {
         acc[rule.id] = rule;
@@ -21,7 +22,7 @@ export class ProtectionRulesExecutor {
       },
       {} as Record<ProtectionRuleId, ProtectionRule>,
     );
-    let result = false;
+    const result = new ProtectionResultDto();
 
     for (const sensor of sensors) {
       if (!sensor.name) {
@@ -34,12 +35,12 @@ export class ProtectionRulesExecutor {
         continue;
       }
 
-      const isActivated = selected.run(sensor, mappedRules);
+      const strategyResult = selected.run(sensor, mappedRules);
 
-      if (isActivated) {
-        result = isActivated;
-      }
+      Object.assign(result.rules, strategyResult);
     }
+
+    result.triggered = Object.values(result.rules).some(Boolean);
 
     return result;
   }

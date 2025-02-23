@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ProtectionRuleDto } from './dto';
+import { Injectable, Logger, MessageEvent } from '@nestjs/common';
+import { ProtectionRuleDto, ProtectionResultDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleId } from './enums';
@@ -10,16 +10,18 @@ import { ProtectionRulesExecutor } from './strategies';
 import { AsicsApiService } from '@api/modules';
 import { AsicsService } from '../asics';
 import { LogsService, LogType } from '../logs';
+import { Observable, Subject, map } from 'rxjs';
 
 @Injectable()
 export class ProtectionRulesService {
   private readonly logger = new Logger(ProtectionRulesService.name);
-
   private readonly allowedRulesToSave: ProtectionRuleId[] = [
     ProtectionRuleId.AC_OUTPUT_FREQUENCY,
     ProtectionRuleId.AC_OUTPUT_VOLTAGE,
     ProtectionRuleId.DC_BATTERY_VOLTAGE,
   ];
+  private readonly protectionResult$ = new Subject<ProtectionResultDto>();
+
   private isRequestSent = false;
 
   constructor(
@@ -49,15 +51,17 @@ export class ProtectionRulesService {
         rules,
       );
 
-      if (!result && this.isRequestSent) {
+      if (!result.triggered && this.isRequestSent) {
         this.isRequestSent = false;
       }
 
-      if (result && !this.isRequestSent) {
+      if (result.triggered && !this.isRequestSent) {
         this.isRequestSent = true;
 
         await this.stopAllAsics();
       }
+
+      this.protectionResult$.next(result);
     } catch (err) {
       this.logger.error(err);
 
@@ -92,6 +96,10 @@ export class ProtectionRulesService {
 
   getRules(): Promise<ProtectionRule[]> {
     return this.protectionRulesRepository.getRules();
+  }
+
+  getRulesResult(): Observable<MessageEvent> {
+    return this.protectionResult$.pipe(map((data) => ({ data })));
   }
 
   async saveRule(

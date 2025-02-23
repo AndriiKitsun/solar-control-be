@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 export class SensorsController {
   constructor(private readonly sensorsService: SensorsService) {}
 
-  @Sse()
+  @Sse('sse')
   getSensorsData(): Observable<MessageEvent> {
     return this.sensorsService.getSensorsData();
   }

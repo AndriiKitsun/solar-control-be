@@ -4,6 +4,7 @@ import { ProtectionRuleId } from '../enums';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../logs';
 import { ProtectionRule } from '../entities';
+import { ProtectionRuleResult } from '../protection-rules.types';
 
 @Injectable()
 export class DcBatteryProtectionStrategy extends ProtectionStrategy {
@@ -16,13 +17,15 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
   run(
     sensor: SensorItem,
     rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): boolean {
-    let result = false;
+  ): ProtectionRuleResult {
+    const result: ProtectionRuleResult = {
+      [ProtectionRuleId.DC_BATTERY_VOLTAGE]: false,
+    };
 
     if (sensor.protection?.dcBatteryVoltage && rules.dcBatteryVoltage) {
       this.logRule(rules.dcBatteryVoltage, sensor.voltage);
 
-      result = true;
+      result.dcBatteryVoltage = true;
     }
 
     return result;
