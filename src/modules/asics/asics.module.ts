@@ -10,5 +10,6 @@ import { Asic } from './entities';
   imports: [TypeOrmModule.forFeature([Asic]), AsicsApiModule],
   controllers: [AsicsController],
   providers: [AsicsService, AsicsRepository],
+  exports: [AsicsService],
 })
 export class AsicsModule {}

@@ -14,6 +14,8 @@ import {
 } from './strategies';
 import { LogsModule } from '../logs';
 import { SensorId } from '../sensors';
+import { AsicsModule } from '../asics';
+import { AsicsApiModule } from '@api/modules';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
 
@@ -22,6 +24,8 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
     TypeOrmModule.forFeature([ProtectionRule]),
     EspApiModule,
     LogsModule,
+    AsicsModule,
+    AsicsApiModule,
   ],
   controllers: [ProtectionRulesController],
   providers: [

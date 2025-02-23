@@ -1,1 +1,1 @@
-export * from './log-type.enum';
+export * from './log.enum';

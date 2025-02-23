@@ -12,7 +12,7 @@ export class ProtectionRulesExecutor {
     private readonly strategyConfig: Record<SensorId, ProtectionStrategy>,
   ) {}
 
-  async execute(sensors: SensorItem[], rules: ProtectionRule[]): Promise<void> {
+  execute(sensors: SensorItem[], rules: ProtectionRule[]): boolean {
     const mappedRules = rules.reduce(
       (acc, rule) => {
         acc[rule.id] = rule;
@@ -21,6 +21,7 @@ export class ProtectionRulesExecutor {
       },
       {} as Record<ProtectionRuleId, ProtectionRule>,
     );
+    let result = false;
 
     for (const sensor of sensors) {
       if (!sensor.name) {
@@ -33,7 +34,13 @@ export class ProtectionRulesExecutor {
         continue;
       }
 
-      await selected.run(sensor, mappedRules);
+      const isActivated = selected.run(sensor, mappedRules);
+
+      if (isActivated) {
+        result = isActivated;
+      }
     }
+
+    return result;
   }
 }

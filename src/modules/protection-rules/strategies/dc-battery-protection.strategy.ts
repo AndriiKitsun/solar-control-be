@@ -13,24 +13,18 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
     super(logsService);
   }
 
-  async run(
+  run(
     sensor: SensorItem,
     rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): Promise<void> {
+  ): boolean {
     let result = false;
 
     if (sensor.protection?.dcBatteryVoltage && rules.dcBatteryVoltage) {
-      await this.logRule(rules.dcBatteryVoltage, sensor.voltage);
+      this.logRule(rules.dcBatteryVoltage, sensor.voltage);
 
       result = true;
     }
 
-    console.log(`dc result -->`, result);
-
-    if (!result) {
-      return;
-    }
-
-    // siable asics
+    return result;
   }
 }

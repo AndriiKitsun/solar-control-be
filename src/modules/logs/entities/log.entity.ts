@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { LogType } from '../enums';
+import { LogType, LogLevel } from '../enums';
 
 @Entity()
 export class Log {
@@ -13,6 +13,9 @@ export class Log {
 
   @Column()
   type!: LogType;
+
+  @Column()
+  level!: LogLevel;
 
   @Column()
   message!: string;

@@ -13,36 +13,30 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
     super(logsService);
   }
 
-  async run(
+  run(
     sensor: SensorItem,
     rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): Promise<void> {
+  ): boolean {
     let result = false;
 
     if (sensor.protection?.acOutputFrequency && rules.acOutputFrequency) {
-      await this.logRule(rules.acOutputFrequency, sensor.frequency);
+      this.logRule(rules.acOutputFrequency, sensor.frequency);
 
       result = true;
     }
 
     if (sensor.protection?.acOutputVoltage && rules.acOutputVoltage) {
-      await this.logRule(rules.acOutputVoltage, sensor.voltage);
+      this.logRule(rules.acOutputVoltage, sensor.voltage);
 
       result = true;
     }
 
     if (this.checkRule(rules.acOutputAvgVoltage, sensor.avgVoltage)) {
-      await this.logRule(rules.acOutputAvgVoltage, sensor.avgVoltage);
+      this.logRule(rules.acOutputAvgVoltage, sensor.avgVoltage);
 
       result = true;
     }
 
-    console.log(`ac result -->`, result);
-
-    if (!result) {
-      return;
-    }
-
-    // disable Asics
+    return result;
   }
 }

@@ -5,6 +5,8 @@ import { LogDto } from './dto';
 import { Subject, Observable, map } from 'rxjs';
 import { plainToClass } from 'class-transformer';
 import { LogParams } from './params';
+import { LogLevel } from './enums';
+import { LogPayload } from './logs.types';
 
 @Injectable()
 export class LogsService {
@@ -28,5 +30,21 @@ export class LogsService {
 
   deleteLogs(): Promise<void> {
     return this.logsRepository.deleteAll();
+  }
+
+  debug(logDto: LogPayload): void {
+    void this.saveLog({ ...logDto, level: LogLevel.DEBUG });
+  }
+
+  info(logDto: LogPayload): void {
+    void this.saveLog({ ...logDto, level: LogLevel.INFO });
+  }
+
+  warn(logDto: LogPayload): void {
+    void this.saveLog({ ...logDto, level: LogLevel.WARN });
+  }
+
+  error(logDto: LogPayload): void {
+    void this.saveLog({ ...logDto, level: LogLevel.ERROR });
   }
 }

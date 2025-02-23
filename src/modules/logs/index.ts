@@ -6,3 +6,4 @@ export * from './logs.controller';
 export * from './logs.module';
 export * from './logs.repository';
 export * from './logs.service';
+export * from './logs.types';
