@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { LogType, LogLevel } from '../enums';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Log {
+  @Exclude()
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
