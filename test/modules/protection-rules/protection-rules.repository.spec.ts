@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import {
   ProtectionRulesRepository,
   ProtectionRule,
+  ProtectionRuleId,
 } from '@modules/protection-rules';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
@@ -42,9 +43,15 @@ describe('ProtectionRulesRepository', () => {
         .spyOn(protectionRulesRepository, 'save')
         .mockResolvedValueOnce(protectionRuleMock);
 
-      const result = await repository.saveRule(protectionRuleDtoMock);
+      const result = await repository.saveRule(
+        ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
+        protectionRuleDtoMock,
+      );
 
-      expect(saveSpy).toHaveBeenCalledWith(protectionRuleDtoMock);
+      expect(saveSpy).toHaveBeenCalledWith(
+        ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
+        protectionRuleDtoMock,
+      );
 
       expect(result).toBe(protectionRuleMock);
     });

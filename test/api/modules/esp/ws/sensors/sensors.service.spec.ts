@@ -5,7 +5,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 jest.mock('ws');
 
-describe('EspWsService', () => {
+describe('EspSensorsWsService', () => {
   let service: EspSensorsWsService;
 
   beforeEach(async () => {

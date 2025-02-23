@@ -1,60 +1,49 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EspApiService } from '@api/modules';
+import { Test } from '@nestjs/testing';
+import { EspRelaysService } from '@api/modules/esp';
+import { HttpService } from '@nestjs/axios';
 import { EspConfig } from '@config/esp.config';
 import { EspConfigMock } from '@config/mocks/esp.config.mock';
-import { HttpService } from '@nestjs/axios';
-import { HttpServiceMock } from '../../common/services/mocks/http-service.mock';
+import { HttpServiceMock } from '../../../../services/mocks/http-service.mock';
 
-describe('EspApiService', () => {
-  let service: EspApiService;
+describe('EspRelaysService', () => {
+  let service: EspRelaysService;
 
   let buildUrlSpy: jest.SpyInstance;
-  let deleteSpy: jest.SpyInstance;
   let getSpy: jest.SpyInstance;
   let postSpy: jest.SpyInstance;
 
   const { urlMock, responseDataMock } = HttpServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
-        EspApiService,
+        EspRelaysService,
         {
           provide: EspConfig.KEY,
           useValue: EspConfigMock,
         },
         {
           provide: HttpService,
-          useClass: HttpServiceMock,
+          useValue: HttpServiceMock,
         },
       ],
     }).compile();
 
-    service = module.get(EspApiService);
+    service = module.get(EspRelaysService);
 
     buildUrlSpy = jest
       .spyOn(service as any, 'buildUrl')
       .mockReturnValue(urlMock);
-    deleteSpy = jest
-      .spyOn(service, 'delete')
+    getSpy = jest
+      .spyOn(service as any, 'get')
       .mockResolvedValue(responseDataMock);
-    getSpy = jest.spyOn(service, 'get').mockResolvedValue(responseDataMock);
-    postSpy = jest.spyOn(service, 'post').mockResolvedValue(responseDataMock);
+    postSpy = jest
+      .spyOn(service as any, 'post')
+      .mockResolvedValue(responseDataMock);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  describe('resetCounter', () => {
-    it('should make request to reset counter', async () => {
-      const result = await service.resetCounter();
-
-      expect(buildUrlSpy).toHaveBeenCalledWith('pzems', 'counter');
-      expect(deleteSpy).toHaveBeenCalledWith(urlMock);
-
-      expect(result).toBe(responseDataMock);
-    });
   });
 
   describe('getRelayStatus', () => {
