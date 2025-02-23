@@ -4,26 +4,43 @@ import { ProtectionRulesController } from './protection-rules.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProtectionRule } from './entities';
 import { ProtectionRulesRepository } from './protection-rules.repository';
-import { EspApiModule } from '@api/modules/esp';
-import { PROTECTION_STRATEGIES } from './protection-rules.constants';
+import { EspApiModule, EspSensorId } from '@api/modules/esp';
+import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';
 import {
   DcBatteryProtectionStrategy,
   AcOutputProtectionStrategy,
   ProtectionRulesExecutor,
+  ProtectionStrategy,
 } from './strategies';
+import { LogsModule } from '../logs';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProtectionRule]), EspApiModule],
+  imports: [
+    TypeOrmModule.forFeature([ProtectionRule]),
+    EspApiModule,
+    LogsModule,
+  ],
   controllers: [ProtectionRulesController],
   providers: [
     ProtectionRulesService,
     ProtectionRulesRepository,
     ProtectionRulesExecutor,
     {
-      provide: PROTECTION_STRATEGIES,
-      useFactory: (...strategies): any[] => strategies,
+      provide: PROTECTION_STRATEGY_CONFIG,
+      useFactory: (
+        ...strategies: ProtectionStrategy[]
+      ): Record<EspSensorId, ProtectionStrategy> => {
+        return strategies.reduce(
+          (acc, strategy) => {
+            acc[strategy.name] = strategy;
+
+            return acc;
+          },
+          {} as Record<EspSensorId, ProtectionStrategy>,
+        );
+      },
       inject: STRATEGIES,
     },
     ...STRATEGIES,

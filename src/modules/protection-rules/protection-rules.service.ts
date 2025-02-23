@@ -34,7 +34,7 @@ export class ProtectionRulesService {
       return;
     }
 
-    // this.protectionStrategyExecutor.execute(sensor.sensors, rules);
+    await this.protectionStrategyExecutor.execute(sensor.sensors, rules);
   }
 
   getRules(): Promise<ProtectionRule[]> {
@@ -45,8 +45,6 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    const rule = await this.protectionRulesRepository.saveRule(id, ruleDto);
-
     if (this.allowedRulesToSave.includes(id)) {
       await this.espProtectionRulesService.saveProtectionRule({
         id,
@@ -56,6 +54,6 @@ export class ProtectionRulesService {
       });
     }
 
-    return rule;
+    return this.protectionRulesRepository.saveRule(id, ruleDto);
   }
 }

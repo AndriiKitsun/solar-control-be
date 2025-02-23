@@ -9,5 +9,6 @@ import { Log } from './entities';
   imports: [TypeOrmModule.forFeature([Log])],
   controllers: [LogsController],
   providers: [LogsService, LogsRepository],
+  exports: [LogsService],
 })
 export class LogsModule {}

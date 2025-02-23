@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Sensor } from './sensor.entity';
 import { Exclude, Expose } from 'class-transformer';
+import { EspSensorId } from '@api/modules/esp';
 
 @Entity()
 export class SensorItem {
@@ -13,7 +14,7 @@ export class SensorItem {
 
   @Expose()
   @Column({ nullable: true })
-  name?: string;
+  name?: EspSensorId;
 
   @Expose()
   @Column({ type: 'float', nullable: true })

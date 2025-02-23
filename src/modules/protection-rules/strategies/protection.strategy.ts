@@ -1,9 +1,11 @@
 import { ProtectionRuleId } from '../enums';
 import { SensorItem } from '../../sensors';
 import { ProtectionRule } from '../entities';
+import { EspSensorId } from '@api/modules/esp';
+import { LogDto, LogType, LogsService } from '../../logs';
 
 export abstract class ProtectionStrategy {
-  abstract readonly name: string;
+  abstract readonly name: EspSensorId;
 
   protected abstract readonly allowedRules: ProtectionRuleId[];
   protected abstract readonly valueMapper: Record<
@@ -11,15 +13,29 @@ export abstract class ProtectionStrategy {
     (sensor: SensorItem) => number | undefined
   >;
 
-  run(sensor: SensorItem, rules: ProtectionRule[]): boolean {
-    return rules
-      .filter((rule) => this.allowedRules.includes(rule.id))
-      .some((rule) =>
-        this.checkProtection(rule, this.valueMapper[rule.id]?.(sensor)),
+  protected constructor(protected readonly logsService: LogsService) {}
+
+  async run(
+    sensor: SensorItem,
+    rules: Record<ProtectionRuleId, ProtectionRule>,
+  ): Promise<void> {
+    for (const id of this.allowedRules) {
+      const rule = rules[id];
+      const value = this.valueMapper[id]?.(sensor);
+
+      const result = this.checkRule(rule, value);
+
+      if (!result) {
+        continue;
+      }
+
+      await this.logsService.saveLog(
+        this.prepareLog(rule, sensor.name!, value!),
       );
+    }
   }
 
-  protected checkProtection(
+  protected checkRule(
     rule: ProtectionRule | undefined,
     value: number | undefined,
   ): boolean {
@@ -28,5 +44,16 @@ export abstract class ProtectionStrategy {
     }
 
     return value < rule.min || value > rule.max;
+  }
+
+  protected prepareLog(
+    rule: ProtectionRule,
+    name: string,
+    value: number,
+  ): LogDto {
+    return {
+      type: LogType.PROTECTION,
+      message: `Rule '${rule.id}' was triggered for '${name}' sensor. Value: ${value}. Min: ${rule.min}. Min: ${rule.max}`,
+    };
   }
 }
