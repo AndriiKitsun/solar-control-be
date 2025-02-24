@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import {
   ProtectionRulesRepository,
   ProtectionRule,
+  ProtectionRuleId,
 } from '@modules/protection-rules';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
@@ -41,10 +42,17 @@ describe('ProtectionRulesRepository', () => {
       const saveSpy = jest
         .spyOn(protectionRulesRepository, 'save')
         .mockResolvedValueOnce(protectionRuleMock);
+      const expectedPayload: ProtectionRule = {
+        id: ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
+        ...protectionRuleDtoMock,
+      };
 
-      const result = await repository.saveRule(protectionRuleDtoMock);
+      const result = await repository.saveRule(
+        ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
+        protectionRuleDtoMock,
+      );
 
-      expect(saveSpy).toHaveBeenCalledWith(protectionRuleDtoMock);
+      expect(saveSpy).toHaveBeenCalledWith(expectedPayload);
 
       expect(result).toBe(protectionRuleMock);
     });

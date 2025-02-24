@@ -8,14 +8,14 @@ import {
   AsicPerfSummary,
 } from './asics.types';
 import { AxiosError } from 'axios';
-import { HttpClientService } from '../../common';
 import { ServerError, HttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
 import { randomUUID } from 'node:crypto';
 import { SystemName, ErrorCode } from '@common/enums';
+import { AbstractHttpService } from '../../services';
 
 @Injectable()
-export class AsicsApiService extends HttpClientService {
+export class AsicsApiService extends AbstractHttpService {
   private logger = new Logger(AsicsApiService.name);
 
   login(ip: string, password: string): Promise<AsicUnlockSuccess> {
@@ -72,11 +72,7 @@ export class AsicsApiService extends HttpClientService {
     }
   }
 
-  private buildUrl(ip: string, path: string[]): string {
-    return `http://${ip}/api/v1/${path.join('/')}`;
-  }
-
-  didEncounterError(error: AxiosError): any {
+  protected didEncounterError(error: AxiosError): any {
     const status = error.response?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
     let message: string;
@@ -104,5 +100,9 @@ export class AsicsApiService extends HttpClientService {
     };
 
     return new HttpException(response, status);
+  }
+
+  private buildUrl(ip: string, path: string[]): string {
+    return `http://${ip}/api/v1/${path.join('/')}`;
   }
 }

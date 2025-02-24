@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { SettingsService } from '@modules/settings/settings.service';
 import { SettingsRepository } from '@modules/settings/settings.repository';
 import { SettingsRepositoryMock } from './mocks/settings.repository.mock';
@@ -15,7 +15,7 @@ describe('SettingsService', () => {
   const { saveSettingsDtoMock } = SaveSettingsDtoMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         SettingsService,
         {

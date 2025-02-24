@@ -4,10 +4,7 @@ import {
   ProtectionRule,
   ProtectionRuleDto,
 } from '@modules/protection-rules';
-import {
-  ProtectionRuleId,
-  ProtectionActionId,
-} from '@modules/protection-rules/enums';
+import { ProtectionRuleId } from '@modules/protection-rules/enums';
 
 export class ProtectionRulesRepositoryMock
   implements ClassMock<ProtectionRulesRepository>
@@ -16,20 +13,25 @@ export class ProtectionRulesRepositoryMock
     id: ProtectionRuleId.AC_OUTPUT_VOLTAGE,
     min: 180.3,
     max: 240,
-    actions: [ProtectionActionId.POWER_OFF],
+    enabled: true,
   };
 
   static readonly protectionRulesMock: ProtectionRule[] = [
     this.protectionRuleMock,
   ];
 
-  async saveRule(
-    protectionRuleDto: ProtectionRuleDto,
-  ): Promise<ProtectionRule> {
-    return ProtectionRulesRepositoryMock.protectionRuleMock;
-  }
-
   async getRules(): Promise<ProtectionRule[]> {
     return ProtectionRulesRepositoryMock.protectionRulesMock;
+  }
+
+  async getEnabledRules(): Promise<ProtectionRule[]> {
+    return ProtectionRulesRepositoryMock.protectionRulesMock;
+  }
+
+  async saveRule(
+    id: ProtectionRuleId,
+    ruleDto: ProtectionRuleDto,
+  ): Promise<ProtectionRule> {
+    return ProtectionRulesRepositoryMock.protectionRuleMock;
   }
 }

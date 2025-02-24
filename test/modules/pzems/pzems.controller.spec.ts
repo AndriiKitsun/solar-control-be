@@ -1,16 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PzemsController, PzemsService } from '@modules/pzems';
+import { EspPzemsApiServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
 import { PzemsServiceMock } from './mocks/pzems.service.mock';
-import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 
 describe('PzemsController', () => {
   let controller: PzemsController;
   let pzemsService: PzemsService;
 
-  const { counterResetResponseMock } = EspApiServiceMock;
+  const { resetCounterResponseMock } = EspPzemsApiServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         PzemsController,
         {
@@ -39,7 +39,7 @@ describe('PzemsController', () => {
 
       expect(resetEnergyCounterSpy).toHaveBeenCalled();
 
-      expect(result).toBe(counterResetResponseMock);
+      expect(result).toBe(resetCounterResponseMock);
     });
   });
 });

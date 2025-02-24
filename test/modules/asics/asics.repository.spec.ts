@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AsicsRepository, Asic } from '@modules/asics';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
@@ -6,7 +6,7 @@ describe('AsicsRepository', () => {
   let repository: AsicsRepository;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         AsicsRepository,
         {

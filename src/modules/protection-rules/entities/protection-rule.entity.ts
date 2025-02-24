@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
-import { ProtectionRuleId, ProtectionActionId } from '../enums';
+import { ProtectionRuleId } from '../enums';
 
 @Entity()
 export class ProtectionRule {
@@ -12,6 +12,6 @@ export class ProtectionRule {
   @Column({ type: 'float' })
   max!: number;
 
-  @Column({ type: 'enum', enum: ProtectionActionId, array: true })
-  actions!: ProtectionActionId[];
+  @Column({ type: 'boolean' })
+  enabled!: boolean;
 }

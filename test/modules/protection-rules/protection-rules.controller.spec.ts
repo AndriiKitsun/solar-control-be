@@ -6,11 +6,13 @@ import {
 import { ProtectionRulesServiceMock } from './mocks/protection-rules.service.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
+import { ProtectionRuleParamsMock } from './params/protection-rule.params.mock';
 
 describe('ProtectionRulesController', () => {
   let controller: ProtectionRulesController;
   let protectionRulesService: ProtectionRulesService;
 
+  const { protectionRuleParamsMock } = ProtectionRuleParamsMock;
   const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
   const { protectionRuleMock, protectionRulesMock } =
     ProtectionRulesRepositoryMock;
@@ -38,9 +40,15 @@ describe('ProtectionRulesController', () => {
     it('should return saved rule', async () => {
       const saveRuleSpy = jest.spyOn(protectionRulesService, 'saveRule');
 
-      const result = await controller.saveRule(protectionRuleDtoMock);
+      const result = await controller.saveRule(
+        protectionRuleParamsMock,
+        protectionRuleDtoMock,
+      );
 
-      expect(saveRuleSpy).toHaveBeenCalledWith(protectionRuleDtoMock);
+      expect(saveRuleSpy).toHaveBeenCalledWith(
+        protectionRuleParamsMock.id,
+        protectionRuleDtoMock,
+      );
 
       expect(result).toBe(protectionRuleMock);
     });

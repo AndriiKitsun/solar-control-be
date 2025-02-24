@@ -1,3 +1,14 @@
-export const DAY_MILLISECONDS = 86_400_000;
-export const HOUR_MILLISECONDS = 3_600_000;
-export const MINUTE_MILLISECONDS = 60_000;
+import { TypeORMCacheConfig } from '@common/types';
+import { AsicsCacheKey } from './enums';
+import { DateMilliseconds } from '@common/enums';
+
+export const ASICS_CACHE_CONFIG: TypeORMCacheConfig<AsicsCacheKey> = {
+  [AsicsCacheKey.GET_ASICS]: {
+    id: AsicsCacheKey.GET_ASICS,
+    milliseconds: DateMilliseconds.DAY,
+  },
+  [AsicsCacheKey.GET_ASIC]: {
+    id: AsicsCacheKey.GET_ASIC,
+    milliseconds: DateMilliseconds.DAY,
+  },
+};

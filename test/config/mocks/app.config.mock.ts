@@ -9,8 +9,8 @@ export const AppConfigMock: AppConfigType = {
     asicsTimeout: 1000,
   },
   feature: {
-    clearPzems: false,
-    pzemCalcPeriod: 2,
+    clearSensors: false,
+    sensorCalcPeriod: 2,
   },
   logLevel: PinoLogLevel.TRACE,
 };

@@ -8,7 +8,7 @@ export default tseslint.config(
   {
     ignores: [
       'eslint.config.mjs',
-      'src/api/modules/esp/esp.schema.d.ts',
+      'src/api/modules/esp/types/esp.schema.d.ts',
       'src/api/modules/asics/asics.schema.d.ts',
     ],
   },
@@ -29,6 +29,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       'sonarjs/todo-tag': 'warn',
@@ -53,6 +54,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/dot-notation': 'off',
       'sonarjs/no-hardcoded-passwords': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
     },

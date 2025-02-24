@@ -4,11 +4,7 @@ import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt } from '@common/utils';
-import {
-  DAY_MILLISECONDS,
-  HOUR_MILLISECONDS,
-  MINUTE_MILLISECONDS,
-} from './asics.constants';
+import { DateMilliseconds } from '@common/enums/date.enum';
 
 @Injectable()
 export class AsicsService {
@@ -94,9 +90,9 @@ export class AsicsService {
 
     const diff = res - start;
 
-    const days = Math.floor(diff / DAY_MILLISECONDS);
-    const hours = Math.floor((diff / HOUR_MILLISECONDS) % 24);
-    const minutes = Math.floor((diff / MINUTE_MILLISECONDS) % 60);
+    const days = Math.floor(diff / DateMilliseconds.DAY);
+    const hours = Math.floor((diff / DateMilliseconds.HOUR) % 24);
+    const minutes = Math.floor((diff / DateMilliseconds.MINUTE) % 60);
 
     return {
       stateTimeDays: days,

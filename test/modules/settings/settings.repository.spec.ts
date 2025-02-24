@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { Repository, EntityNotFoundError } from 'typeorm';
 import { Setting } from '@modules/settings/entities';
 import { SettingsRepository } from '@modules/settings/settings.repository';
@@ -17,7 +17,7 @@ describe('SettingsRepository', () => {
   const { idMock } = IdParamMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         SettingsRepository,
         {

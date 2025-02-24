@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AsicsApiService } from '@api/modules';
 import { HttpService } from '@nestjs/axios';
-import { HttpServiceMock } from '../../common/services/mocks/http-service.mock';
 import { AsicsApiServiceMock } from './mocks/asics.service.mock';
 import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
+import { HttpServiceMock } from '../../services/mocks/http-service.mock';
 
 describe('AsicsApiService', () => {
   let service: AsicsApiService;
@@ -17,7 +17,7 @@ describe('AsicsApiService', () => {
   const { asicSummaryMock, asicSummaryStats } = AsicsApiServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         AsicsApiService,
         {
@@ -34,7 +34,9 @@ describe('AsicsApiService', () => {
     buildUrlSpy = jest
       .spyOn(service as any, 'buildUrl')
       .mockReturnValueOnce(urlMock);
-    getSpy = jest.spyOn(service, 'get').mockResolvedValue(responseDataMock);
+    getSpy = jest
+      .spyOn(service as any, 'get')
+      .mockResolvedValue(responseDataMock);
   });
 
   it('should be defined', () => {

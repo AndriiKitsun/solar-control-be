@@ -4,6 +4,8 @@ import { UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
+import { ASICS_CACHE_CONFIG } from './asics.constants';
+import { getCacheKey } from '@common/utils';
 
 @Injectable()
 export class AsicsRepository {
@@ -19,11 +21,19 @@ export class AsicsRepository {
   }
 
   findAll(): Promise<Asic[]> {
-    return this.asicsRepository.find();
+    return this.asicsRepository.find({
+      cache: ASICS_CACHE_CONFIG.getAsics,
+    });
   }
 
   findOne(id: string): Promise<Asic> {
-    return this.asicsRepository.findOneByOrFail({ id });
+    return this.asicsRepository.findOneOrFail({
+      where: { id },
+      cache: {
+        id: getCacheKey(ASICS_CACHE_CONFIG.getAsic.id, id),
+        milliseconds: ASICS_CACHE_CONFIG.getAsic.milliseconds,
+      },
+    });
   }
 
   async update(id: string, updateAsicDto: UpdateAsicDto): Promise<Asic> {
@@ -32,6 +42,10 @@ export class AsicsRepository {
     if (!result.affected) {
       throw new EntityNotFoundError(Asic, { id });
     }
+
+    await this.asicsRepository.manager.connection.queryResultCache?.remove([
+      getCacheKey(ASICS_CACHE_CONFIG.getAsic.id, id),
+    ]);
 
     return this.findOne(id);
   }
@@ -42,5 +56,10 @@ export class AsicsRepository {
     if (!result.affected) {
       throw new EntityNotFoundError(Asic, { id });
     }
+
+    await this.asicsRepository.manager.connection.queryResultCache?.remove([
+      ASICS_CACHE_CONFIG.getAsics.id,
+      getCacheKey(ASICS_CACHE_CONFIG.getAsic.id, id),
+    ]);
   }
 }

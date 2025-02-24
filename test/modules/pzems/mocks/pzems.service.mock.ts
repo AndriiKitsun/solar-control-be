@@ -1,31 +1,10 @@
-import { PzemsService, Pzem, SensorsAvgVoltageConfig } from '@modules/pzems';
 import { ClassMock } from '@common/types/test.types';
-import { EspSensorsData, EspPzemCounter } from '@api/modules';
-import { PzemsRepositoryMock } from './pzems.repository.mock';
-import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
+import { PzemsService } from '@modules/pzems';
+import { EspPzemCounter } from '@api/modules/esp';
+import { EspPzemsApiServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
 
 export class PzemsServiceMock implements ClassMock<PzemsService> {
-  onModuleInit(): void {}
-
-  async handleEspMessage(
-    espSensors: EspSensorsData,
-    raw: string,
-  ): Promise<string> {
-    return '';
-  }
-
-  async saveSensors(sensorsData: Pzem): Promise<Pzem> {
-    return PzemsRepositoryMock.pzemMock;
-  }
-
   async resetEnergyCounter(): Promise<EspPzemCounter[]> {
-    return EspApiServiceMock.counterResetResponseMock;
-  }
-
-  async calcAvgVoltage(
-    sensorsData: Pzem,
-    config: SensorsAvgVoltageConfig,
-  ): Promise<void> {
-    return;
+    return EspPzemsApiServiceMock.resetCounterResponseMock;
   }
 }

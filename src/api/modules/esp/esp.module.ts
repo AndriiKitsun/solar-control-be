@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
-import { EspApiService } from './esp.service';
-import { ESP_WS_SERVICE } from './esp.constants';
+import { ESP_WS_SERVICE } from './constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
-import { EspWsService } from './ws/esp-ws.service';
+import { EspSensorsWsService } from './ws';
+import {
+  EspPzemsApiService,
+  EspRelaysApiService,
+  EspProtectionRulesApiService,
+} from './collections';
+
+const PROVIDERS = [
+  EspProtectionRulesApiService,
+  EspPzemsApiService,
+  EspRelaysApiService,
+];
 
 @Module({
   imports: [
@@ -17,12 +27,12 @@ import { EspWsService } from './ws/esp-ws.service';
     }),
   ],
   providers: [
-    EspApiService,
+    ...PROVIDERS,
     {
       provide: ESP_WS_SERVICE,
-      useClass: EspWsService,
+      useClass: EspSensorsWsService,
     },
   ],
-  exports: [EspApiService, ESP_WS_SERVICE],
+  exports: [...PROVIDERS, ESP_WS_SERVICE],
 })
 export class EspApiModule {}

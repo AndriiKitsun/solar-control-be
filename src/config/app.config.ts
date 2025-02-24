@@ -22,8 +22,8 @@ export interface AppConfigType {
     asicsTimeout: number;
   };
   feature: {
-    clearPzems: boolean;
-    pzemCalcPeriod: number;
+    clearSensors: boolean;
+    sensorCalcPeriod: number;
   };
   logLevel: PinoLogLevel;
 }
@@ -53,11 +53,11 @@ class AppEnvVariables {
 
   @IsBoolean()
   @IsNotEmpty()
-  PZEMS_CLEAR_ON_START!: boolean;
+  SENSORS_CLEAR_ON_START!: boolean;
 
   @IsNumber()
   @IsNotEmpty()
-  PZEMS_PERIOD_TO_CALC!: number;
+  SENSORS_CALC_PERIOD!: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -83,8 +83,8 @@ export const AppConfig = registerAs<AppConfigType>(
         asicsTimeout: config.ASICS_HTTP_TIMEOUT,
       },
       feature: {
-        clearPzems: config.PZEMS_CLEAR_ON_START,
-        pzemCalcPeriod: config.PZEMS_PERIOD_TO_CALC,
+        clearSensors: config.SENSORS_CLEAR_ON_START,
+        sensorCalcPeriod: config.SENSORS_CALC_PERIOD,
       },
       logLevel: config.LOG_LEVEL,
     };
