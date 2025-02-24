@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { EspSensorsWsService } from '@api/modules/esp/ws/sensors/sensors.service';
 import { EspConfig } from '@config/esp.config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -9,7 +9,7 @@ describe('EspSensorsWsService', () => {
   let service: EspSensorsWsService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         EspSensorsWsService,
         {

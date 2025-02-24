@@ -6,20 +6,16 @@ import { ProtectionRuleId } from './enums';
 import { EspProtectionRulesService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT, Sensor } from '../sensors';
-import { ProtectionRulesExecutor } from './strategies';
 import { AsicsApiService } from '@api/modules';
 import { AsicsService } from '../asics';
 import { LogsService, LogType } from '../logs';
 import { Observable, Subject, map } from 'rxjs';
+import { ProtectionRulesExecutor } from './protection-rules.executor';
+import { ALLOWED_RULES_TO_SAVE } from './protection-rules.constants';
 
 @Injectable()
 export class ProtectionRulesService {
   private readonly logger = new Logger(ProtectionRulesService.name);
-  private readonly allowedRulesToSave: ProtectionRuleId[] = [
-    ProtectionRuleId.AC_OUTPUT_FREQUENCY,
-    ProtectionRuleId.AC_OUTPUT_VOLTAGE,
-    ProtectionRuleId.DC_BATTERY_VOLTAGE,
-  ];
   private readonly protectionResult$ = new Subject<ProtectionResultDto>();
 
   private isRequestSent = false;
@@ -106,7 +102,7 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    if (this.allowedRulesToSave.includes(id) && ruleDto.enabled) {
+    if (ALLOWED_RULES_TO_SAVE.includes(id) && ruleDto.enabled) {
       await this.espProtectionRulesService.saveProtectionRule({
         id,
         min: ruleDto.min,

@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AsicsApiService } from '@api/modules';
 import { HttpService } from '@nestjs/axios';
 import { AsicsApiServiceMock } from './mocks/asics.service.mock';
@@ -17,7 +17,7 @@ describe('AsicsApiService', () => {
   const { asicSummaryMock, asicSummaryStats } = AsicsApiServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         AsicsApiService,
         {

@@ -5,6 +5,8 @@ import {
   ObjectId,
   FindOptionsWhere,
   UpdateResult,
+  QueryRunner,
+  EntityManager,
 } from 'typeorm';
 import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -13,12 +15,23 @@ import { SaveOptions } from 'typeorm/repository/SaveOptions';
 
 type MockedRepository<Entity extends ObjectLiteral> = Pick<
   Repository<Entity>,
-  'insert' | 'find' | 'update' | 'save'
+  'insert' | 'find' | 'update' | 'save' | 'manager'
 >;
 
 export class RepositoryMock<Entity extends ObjectLiteral>
   implements MockedRepository<Entity>
 {
+  manager = {
+    connection: {
+      queryResultCache: {
+        async remove(
+          identifiers: string[],
+          queryRunner?: QueryRunner,
+        ): Promise<void> {},
+      },
+    },
+  } as EntityManager;
+
   async find(options: FindManyOptions<Entity> | undefined): Promise<Entity[]> {
     return [];
   }

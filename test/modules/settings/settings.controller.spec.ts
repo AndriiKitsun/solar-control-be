@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { SettingsController } from '@modules/settings/settings.controller';
 import { SettingsService } from '@modules/settings/settings.service';
 import { SettingEntityMock } from './entities/mocks/setting.entity.mock';
@@ -15,7 +15,7 @@ describe('SettingsController', () => {
   const { saveSettingsDtoMock } = SaveSettingsDtoMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       controllers: [SettingsController],
       providers: [
         {

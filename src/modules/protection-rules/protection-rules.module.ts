@@ -9,13 +9,13 @@ import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';
 import {
   DcBatteryProtectionStrategy,
   AcOutputProtectionStrategy,
-  ProtectionRulesExecutor,
   ProtectionStrategy,
 } from './strategies';
 import { LogsModule } from '../logs';
 import { SensorId } from '../sensors';
 import { AsicsModule } from '../asics';
 import { AsicsApiModule } from '@api/modules';
+import { ProtectionRulesExecutor } from './protection-rules.executor';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
 

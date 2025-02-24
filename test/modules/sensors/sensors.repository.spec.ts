@@ -1,22 +1,22 @@
 import { Test } from '@nestjs/testing';
-import { AsicsRepository, Asic } from '@modules/asics';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { SensorsRepository, Sensor } from '@modules/sensors';
 
-describe('AsicsRepository', () => {
-  let repository: AsicsRepository;
+describe('SensorsRepository', () => {
+  let repository: SensorsRepository;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        AsicsRepository,
+        SensorsRepository,
         {
-          provide: getRepositoryToken(Asic),
+          provide: getRepositoryToken(Sensor),
           useValue: {},
         },
       ],
     }).compile();
 
-    repository = module.get(AsicsRepository);
+    repository = module.get(SensorsRepository);
   });
 
   it('should be defined', () => {

@@ -42,8 +42,8 @@ export class SensorsService implements OnModuleInit {
   }
 
   onModuleInit(): void {
-    if (this.appConfig.feature.clearPzems) {
-      void this.pzemsRepository.clearPzemTable();
+    if (this.appConfig.feature.clearSensors) {
+      void this.pzemsRepository.deleteAll();
     }
   }
 
@@ -85,7 +85,7 @@ export class SensorsService implements OnModuleInit {
     sensorsData: Sensor,
     config: SensorsAvgVoltageConfig,
   ): Promise<void> {
-    const period = config.fetchLimit * this.appConfig.feature.pzemCalcPeriod;
+    const period = config.fetchLimit * this.appConfig.feature.sensorCalcPeriod;
 
     const recentSensors = await this.pzemsRepository.findAllBefore(
       sensorsData.createdAt,

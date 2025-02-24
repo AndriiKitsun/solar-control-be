@@ -42,16 +42,17 @@ describe('ProtectionRulesRepository', () => {
       const saveSpy = jest
         .spyOn(protectionRulesRepository, 'save')
         .mockResolvedValueOnce(protectionRuleMock);
+      const expectedPayload: ProtectionRule = {
+        id: ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
+        ...protectionRuleDtoMock,
+      };
 
       const result = await repository.saveRule(
         ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
         protectionRuleDtoMock,
       );
 
-      expect(saveSpy).toHaveBeenCalledWith(
-        ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
-        protectionRuleDtoMock,
-      );
+      expect(saveSpy).toHaveBeenCalledWith(expectedPayload);
 
       expect(result).toBe(protectionRuleMock);
     });

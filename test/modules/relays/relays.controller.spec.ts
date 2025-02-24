@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { RelaysServiceMock } from './mocks/relays.service.mock';
-import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
 import { RelaysController } from '@modules/relays/relays.controller';
 import { RelaysService } from '@modules/relays/relays.service';
+import { EspRelaysServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
 
 describe('RelaysController', () => {
   let controller: RelaysController;
   let relaysService: RelaysService;
 
-  const { relayStatus } = EspApiServiceMock;
+  const { relayStatusMock } = EspRelaysServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         RelaysController,
         {
@@ -37,7 +37,7 @@ describe('RelaysController', () => {
 
       expect(getRelayStatusSpy).toHaveBeenCalled();
 
-      expect(result).toBe(relayStatus);
+      expect(result).toBe(relayStatusMock);
     });
   });
 
@@ -51,7 +51,7 @@ describe('RelaysController', () => {
 
       expect(updatePowerRelaySpy).toHaveBeenCalledWith(false);
 
-      expect(result).toBe(relayStatus);
+      expect(result).toBe(relayStatusMock);
     });
   });
 });

@@ -1,27 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EspApiService } from '@api/modules';
-import { EspApiServiceMock } from '@api/modules/esp/mocks/esp-service.mock';
+import { Test } from '@nestjs/testing';
 import { RelaysService } from '@modules/relays/relays.service';
+import { EspRelaysService } from '@api/modules/esp';
+import { EspRelaysServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
 
 describe('RelaysService', () => {
   let service: RelaysService;
-  let espApiService: EspApiService;
+  let espRelaysService: EspRelaysService;
 
-  const { relayStatus } = EspApiServiceMock;
+  const { relayStatusMock } = EspRelaysServiceMock;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         RelaysService,
         {
-          provide: EspApiService,
-          useClass: EspApiServiceMock,
+          provide: EspRelaysService,
+          useClass: EspRelaysServiceMock,
         },
       ],
     }).compile();
 
     service = module.get(RelaysService);
-    espApiService = module.get(EspApiService);
+    espRelaysService = module.get(EspRelaysService);
   });
 
   it('should be defined', () => {
@@ -30,25 +30,28 @@ describe('RelaysService', () => {
 
   describe('getRelayStatus', () => {
     it('should return relay power status', async () => {
-      const getRelayStatusSpy = jest.spyOn(espApiService, 'getRelayStatus');
+      const getRelayStatusSpy = jest.spyOn(espRelaysService, 'getRelayStatus');
 
       const result = await service.getRelayStatus();
 
       expect(getRelayStatusSpy).toHaveBeenCalled();
 
-      expect(result).toBe(relayStatus);
+      expect(result).toBe(relayStatusMock);
     });
   });
 
   describe('updatePowerRelay', () => {
     it('should return status of updating the power relay', async () => {
-      const updatePowerRelaySpy = jest.spyOn(espApiService, 'updatePowerRelay');
+      const updatePowerRelaySpy = jest.spyOn(
+        espRelaysService,
+        'updatePowerRelay',
+      );
 
       const result = await service.updatePowerRelay(false);
 
       expect(updatePowerRelaySpy).toHaveBeenCalledWith(false);
 
-      expect(result).toBe(relayStatus);
+      expect(result).toBe(relayStatusMock);
     });
   });
 });

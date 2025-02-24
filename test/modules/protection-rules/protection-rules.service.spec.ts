@@ -3,9 +3,18 @@ import {
   ProtectionRulesService,
   ProtectionRulesRepository,
   ProtectionRuleId,
+  ProtectionRulesExecutor,
 } from '@modules/protection-rules';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
+import { EspProtectionRulesService } from '@api/modules/esp';
+import { EspProtectionRulesServiceMock } from '@api/modules/esp/collections/protection-rules/mocks/protection-rules.service.mock';
+import { ProtectionRulesExecutorMock } from './mocks/protection-rules.executor.mock';
+import { AsicsApiService } from '@api/modules';
+import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
+import { AsicsService } from '@modules/asics';
+import { AsicsServiceMock } from '../asics/mocks/asics.service.mock';
+import { LogsService } from '@modules/logs';
 
 describe('ProtectionRulesService', () => {
   let service: ProtectionRulesService;
@@ -22,6 +31,26 @@ describe('ProtectionRulesService', () => {
         {
           provide: ProtectionRulesRepository,
           useClass: ProtectionRulesRepositoryMock,
+        },
+        {
+          provide: EspProtectionRulesService,
+          useClass: EspProtectionRulesServiceMock,
+        },
+        {
+          provide: ProtectionRulesExecutor,
+          useClass: ProtectionRulesExecutorMock,
+        },
+        {
+          provide: AsicsApiService,
+          useClass: AsicsApiServiceMock,
+        },
+        {
+          provide: AsicsService,
+          useClass: AsicsServiceMock,
+        },
+        {
+          provide: LogsService,
+          useValue: {},
         },
       ],
     }).compile();

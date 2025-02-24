@@ -7,11 +7,11 @@ import { Repository, Between, Not, IsNull } from 'typeorm';
 export class SensorsRepository {
   constructor(
     @InjectRepository(Sensor)
-    private readonly pzemsRepository: Repository<Sensor>,
+    private readonly repository: Repository<Sensor>,
   ) {}
 
   save(sensorsData: Sensor): Promise<Sensor> {
-    return this.pzemsRepository.save(sensorsData);
+    return this.repository.save(sensorsData);
   }
 
   findAllBefore(date: Date | string, seconds: number): Promise<Sensor[]> {
@@ -22,7 +22,7 @@ export class SensorsRepository {
     const toDate = new Date(date);
     toDate.setMilliseconds(999);
 
-    return this.pzemsRepository.find({
+    return this.repository.find({
       select: {
         createdAt: true,
         sensors: {
@@ -45,7 +45,7 @@ export class SensorsRepository {
     });
   }
 
-  async clearPzemTable(): Promise<void> {
-    await this.pzemsRepository.delete({});
+  async deleteAll(): Promise<void> {
+    await this.repository.delete({});
   }
 }
