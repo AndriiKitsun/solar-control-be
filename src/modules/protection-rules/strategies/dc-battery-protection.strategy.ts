@@ -19,7 +19,7 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
     rules: Record<ProtectionRuleId, ProtectionRule>,
   ): ProtectionRuleResult {
     const result: ProtectionRuleResult = {
-      [ProtectionRuleId.DC_BATTERY_VOLTAGE]: false,
+      dcBatteryVoltage: false,
     };
 
     if (sensor.protection?.dcBatteryVoltage && rules.dcBatteryVoltage) {

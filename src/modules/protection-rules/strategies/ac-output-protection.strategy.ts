@@ -19,9 +19,9 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
     rules: Record<ProtectionRuleId, ProtectionRule>,
   ): ProtectionRuleResult {
     const result: ProtectionRuleResult = {
-      [ProtectionRuleId.AC_OUTPUT_FREQUENCY]: false,
-      [ProtectionRuleId.AC_OUTPUT_VOLTAGE]: false,
-      [ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE]: false,
+      acOutputFrequency: false,
+      acOutputVoltage: false,
+      acOutputAvgVoltage: false,
     };
 
     if (sensor.protection?.acOutputFrequency && rules.acOutputFrequency) {
