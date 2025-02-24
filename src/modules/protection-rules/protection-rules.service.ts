@@ -3,7 +3,7 @@ import { ProtectionRuleDto, ProtectionResultDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleId } from './enums';
-import { EspProtectionRulesService } from '@api/modules/esp';
+import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT, Sensor } from '../sensors';
 import { AsicsApiService } from '@api/modules';
@@ -22,7 +22,7 @@ export class ProtectionRulesService {
 
   constructor(
     private readonly protectionRulesRepository: ProtectionRulesRepository,
-    private readonly espProtectionRulesService: EspProtectionRulesService,
+    private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
     private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
     private readonly asicsApiService: AsicsApiService,
     private readonly asicsService: AsicsService,
@@ -103,7 +103,7 @@ export class ProtectionRulesService {
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
     if (ALLOWED_RULES_TO_SAVE.includes(id) && ruleDto.enabled) {
-      await this.espProtectionRulesService.saveProtectionRule({
+      await this.espProtectionRulesApiService.saveProtectionRule({
         id,
         min: ruleDto.min,
         max: ruleDto.max,

@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-import { EspRelaysService } from '@api/modules/esp';
+import { EspRelaysApiService } from '@api/modules/esp';
 import { HttpService } from '@nestjs/axios';
 import { EspConfig } from '@config/esp.config';
 import { EspConfigMock } from '@config/mocks/esp.config.mock';
 import { HttpServiceMock } from '../../../../services/mocks/http-service.mock';
 
-describe('EspRelaysService', () => {
-  let service: EspRelaysService;
+describe('EspRelaysApiService', () => {
+  let service: EspRelaysApiService;
 
   let buildUrlSpy: jest.SpyInstance;
   let getSpy: jest.SpyInstance;
@@ -17,7 +17,7 @@ describe('EspRelaysService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EspRelaysService,
+        EspRelaysApiService,
         {
           provide: EspConfig.KEY,
           useValue: EspConfigMock,
@@ -29,7 +29,7 @@ describe('EspRelaysService', () => {
       ],
     }).compile();
 
-    service = module.get(EspRelaysService);
+    service = module.get(EspRelaysApiService);
 
     buildUrlSpy = jest
       .spyOn(service as any, 'buildUrl')

@@ -1,9 +1,12 @@
 import { ClassMock } from '@common/types/test.types';
-import { EspProtectionRulesService, EspProtectionRule } from '@api/modules/esp';
+import {
+  EspProtectionRulesApiService,
+  EspProtectionRule,
+} from '@api/modules/esp';
 import { ProtectionRuleId } from '@modules/protection-rules';
 
-export class EspProtectionRulesServiceMock
-  implements ClassMock<EspProtectionRulesService>
+export class EspProtectionRulesApiServiceMock
+  implements ClassMock<EspProtectionRulesApiService>
 {
   static readonly protectionRuleMock: EspProtectionRule = {
     id: ProtectionRuleId.AC_OUTPUT_VOLTAGE,

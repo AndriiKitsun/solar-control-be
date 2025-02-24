@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-import { EspPzemsService } from '@api/modules/esp';
+import { EspPzemsApiService } from '@api/modules/esp';
 import { HttpService } from '@nestjs/axios';
 import { EspConfig } from '@config/esp.config';
 import { EspConfigMock } from '@config/mocks/esp.config.mock';
 import { HttpServiceMock } from '../../../../services/mocks/http-service.mock';
 
-describe('EspPzemsService', () => {
-  let service: EspPzemsService;
+describe('EspPzemsApiService', () => {
+  let service: EspPzemsApiService;
 
   let buildUrlSpy: jest.SpyInstance;
   let deleteSpy: jest.SpyInstance;
@@ -16,7 +16,7 @@ describe('EspPzemsService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        EspPzemsService,
+        EspPzemsApiService,
         {
           provide: EspConfig.KEY,
           useValue: EspConfigMock,
@@ -28,7 +28,7 @@ describe('EspPzemsService', () => {
       ],
     }).compile();
 
-    service = module.get(EspPzemsService);
+    service = module.get(EspPzemsApiService);
 
     buildUrlSpy = jest
       .spyOn(service as any, 'buildUrl')

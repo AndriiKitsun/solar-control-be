@@ -1,27 +1,27 @@
 import { Test } from '@nestjs/testing';
 import { PzemsService } from '@modules/pzems';
-import { EspPzemsService } from '@api/modules/esp';
-import { EspPzemsServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
+import { EspPzemsApiService } from '@api/modules/esp';
+import { EspPzemsApiServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
 
 describe('PzemsService', () => {
   let service: PzemsService;
-  let espPzemsService: EspPzemsService;
+  let espPzemsApiService: EspPzemsApiService;
 
-  const { resetCounterResponseMock } = EspPzemsServiceMock;
+  const { resetCounterResponseMock } = EspPzemsApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         PzemsService,
         {
-          provide: EspPzemsService,
-          useClass: EspPzemsServiceMock,
+          provide: EspPzemsApiService,
+          useClass: EspPzemsApiServiceMock,
         },
       ],
     }).compile();
 
     service = module.get(PzemsService);
-    espPzemsService = module.get(EspPzemsService);
+    espPzemsApiService = module.get(EspPzemsApiService);
   });
 
   it('should be defined', () => {
@@ -30,7 +30,7 @@ describe('PzemsService', () => {
 
   describe('resetEnergyCounter', () => {
     it('should return reset response', async () => {
-      const resetCounterSpy = jest.spyOn(espPzemsService, 'resetCounter');
+      const resetCounterSpy = jest.spyOn(espPzemsApiService, 'resetCounter');
 
       const result = await service.resetEnergyCounter();
 

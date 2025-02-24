@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { PzemsController, PzemsService } from '@modules/pzems';
-import { EspPzemsServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
+import { EspPzemsApiServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
 import { PzemsServiceMock } from './mocks/pzems.service.mock';
 
 describe('PzemsController', () => {
   let controller: PzemsController;
   let pzemsService: PzemsService;
 
-  const { resetCounterResponseMock } = EspPzemsServiceMock;
+  const { resetCounterResponseMock } = EspPzemsApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({

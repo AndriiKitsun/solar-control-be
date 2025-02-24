@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EspPzemCounter, EspPzemsService } from '@api/modules/esp';
+import { EspPzemCounter, EspPzemsApiService } from '@api/modules/esp';
 
 @Injectable()
 export class PzemsService {
-  constructor(private readonly espPzemsService: EspPzemsService) {}
+  constructor(private readonly espPzemsApiService: EspPzemsApiService) {}
 
   resetEnergyCounter(): Promise<EspPzemCounter[]> {
-    return this.espPzemsService.resetCounter();
+    return this.espPzemsApiService.resetCounter();
   }
 }

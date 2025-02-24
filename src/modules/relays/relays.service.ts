@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { EspRelayStatus, EspRelaysService } from '@api/modules/esp';
+import { EspRelayStatus, EspRelaysApiService } from '@api/modules/esp';
 
 @Injectable()
 export class RelaysService {
-  constructor(private readonly espRelaysService: EspRelaysService) {}
+  constructor(private readonly espRelaysApiService: EspRelaysApiService) {}
 
   getRelayStatus(): Promise<EspRelayStatus> {
-    return this.espRelaysService.getRelayStatus();
+    return this.espRelaysApiService.getRelayStatus();
   }
 
   updatePowerRelay(status: boolean): Promise<EspRelayStatus> {
-    return this.espRelaysService.updatePowerRelay(status);
+    return this.espRelaysApiService.updatePowerRelay(status);
   }
 }

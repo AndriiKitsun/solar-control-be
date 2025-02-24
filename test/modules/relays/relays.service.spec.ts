@@ -1,27 +1,27 @@
 import { Test } from '@nestjs/testing';
 import { RelaysService } from '@modules/relays/relays.service';
-import { EspRelaysService } from '@api/modules/esp';
-import { EspRelaysServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
+import { EspRelaysApiService } from '@api/modules/esp';
+import { EspRelaysApiServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
 
 describe('RelaysService', () => {
   let service: RelaysService;
-  let espRelaysService: EspRelaysService;
+  let espRelaysApiService: EspRelaysApiService;
 
-  const { relayStatusMock } = EspRelaysServiceMock;
+  const { relayStatusMock } = EspRelaysApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         RelaysService,
         {
-          provide: EspRelaysService,
-          useClass: EspRelaysServiceMock,
+          provide: EspRelaysApiService,
+          useClass: EspRelaysApiServiceMock,
         },
       ],
     }).compile();
 
     service = module.get(RelaysService);
-    espRelaysService = module.get(EspRelaysService);
+    espRelaysApiService = module.get(EspRelaysApiService);
   });
 
   it('should be defined', () => {
@@ -30,7 +30,10 @@ describe('RelaysService', () => {
 
   describe('getRelayStatus', () => {
     it('should return relay power status', async () => {
-      const getRelayStatusSpy = jest.spyOn(espRelaysService, 'getRelayStatus');
+      const getRelayStatusSpy = jest.spyOn(
+        espRelaysApiService,
+        'getRelayStatus',
+      );
 
       const result = await service.getRelayStatus();
 
@@ -43,7 +46,7 @@ describe('RelaysService', () => {
   describe('updatePowerRelay', () => {
     it('should return status of updating the power relay', async () => {
       const updatePowerRelaySpy = jest.spyOn(
-        espRelaysService,
+        espRelaysApiService,
         'updatePowerRelay',
       );
 

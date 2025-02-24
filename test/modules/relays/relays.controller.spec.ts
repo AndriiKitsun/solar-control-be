@@ -2,13 +2,13 @@ import { Test } from '@nestjs/testing';
 import { RelaysServiceMock } from './mocks/relays.service.mock';
 import { RelaysController } from '@modules/relays/relays.controller';
 import { RelaysService } from '@modules/relays/relays.service';
-import { EspRelaysServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
+import { EspRelaysApiServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
 
 describe('RelaysController', () => {
   let controller: RelaysController;
   let relaysService: RelaysService;
 
-  const { relayStatusMock } = EspRelaysServiceMock;
+  const { relayStatusMock } = EspRelaysApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({

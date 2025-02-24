@@ -1,9 +1,9 @@
-import { EspHttpBaseService } from '../../services';
+import { EspHttpBaseApiService } from '../../services';
 import { Injectable } from '@nestjs/common';
 import { EspRelayStatus } from './relays.types';
 
 @Injectable()
-export class EspRelaysService extends EspHttpBaseService {
+export class EspRelaysApiService extends EspHttpBaseApiService {
   getRelayStatus(): Promise<EspRelayStatus> {
     const url = this.buildUrl('relays');
 

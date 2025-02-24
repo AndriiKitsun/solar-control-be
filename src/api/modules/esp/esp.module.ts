@@ -4,15 +4,15 @@ import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
 import { EspSensorsWsService } from './ws';
 import {
-  EspPzemsService,
-  EspRelaysService,
-  EspProtectionRulesService,
+  EspPzemsApiService,
+  EspRelaysApiService,
+  EspProtectionRulesApiService,
 } from './collections';
 
 const PROVIDERS = [
-  EspProtectionRulesService,
-  EspPzemsService,
-  EspRelaysService,
+  EspProtectionRulesApiService,
+  EspPzemsApiService,
+  EspRelaysApiService,
 ];
 
 @Module({

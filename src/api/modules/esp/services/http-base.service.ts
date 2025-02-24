@@ -6,7 +6,7 @@ import { ErrorCode, SystemName } from '@common/enums';
 import { EspConfigType, EspConfig } from '@config/esp.config';
 import { AbstractHttpService } from '../../../services';
 
-export abstract class EspHttpBaseService extends AbstractHttpService {
+export abstract class EspHttpBaseApiService extends AbstractHttpService {
   @Inject(EspConfig.KEY)
   private espConfig!: EspConfigType;
 
