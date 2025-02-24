@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
-import { LogDto } from './dto';
+import { CreateLogDto } from './dto';
 import { Log } from './entities';
 import { Observable } from 'rxjs';
 import { LogParams } from './params';
@@ -29,7 +29,7 @@ export class LogsController {
   }
 
   @Post()
-  saveLog(@Body() logDto: LogDto): Promise<void> {
+  saveLog(@Body() logDto: CreateLogDto): Promise<void> {
     return this.logsService.saveLog(logDto);
   }
 

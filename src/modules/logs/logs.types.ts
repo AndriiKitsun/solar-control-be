@@ -1,3 +1,3 @@
-import { LogDto } from './dto';
+import { CreateLogDto } from './dto';
 
-export type LogPayload = Omit<LogDto, 'level'>;
+export type LogPayload = Omit<CreateLogDto, 'level'>;

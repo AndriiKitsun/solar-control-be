@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
 import { LogType, LogLevel } from '../enums';
 
-export class LogDto {
+export class CreateLogDto {
   @IsEnum(LogType)
   @IsNotEmpty()
   type!: LogType;

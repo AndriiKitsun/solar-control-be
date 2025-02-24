@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Log } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { LogDto } from './dto';
+import { CreateLogDto } from './dto';
 import { LogParams } from './params';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class LogsRepository {
     });
   }
 
-  async saveLog(logDto: LogDto): Promise<Log> {
+  async saveLog(logDto: CreateLogDto): Promise<Log> {
     await this.repository.insert(logDto);
 
     return logDto as Log;
