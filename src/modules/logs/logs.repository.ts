@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { CreateLogDto } from './dto';
 import { LogParams } from './params';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 @Injectable()
 export class LogsRepository {
@@ -12,24 +14,23 @@ export class LogsRepository {
     private readonly repository: Repository<Log>,
   ) {}
 
-  getLogs(params: LogParams): Promise<Log[]> {
-    if (!params.from && !params.to) {
-      return this.repository.find({
-        where: {
-          type: params.type,
-        },
-      });
+  async getLogs(params: LogParams): Promise<Log[]> {
+    const where: FindOptionsWhere<Log> = {};
+    const opts: FindManyOptions<Log> = { where };
+
+    if (params.from && params.to) {
+      where.createdAt = Between(new Date(params.from), new Date(params.to));
     }
 
-    const to = params.to ? new Date(params.to) : new Date();
-    const from = params.from ? new Date(params.from) : new Date();
+    if (params.type) {
+      where.type = params.type;
+    }
 
-    return this.repository.find({
-      where: {
-        type: params.type,
-        createdAt: Between(from, to),
-      },
-    });
+    if (params.order) {
+      opts.order = { createdAt: params.order };
+    }
+
+    return this.repository.find(opts);
   }
 
   async saveLog(logDto: CreateLogDto): Promise<Log> {

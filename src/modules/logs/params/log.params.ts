@@ -1,5 +1,5 @@
 import { IsDateString, IsOptional, IsEnum } from 'class-validator';
-import { LogType } from '../enums';
+import { LogType, LogOrder } from '../enums';
 
 export class LogParams {
   @IsDateString()
@@ -13,4 +13,8 @@ export class LogParams {
   @IsEnum(LogType)
   @IsOptional()
   type?: LogType;
+
+  @IsEnum(LogOrder)
+  @IsOptional()
+  order?: LogOrder;
 }

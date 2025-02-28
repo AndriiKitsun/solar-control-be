@@ -23,7 +23,7 @@ export abstract class ProtectionStrategy {
   protected logRule(rule: ProtectionRule, value: number | undefined): void {
     return this.logsService.info({
       type: LogType.PROTECTION,
-      message: `Rule '${rule.id}' was triggered for '${this.name}' sensor. Value: ${value}. Min: ${rule.min}. Max: ${rule.max}`,
+      message: `Protection rule '${rule.id}' was triggered for '${this.name}' sensor. Value: ${value}. Min: ${rule.min}. Max: ${rule.max}`,
     });
   }
 
