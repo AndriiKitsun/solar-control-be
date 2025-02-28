@@ -8,3 +8,8 @@ export enum LogLevel {
   WARN,
   ERROR,
 }
+
+export enum LogOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}
