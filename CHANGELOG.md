@@ -1,5 +1,27 @@
 # solar-control-be
 
+## 1.3.0
+
+### Minor Changes
+
+- [#35](https://github.com/AndriiKitsun/solar-control-be/pull/35) [`c15a67e`](https://github.com/AndriiKitsun/solar-control-be/commit/c15a67e0bb9cb76fdd232d6867468121271a165a) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-102: Calculate avg voltage for DC Battery based on 50 values
+
+- [#37](https://github.com/AndriiKitsun/solar-control-be/pull/37) [`7cf4155`](https://github.com/AndriiKitsun/solar-control-be/commit/7cf415578adf63572e3c9e0d2fcbd3d3c588dc2c) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-103: Implement logger for error and fatal severity
+
+- [#42](https://github.com/AndriiKitsun/solar-control-be/pull/42) [`4be055a`](https://github.com/AndriiKitsun/solar-control-be/commit/4be055a1b09b193f2708c887f8016a28017e3dd9) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-114: Return logs in specified order
+
+- [#40](https://github.com/AndriiKitsun/solar-control-be/pull/40) [`cdac87d`](https://github.com/AndriiKitsun/solar-control-be/commit/cdac87d022ce53da731bdebfd74dcb0aae1caf87) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-106: Implement Protection rule collection
+
+- [#41](https://github.com/AndriiKitsun/solar-control-be/pull/41) [`8f44252`](https://github.com/AndriiKitsun/solar-control-be/commit/8f442528aabd2aa2d746b18928d0ca3a6bac08aa) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-107: Implement protection rules events
+
+- [#39](https://github.com/AndriiKitsun/solar-control-be/pull/39) [`17168f7`](https://github.com/AndriiKitsun/solar-control-be/commit/17168f7b2165d07298a03f34b2346e2456a5af32) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-109: ECONABORTED from postgres
+
+- [#38](https://github.com/AndriiKitsun/solar-control-be/pull/38) [`2e9b0a8`](https://github.com/AndriiKitsun/solar-control-be/commit/2e9b0a8a57eb586db87444c1c1a41437e9c21b49) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-92: Independent HTTP config per 3d-party API
+
+### Patch Changes
+
+- [#36](https://github.com/AndriiKitsun/solar-control-be/pull/36) [`ff2ef22`](https://github.com/AndriiKitsun/solar-control-be/commit/ff2ef22d436e02c67c804d00015b78c6f64678b6) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-00: Async pzem table clearing
+
 ## 1.2.0
 
 ### Minor Changes
