@@ -17,6 +17,10 @@ export class AsicsRepository {
   async create(createAsicDto: Partial<Asic>): Promise<Asic> {
     await this.asicsRepository.insert(createAsicDto);
 
+    await this.asicsRepository.manager.connection.queryResultCache?.remove([
+      ASICS_CACHE_CONFIG.getAsics.id,
+    ]);
+
     return plainToInstance(Asic, createAsicDto);
   }
 
@@ -44,6 +48,7 @@ export class AsicsRepository {
     }
 
     await this.asicsRepository.manager.connection.queryResultCache?.remove([
+      ASICS_CACHE_CONFIG.getAsics.id,
       getCacheKey(ASICS_CACHE_CONFIG.getAsic.id, id),
     ]);
 
