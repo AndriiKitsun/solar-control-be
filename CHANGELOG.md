@@ -1,5 +1,11 @@
 # solar-control-be
 
+## 1.3.1
+
+### Patch Changes
+
+- [#44](https://github.com/AndriiKitsun/solar-control-be/pull/44) [`9021fc4`](https://github.com/AndriiKitsun/solar-control-be/commit/9021fc459cf6d53d46d00537934bf62e9ef04afe) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-120: Asics cache is not flushed during adding new one
+
 ## 1.3.0
 
 ### Minor Changes
