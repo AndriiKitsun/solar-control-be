@@ -1,5 +1,6 @@
 import { ClassMock } from '@common/types/test.types';
-import { SensorsRepository, Sensor } from '@modules/sensors';
+import { SensorsRepository } from '@modules/sensors/sensors.repository';
+import { Sensor } from '@modules/sensors/entities';
 
 export class SensorsRepositoryMock implements ClassMock<SensorsRepository> {
   static readonly sensorMock: Sensor = {

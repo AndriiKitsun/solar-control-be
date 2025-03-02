@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { SensorsController, SensorsService } from '@modules/sensors';
+import { SensorsController } from '@modules/sensors/sensors.controller';
+import { SensorsService } from '@modules/sensors/sensors.service';
 import { SensorsServiceMock } from './mocks/sensors.service.mock';
 import { SensorsRepositoryMock } from './mocks/sensors.repository.mock';
 

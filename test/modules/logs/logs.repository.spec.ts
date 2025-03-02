@@ -2,7 +2,8 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
 import { Repository } from 'typeorm';
-import { LogsRepository, Log } from '@modules/logs';
+import { LogsRepository } from '@modules/logs/logs.repository';
+import { Log } from '@modules/logs/entities';
 import { LogParamsMock } from './params/log.params.mock';
 import { LogsRepositoryMock } from './mocks/logs.repository.mock';
 

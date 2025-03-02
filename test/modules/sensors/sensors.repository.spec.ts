@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { SensorsRepository, Sensor } from '@modules/sensors';
+import { SensorsRepository } from '@modules/sensors/sensors.repository';
+import { Sensor } from '@modules/sensors/entities';
 
 describe('SensorsRepository', () => {
   let repository: SensorsRepository;
