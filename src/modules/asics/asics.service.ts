@@ -3,7 +3,7 @@ import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
-import { encrypt } from '@common/utils';
+import { encrypt, decrypt } from '@common/utils';
 import { DateMilliseconds } from '@common/enums/date.enum';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -15,8 +15,17 @@ export class AsicsService {
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_11PM)
-  startAsics(): void {
-    // start all asics
+  async startAsics(): Promise<void> {
+    const asics = await this.asicsRepository.findAllT2Active();
+
+    for (const asic of asics) {
+      const { token } = await this.asicsApiService.login(
+        asic.ip,
+        decrypt(asic.password),
+      );
+
+      await this.asicsApiService.start(asic.ip, token);
+    }
   }
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {

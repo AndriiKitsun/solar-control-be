@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export class Asic {
@@ -23,6 +23,7 @@ export class Asic {
   @Column()
   token!: string;
 
+  @Expose()
   @Column({ default: false })
   t2Active!: boolean;
 }

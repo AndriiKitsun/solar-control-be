@@ -30,6 +30,14 @@ export class AsicsRepository {
     });
   }
 
+  findAllT2Active(): Promise<Asic[]> {
+    return this.asicsRepository.find({
+      where: {
+        t2Active: true,
+      },
+    });
+  }
+
   findOne(id: string): Promise<Asic> {
     return this.asicsRepository.findOneOrFail({
       where: { id },
