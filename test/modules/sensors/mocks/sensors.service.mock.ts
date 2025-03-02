@@ -1,9 +1,7 @@
 import { ClassMock } from '@common/types/test.types';
-import {
-  SensorsService,
-  Sensor,
-  SensorsAvgVoltageConfig,
-} from '@modules/sensors';
+import { SensorsService } from '@modules/sensors/sensors.service';
+import { Sensor } from '@modules/sensors/entities';
+import { SensorsAvgVoltageConfig } from '@modules/sensors/sensors.types';
 import { Observable, of } from 'rxjs';
 import { MessageEvent } from '@nestjs/common';
 import { EspSensorsData } from '@api/modules/esp';

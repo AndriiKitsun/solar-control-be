@@ -1,8 +1,6 @@
 import { Test } from '@nestjs/testing';
-import {
-  ProtectionRulesController,
-  ProtectionRulesService,
-} from '@modules/protection-rules';
+import { ProtectionRulesService } from '@modules/protection-rules/protection-rules.service';
+import { ProtectionRulesController } from '@modules/protection-rules/protection-rules.controller';
 import { ProtectionRulesServiceMock } from './mocks/protection-rules.service.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';

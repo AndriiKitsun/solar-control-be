@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
-import {
-  ProtectionRulesRepository,
-  ProtectionRule,
-  ProtectionRuleId,
-} from '@modules/protection-rules';
+import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
+import { ProtectionRule } from '@modules/protection-rules/entities';
+import { ProtectionRuleId } from '@modules/protection-rules/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
 import { Repository } from 'typeorm';

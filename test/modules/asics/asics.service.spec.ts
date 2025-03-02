@@ -1,10 +1,7 @@
 import { Test } from '@nestjs/testing';
-import {
-  AsicsService,
-  AsicsRepository,
-  AsicSummaryResponseDto,
-  UpdateAsicDto,
-} from '@modules/asics';
+import { AsicsRepository } from '@modules/asics/asics.repository';
+import { AsicsService } from '@modules/asics/asics.service';
+import { UpdateAsicDto, AsicSummaryResponseDto } from '@modules/asics/dto';
 import { AsicsApiService } from '@api/modules';
 import { AsicsRepositoryMock } from './mocks/asics.repository.mock';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';

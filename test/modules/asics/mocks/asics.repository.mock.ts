@@ -1,9 +1,6 @@
-import {
-  AsicsRepository,
-  Asic,
-  CreateAsicDto,
-  UpdateAsicDto,
-} from '@modules/asics';
+import { AsicsRepository } from '@modules/asics/asics.repository';
+import { Asic } from '@modules/asics/entities';
+import { CreateAsicDto, UpdateAsicDto } from '@modules/asics/dto';
 import { ClassMock } from '@common/types/test.types';
 
 export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {

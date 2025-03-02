@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { LogsServiceMock } from './mocks/logs.service.mock';
-import { LogsController, LogsService } from '@modules/logs';
+import { LogsController } from '@modules/logs/logs.controller';
+import { LogsService } from '@modules/logs/logs.service';
 import { LogParamsMock } from './params/log.params.mock';
 import { LogsRepositoryMock } from './mocks/logs.repository.mock';
 

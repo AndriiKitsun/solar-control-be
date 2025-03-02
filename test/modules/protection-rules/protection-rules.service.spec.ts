@@ -1,10 +1,8 @@
 import { Test } from '@nestjs/testing';
-import {
-  ProtectionRulesService,
-  ProtectionRulesRepository,
-  ProtectionRuleId,
-  ProtectionRulesExecutor,
-} from '@modules/protection-rules';
+import { ProtectionRulesService } from '@modules/protection-rules/protection-rules.service';
+import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
+import { ProtectionRulesExecutor } from '@modules/protection-rules/protection-rules.executor';
+import { ProtectionRuleId } from '@modules/protection-rules/enums';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { EspProtectionRulesApiService } from '@api/modules/esp';
@@ -12,9 +10,9 @@ import { EspProtectionRulesApiServiceMock } from '@api/modules/esp/collections/p
 import { ProtectionRulesExecutorMock } from './mocks/protection-rules.executor.mock';
 import { AsicsApiService } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
-import { AsicsService } from '@modules/asics';
+import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsServiceMock } from '../asics/mocks/asics.service.mock';
-import { LogsService } from '@modules/logs';
+import { LogsService } from '@modules/logs/logs.service';
 
 describe('ProtectionRulesService', () => {
   let service: ProtectionRulesService;

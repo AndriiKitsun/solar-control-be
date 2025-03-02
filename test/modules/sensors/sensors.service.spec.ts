@@ -2,11 +2,9 @@ import { Test } from '@nestjs/testing';
 import { SensorsRepositoryMock } from './mocks/sensors.repository.mock';
 import { AppConfig } from '@config/app.config';
 import { AppConfigMock } from '@config/mocks/app.config.mock';
-import {
-  SensorsService,
-  SensorsRepository,
-  SENSORS_DATA_EVENT,
-} from '@modules/sensors';
+import { SensorsService } from '@modules/sensors/sensors.service';
+import { SensorsRepository } from '@modules/sensors/sensors.repository';
+import { SENSORS_DATA_EVENT } from '@modules/sensors/sensors.constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EspSensorsWsServiceMock } from '@api/modules/esp/ws/sensors/mocks/sensors.service.mock';
 import { EventEmitter2Mock } from '@common/mocks/event-emitter2.mock';

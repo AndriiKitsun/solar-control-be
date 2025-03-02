@@ -1,9 +1,7 @@
 import { ClassMock } from '@common/types/test.types';
-import {
-  ProtectionRulesRepository,
-  ProtectionRule,
-  ProtectionRuleDto,
-} from '@modules/protection-rules';
+import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
+import { ProtectionRule } from '@modules/protection-rules/entities';
+import { ProtectionRuleDto } from '@modules/protection-rules/dto';
 import { ProtectionRuleId } from '@modules/protection-rules/enums';
 
 export class ProtectionRulesRepositoryMock

@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { PzemsController, PzemsService } from '@modules/pzems';
+import { PzemsController } from '@modules/pzems/pzems.controller';
+import { PzemsService } from '@modules/pzems/pzems.service';
 import { EspPzemsApiServiceMock } from '@api/modules/esp/collections/pzems/mocks/pzems.service.mock';
 import { PzemsServiceMock } from './mocks/pzems.service.mock';
 
