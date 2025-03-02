@@ -18,7 +18,7 @@ import { RelaysModule } from '@modules/relays';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeORMExceptionFilter } from '@common/filters';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ProtectionRulesModule } from '@modules/protection-rules';
+import { ProtectionRulesModule } from '@modules/protection-rules/protection-rules.module';
 import { SensorsModule } from '@modules/sensors';
 import { LogsModule } from '@modules/logs/logs.module';
 
