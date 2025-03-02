@@ -1,4 +1,5 @@
-import { LogParams, LogType } from '@modules/logs';
+import { LogParams } from '@modules/logs/params';
+import { LogType } from '@modules/logs/enums';
 
 export class LogParamsMock {
   static readonly logParamsMock: LogParams = {

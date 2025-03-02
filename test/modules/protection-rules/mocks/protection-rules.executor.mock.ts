@@ -1,10 +1,8 @@
 import { ClassMock } from '@common/types/test.types';
-import {
-  ProtectionRulesExecutor,
-  ProtectionRule,
-  ProtectionResultDto,
-} from '@modules/protection-rules';
-import { SensorItem } from '@modules/sensors';
+import { ProtectionRulesExecutor } from '@modules/protection-rules/protection-rules.executor';
+import { ProtectionResultDto } from '@modules/protection-rules/dto';
+import { ProtectionRule } from '@modules/protection-rules/entities';
+import { SensorItem } from '@modules/sensors/entities';
 
 export class ProtectionRulesExecutorMock
   implements ClassMock<ProtectionRulesExecutor>

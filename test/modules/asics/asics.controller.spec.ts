@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { AsicsService, AsicsController } from '@modules/asics';
+import { AsicsService } from '@modules/asics/asics.service';
+import { AsicsController } from '@modules/asics/asics.controller';
 import { AsicsServiceMock } from './mocks/asics.service.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
 

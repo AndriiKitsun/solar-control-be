@@ -1,10 +1,10 @@
 import {
-  UpdateAsicDto,
-  AsicsService,
-  CreateAsicDto,
-  Asic,
   AsicSummaryResponseDto,
-} from '@modules/asics';
+  CreateAsicDto,
+  UpdateAsicDto,
+} from '@modules/asics/dto';
+import { AsicsService } from '@modules/asics/asics.service';
+import { Asic } from '@modules/asics/entities';
 import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
 

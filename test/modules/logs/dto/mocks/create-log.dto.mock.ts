@@ -1,4 +1,5 @@
-import { CreateLogDto, LogType, LogLevel } from '@modules/logs';
+import { CreateLogDto } from '@modules/logs/dto';
+import { LogType, LogLevel } from '@modules/logs/enums';
 
 export class CreateLogDtoMock {
   static readonly createLogDtoMock: CreateLogDto = {

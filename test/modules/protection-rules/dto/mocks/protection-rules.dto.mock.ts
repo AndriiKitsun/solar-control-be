@@ -1,4 +1,4 @@
-import { ProtectionRuleDto } from '@modules/protection-rules';
+import { ProtectionRuleDto } from '@modules/protection-rules/dto';
 
 export class ProtectionRuleDtoMock {
   static readonly protectionRuleDtoMock: ProtectionRuleDto = {

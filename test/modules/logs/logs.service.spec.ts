@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { LogsRepositoryMock } from './mocks/logs.repository.mock';
-import { LogsService, LogsRepository } from '@modules/logs';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsRepository } from '@modules/logs/logs.repository';
 import { LogParamsMock } from './params/log.params.mock';
 
 describe('LogsService', () => {

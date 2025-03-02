@@ -1,12 +1,9 @@
 import { ClassMock } from '@common/types/test.types';
-import {
-  LogsRepository,
-  LogParams,
-  Log,
-  CreateLogDto,
-  LogLevel,
-  LogType,
-} from '@modules/logs';
+import { LogsRepository } from '@modules/logs/logs.repository';
+import { Log } from '@modules/logs/entities';
+import { LogType, LogLevel } from '@modules/logs/enums';
+import { LogParams } from '@modules/logs/params';
+import { CreateLogDto } from '@modules/logs/dto';
 
 export class LogsRepositoryMock implements ClassMock<LogsRepository> {
   static readonly logMock: Log = {

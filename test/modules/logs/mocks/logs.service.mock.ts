@@ -1,11 +1,9 @@
 import { ClassMock } from '@common/types/test.types';
-import {
-  LogsService,
-  LogPayload,
-  LogParams,
-  Log,
-  CreateLogDto,
-} from '@modules/logs';
+import { LogParams } from '@modules/logs/params';
+import { LogsService } from '@modules/logs/logs.service';
+import { Log } from '@modules/logs/entities';
+import { CreateLogDto } from '@modules/logs/dto';
+import { LogPayload } from '@modules/logs/logs.types';
 import { Observable, of } from 'rxjs';
 import { MessageEvent } from '@nestjs/common';
 import { LogsRepositoryMock } from './logs.repository.mock';
