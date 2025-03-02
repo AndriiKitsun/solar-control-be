@@ -14,7 +14,7 @@ import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { PostgresProvider, PinoLoggerProvider } from '@providers/index';
 import { convertToHttpException } from '@common/utils';
 import { SettingsModule } from '@modules/settings';
-import { RelaysModule } from '@modules/relays';
+import { RelaysModule } from '@modules/relays/relays.module';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeORMExceptionFilter } from '@common/filters';
 import { EventEmitterModule } from '@nestjs/event-emitter';
