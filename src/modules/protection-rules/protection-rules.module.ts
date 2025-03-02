@@ -11,7 +11,7 @@ import {
   AcOutputProtectionStrategy,
   ProtectionStrategy,
 } from './strategies';
-import { LogsModule } from '../logs';
+import { LogsModule } from '../logs/logs.module';
 import { SensorId } from '../sensors';
 import { AsicsModule } from '../asics/asics.module';
 import { AsicsApiModule } from '@api/modules';

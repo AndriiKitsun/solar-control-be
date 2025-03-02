@@ -2,7 +2,7 @@ import { SensorItem, SensorId } from '../../sensors';
 import { Injectable } from '@nestjs/common';
 import { ProtectionRuleId } from '../enums';
 import { ProtectionStrategy } from './protection.strategy';
-import { LogsService } from '../../logs';
+import { LogsService } from '../../logs/logs.service';
 import { ProtectionRule } from '../entities';
 import { ProtectionRuleResult } from '../protection-rules.types';
 

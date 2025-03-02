@@ -1,6 +1,7 @@
 import { SensorId, SensorItem } from '../../sensors';
 import { ProtectionRule } from '../entities';
-import { LogType, LogsService } from '../../logs';
+import { LogsService } from '../../logs/logs.service';
+import { LogType } from '../../logs/enums';
 import { ProtectionRuleId } from '../enums';
 import { ProtectionRuleResult } from '../protection-rules.types';
 
