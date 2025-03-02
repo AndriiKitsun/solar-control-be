@@ -22,4 +22,7 @@ export class Asic {
   @Exclude()
   @Column()
   token!: string;
+
+  @Column({ default: false })
+  t2Active!: boolean;
 }

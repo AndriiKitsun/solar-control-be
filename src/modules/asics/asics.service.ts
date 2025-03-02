@@ -5,6 +5,7 @@ import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt } from '@common/utils';
 import { DateMilliseconds } from '@common/enums/date.enum';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AsicsService {
@@ -12,6 +13,11 @@ export class AsicsService {
     private readonly asicsRepository: AsicsRepository,
     private readonly asicsApiService: AsicsApiService,
   ) {}
+
+  @Cron(CronExpression.EVERY_DAY_AT_11PM)
+  startAsics(): void {
+    // start all asics
+  }
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     const { ip, password } = createAsicDto;
@@ -41,8 +47,8 @@ export class AsicsService {
     return this.asicsRepository.update(id, updateAsicDto);
   }
 
-  remove(id: string): Promise<void> {
-    return this.asicsRepository.remove(id);
+  delete(id: string): Promise<void> {
+    return this.asicsRepository.delete(id);
   }
 
   async start(id: string): Promise<void> {

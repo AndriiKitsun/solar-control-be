@@ -25,7 +25,11 @@
     "types:asics": "npx openapi-typescript http://192.168.1.21/docs/api-doc.json -o src/api/modules/asics/asics.schema.d.ts",
     "prepare": "husky",
     "changeset:add": "changeset",
-    "changeset:publish": "changeset publish"
+    "changeset:publish": "changeset publish",
+    "typeorm": "typeorm-ts-node-commonjs -d src/db/postgres-migration.data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "lint-staged": {
     "*.ts": [
@@ -43,6 +47,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-fastify": "^11.0.8",
     "@nestjs/platform-ws": "^11.0.8",
+    "@nestjs/schedule": "^5.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "@nestjs/websockets": "^11.0.8",
     "axios": "^1.7.9",

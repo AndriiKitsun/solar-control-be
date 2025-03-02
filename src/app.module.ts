@@ -21,6 +21,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProtectionRulesModule } from '@modules/protection-rules';
 import { SensorsModule } from '@modules/sensors';
 import { LogsModule } from '@modules/logs';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LogsModule } from '@modules/logs';
       useFactory: PinoLoggerProvider,
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot({ intervals: false, timeouts: false }),
     AsicsModule,
     LogsModule,
     ProtectionRulesModule,
