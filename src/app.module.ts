@@ -4,7 +4,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PzemsModule } from '@modules/pzems';
-import { AsicsModule } from '@modules/asics';
+import { AsicsModule } from '@modules/asics/asics.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfig } from '@config/app.config';

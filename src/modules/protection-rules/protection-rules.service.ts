@@ -7,7 +7,7 @@ import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT, Sensor } from '../sensors';
 import { AsicsApiService } from '@api/modules';
-import { AsicsService } from '../asics';
+import { AsicsService } from '../asics/asics.service';
 import { LogsService, LogType } from '../logs';
 import { Observable, Subject, map } from 'rxjs';
 import { ProtectionRulesExecutor } from './protection-rules.executor';

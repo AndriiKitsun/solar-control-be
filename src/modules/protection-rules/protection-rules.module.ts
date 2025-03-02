@@ -13,7 +13,7 @@ import {
 } from './strategies';
 import { LogsModule } from '../logs';
 import { SensorId } from '../sensors';
-import { AsicsModule } from '../asics';
+import { AsicsModule } from '../asics/asics.module';
 import { AsicsApiModule } from '@api/modules';
 import { ProtectionRulesExecutor } from './protection-rules.executor';
 
