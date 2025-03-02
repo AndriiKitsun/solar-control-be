@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SensorItem, SensorId } from '../sensors';
+import { SensorId } from '../sensors/enums';
+import { SensorItem } from '../sensors/entities';
 import { ProtectionRule } from './entities';
 import { ProtectionStrategy } from './strategies';
 import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';

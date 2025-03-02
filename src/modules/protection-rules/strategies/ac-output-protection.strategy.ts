@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProtectionRuleId } from '../enums';
-import { SensorItem, SensorId } from '../../sensors';
+import { SensorId } from '../../sensors/enums';
+import { SensorItem } from '../../sensors/entities';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../logs/logs.service';
 import { ProtectionRule } from '../entities';
