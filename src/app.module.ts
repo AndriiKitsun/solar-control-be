@@ -3,7 +3,7 @@ import {
   ClassSerializerInterceptor,
   ValidationPipe,
 } from '@nestjs/common';
-import { PzemsModule } from '@modules/pzems';
+import { PzemsModule } from '@modules/pzems/pzems.module';
 import { AsicsModule } from '@modules/asics/asics.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
