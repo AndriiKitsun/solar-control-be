@@ -1,5 +1,6 @@
 export enum LogType {
   PROTECTION = 'protection',
+  CONTROL = 'control',
 }
 
 export enum LogLevel {

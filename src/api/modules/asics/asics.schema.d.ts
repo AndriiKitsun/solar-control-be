@@ -13,10 +13,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Warranty activate
-     * @description Warranty activate
-     */
+    /** Warranty activate */
     post: operations['warrantyActivate'];
     delete?: never;
     options?: never;
@@ -31,16 +28,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get apikeys
-     * @description Get apikeys
-     */
+    /** Get apikeys */
     get: operations['apikeysGet'];
     put?: never;
-    /**
-     * Add api key
-     * @description Add api key
-     */
+    /** Add api key */
     post: operations['apikeysAdd'];
     delete?: never;
     options?: never;
@@ -57,10 +48,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Delete api key
-     * @description Delete api key
-     */
+    /** Delete api key */
     post: operations['apikeysDelete'];
     delete?: never;
     options?: never;
@@ -75,13 +63,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /** Auth Check */
+    get: operations['authCheck'];
     put?: never;
-    /**
-     * Auth Check
-     * @description Auth Check
-     */
-    post: operations['authCheck'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -95,10 +80,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get autotune preset list
-     * @description Get autotune preset list
-     */
+    /** Get autotune preset list */
     get: operations['autotunePresets'];
     put?: never;
     post?: never;
@@ -117,10 +99,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Autotune reset list of profiles
-     * @description Autotune reset list of profiles
-     */
+    /** Autotune reset list of profiles */
     post: operations['autotuneReset'];
     delete?: never;
     options?: never;
@@ -137,10 +116,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Autotune reset all profiles
-     * @description Autotune reset all profiles
-     */
+    /** Autotune reset all profiles */
     post: operations['autotuneResetAll'];
     delete?: never;
     options?: never;
@@ -157,10 +133,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Warranty cancel
-     * @description Warranty cancel
-     */
+    /** Warranty cancel */
     post: operations['warrantyCancel'];
     delete?: never;
     options?: never;
@@ -175,10 +148,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get miner chains
-     * @description Get miner chains
-     */
+    /** Get miner chains */
     get: operations['getChains'];
     put?: never;
     post?: never;
@@ -195,10 +165,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get miner chains factory info
-     * @description Get miner chains factory info
-     */
+    /** Get miner chains factory info */
     get: operations['getChainsFactoryInfo'];
     put?: never;
     post?: never;
@@ -218,7 +185,6 @@ export interface paths {
     /**
      * Get miner chips. Deprecated. Use /chains route instead
      * @deprecated
-     * @description Get miner chips. Deprecated. Use /chains route instead
      */
     get: operations['getChips'];
     put?: never;
@@ -238,10 +204,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Find miner
-     * @description Find miner
-     */
+    /** Find miner */
     post: operations['findMiner'];
     delete?: never;
     options?: never;
@@ -258,10 +221,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Remove firmware and boot from stock
-     * @description Remove firmware and boot from stock
-     */
+    /** Remove firmware and boot from stock */
     post: operations['firmwareRemove'];
     delete?: never;
     options?: never;
@@ -278,10 +238,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Update firmware
-     * @description Update firmware
-     */
+    /** Update firmware */
     post: operations['firmwareUpdate'];
     delete?: never;
     options?: never;
@@ -296,10 +253,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get miner info
-     * @description Get miner info
-     */
+    /** Get miner info */
     get: operations['getInfo'];
     put?: never;
     post?: never;
@@ -316,10 +270,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Layout
-     * @description Layout
-     */
+    /** Layout */
     get: operations['layout'];
     put?: never;
     post?: never;
@@ -338,10 +289,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Lock miner
-     * @description Lock miner
-     */
+    /** Lock miner */
     post: operations['lock'];
     delete?: never;
     options?: never;
@@ -358,10 +306,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Lock other miner sessions
-     * @description Lock other miner sessions
-     */
+    /** Lock other miner sessions */
     post: operations['lock_others'];
     delete?: never;
     options?: never;
@@ -376,10 +321,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Read log file
-     * @description Read log file
-     */
+    /** Read log file */
     get: operations['logsGet'];
     put?: never;
     post?: never;
@@ -398,10 +340,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Clear logs
-     * @description Clear logs
-     */
+    /** Clear logs */
     post: operations['logsClear'];
     delete?: never;
     options?: never;
@@ -416,10 +355,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get metrics
-     * @description Get metrics
-     */
+    /** Get metrics */
     get: operations['metrics'];
     put?: never;
     post?: never;
@@ -438,10 +374,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining pause
-     * @description Mining pause
-     */
+    /** Mining pause */
     post: operations['miningPause'];
     delete?: never;
     options?: never;
@@ -458,10 +391,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining restart
-     * @description Mining restart
-     */
+    /** Mining restart */
     post: operations['miningRestart'];
     delete?: never;
     options?: never;
@@ -478,10 +408,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining resume
-     * @description Mining resume
-     */
+    /** Mining resume */
     post: operations['miningResume'];
     delete?: never;
     options?: never;
@@ -498,10 +425,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining start
-     * @description Mining start
-     */
+    /** Mining start */
     post: operations['miningStart'];
     delete?: never;
     options?: never;
@@ -518,10 +442,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining stop
-     * @description Mining stop
-     */
+    /** Mining stop */
     post: operations['miningStop'];
     delete?: never;
     options?: never;
@@ -538,10 +459,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Mining switch pool
-     * @description Mining switch pool
-     */
+    /** Mining switch pool */
     post: operations['miningSwitchPool'];
     delete?: never;
     options?: never;
@@ -556,10 +474,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Summary
-     * @description Summary
-     */
+    /** Summary */
     get: operations['perfSummary'];
     put?: never;
     post?: never;
@@ -576,16 +491,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get all miner settings
-     * @description Get all miner settings
-     */
+    /** Get all miner settings */
     get: operations['settingsGet'];
     put?: never;
-    /**
-     * Save miner settings
-     * @description Save miner settings
-     */
+    /** Save miner settings */
     post: operations['settingsSave'];
     delete?: never;
     options?: never;
@@ -602,10 +511,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Settings backup
-     * @description Settings backup
-     */
+    /** Settings backup */
     post: operations['settingsBackup'];
     delete?: never;
     options?: never;
@@ -622,10 +528,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Settings factory reset
-     * @description Settings factory reset
-     */
+    /** Settings factory reset */
     post: operations['settingsFactoryReset'];
     delete?: never;
     options?: never;
@@ -642,10 +545,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Settings restore
-     * @description Settings restore
-     */
+    /** Settings restore */
     post: operations['settingsRestore'];
     delete?: never;
     options?: never;
@@ -660,10 +560,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Get status
-     * @description Get status
-     */
+    /** Get status */
     get: operations['status'];
     put?: never;
     post?: never;
@@ -680,10 +577,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * Summary
-     * @description Summary
-     */
+    /** Summary */
     get: operations['summary'];
     put?: never;
     post?: never;
@@ -702,11 +596,25 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * System reboot
-     * @description System reboot
-     */
+    /** System reboot */
     post: operations['systemReboot'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/ui': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** UI */
+    get: operations['ui'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -722,10 +630,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /**
-     * Auth Check
-     * @description Auth Check
-     */
+    /** Auth Check */
     post: operations['unlock'];
     delete?: never;
     options?: never;
@@ -745,9 +650,12 @@ export interface components {
     AddApikeyQuery: components['schemas']['ApiKeysJsonItem'];
     AdvancedSettings: {
       asic_boost?: boolean | null;
+      /** @description Automatically adjusts chip frequencies based on temperatures */
+      auto_chip_throttling?: boolean | null;
       /** @description Disable voltage compensation feature */
       bitmain_disable_volt_comp?: boolean | null;
       disable_chain_break_protection?: boolean | null;
+      disable_ignore_broken_chains?: boolean | null;
       disable_restart_unbalanced?: boolean | null;
       disable_volt_checks?: boolean | null;
       /** @description Automatic preset reduction in case of miner overheating or chain break error */
@@ -792,6 +700,10 @@ export interface components {
       /** Format: int32 */
       hw_errors: number;
       id: number;
+      /** Format: int32 */
+      inlet_water_temp?: number | null;
+      /** Format: int32 */
+      outlet_water_temp?: number | null;
       pcb_temp: components['schemas']['TempRange'];
       /** Format: int32 */
       power_consumption: number;
@@ -830,6 +742,7 @@ export interface components {
       id: number;
       /** Format: float */
       temp: number;
+      throttled: boolean;
       /** Format: int32 */
       volt: number;
     };
@@ -871,6 +784,8 @@ export interface components {
        */
       hr_error: number;
       /** Format: float */
+      hr_nominal: number;
+      /** Format: float */
       hr_realtime: number;
       /** Format: float */
       hr_stock: number;
@@ -908,7 +823,7 @@ export interface components {
       hashrate: number;
       /** Format: int32 */
       id: number;
-      sensor?: components['schemas']['TempSensor'] | null;
+      sensor?: null | components['schemas']['TempSensor'];
       status: components['schemas']['ChipGrade'];
       /** Format: float */
       temp: number;
@@ -919,6 +834,10 @@ export interface components {
       key: string;
     };
     Apikey: string;
+    AuthCheck: {
+      /** Format: int64 */
+      unlock_timeout?: number | null;
+    };
     AutotuneChain: {
       chips: number[];
       /** Format: int32 */
@@ -926,7 +845,7 @@ export interface components {
       serial?: string | null;
     };
     AutotunePresetDto: components['schemas']['AutotunePresetsItem'] & {
-      tune_settings?: components['schemas']['AutotuneResultsItem'] | null;
+      tune_settings?: null | components['schemas']['AutotuneResultsItem'];
     };
     /**
      * @description Preset status. `tuned` means that preset tuned successfully
@@ -957,6 +876,7 @@ export interface components {
       freq: number;
       /** Format: int32 */
       hashrate: number;
+      modified: boolean;
       /** Format: int32 */
       volt: number;
     };
@@ -1001,12 +921,40 @@ export interface components {
     /** @enum {string} */
     ChipGrade: 'grey' | 'orange' | 'red';
     Consts: {
-      cooling: components['schemas']['Cooling'];
+      cooling: components['schemas']['CoolingConsts'];
       overclock: components['schemas']['Overclock'];
       /** @description Available timezones list.
        *     A purpose for this field is to display timezones list in UI.
        *     Makes sense for GET queries only and shall ignore for UPDATE queries. */
-      timezones: (components['schemas']['Timezone'] & string)[][];
+      timezones: [
+        (
+          | 'GMT+1'
+          | 'GMT+2'
+          | 'GMT+3'
+          | 'GMT+4'
+          | 'GMT+5'
+          | 'GMT+6'
+          | 'GMT+7'
+          | 'GMT+8'
+          | 'GMT+9'
+          | 'GMT+10'
+          | 'GMT+11'
+          | 'GMT+12'
+          | 'GMT'
+          | 'GMT-1'
+          | 'GMT-2'
+          | 'GMT-3'
+          | 'GMT-4'
+          | 'GMT-5'
+          | 'GMT-6'
+          | 'GMT-7'
+          | 'GMT-8'
+          | 'GMT-9'
+          | 'GMT-10'
+          | 'GMT-11'
+        ),
+        string,
+      ][];
     };
     Cooling: {
       /** Format: int32 */
@@ -1015,23 +963,29 @@ export interface components {
       fans: components['schemas']['Fan'][];
       settings: components['schemas']['FanSettings'];
     };
+    CoolingConsts: {
+      fan_min_count?: null | components['schemas']['MinerFanMinCount'];
+      /** Format: int32 */
+      max_target_temp: number;
+      /** Format: int32 */
+      min_fan_pwm: number;
+      /** Format: int32 */
+      min_target_temp: number;
+    };
     CoolingSettingsRaw: {
+      /** Format: int32 */
+      fan_max_duty?: number | null;
       /** Format: int32 */
       fan_min_count?: number | null;
       /** Format: int32 */
       fan_min_duty?: number | null;
-      mode?: Omit<components['schemas']['ModeRaw'], 'name'> | null;
+      mode?: null | components['schemas']['ModeRaw'];
     };
     CurrentPreset: components['schemas']['AutotunePresetsItem'] & {
-      globals?: components['schemas']['GlobalsRaw'] | null;
+      globals?: null | components['schemas']['GlobalsRaw'];
     };
     DeleteApikeyQuery: {
       key: string;
-    };
-    /** @enum {string} */
-    DevfeeRegion: 'auto' | 'eu' | 'us' | 'cn' | 'reserve';
-    DevfeeSettings: {
-      region: components['schemas']['DevfeeRegion'];
     };
     DiagReportQueryInput: {
       /** @description Issue text. Max 16KB */
@@ -1056,8 +1010,11 @@ export interface components {
     };
     FactoryInfoReply: {
       chains?: components['schemas']['FactoryInfoChain'][] | null;
+      has_pics?: boolean | null;
       /** Format: double */
       hr_stock?: number | null;
+      psu_model?: string | null;
+      psu_serial?: string | null;
     };
     Fan: {
       id: number;
@@ -1081,8 +1038,10 @@ export interface components {
       on: boolean;
     };
     FwInfo: {
+      build_name?: string;
       /** @description Build time */
       build_time: string;
+      build_uuid?: string;
       /** @description Firmware name */
       fw_name: string;
       /** @description Firmware version */
@@ -1100,30 +1059,20 @@ export interface components {
       /** Format: int32 */
       volt?: number | null;
     };
-    HotelFee: {
-      enable: boolean;
-      pool: components['schemas']['HotelFeePool'];
-    };
-    HotelFeePool: {
-      /** Format: float */
-      percent: number;
-      url: string;
-      worker: string;
-    };
     /** @enum {string} */
     HrMeasure: 'GH/s' | 'MH/s';
     InfoJson: components['schemas']['FwInfo'] & {
       hr_measure: components['schemas']['HrMeasure'];
       serial: string;
-      system?: components['schemas']['SystemInfo'] | null;
+      system?: null | components['schemas']['SystemInfo'];
     };
     InputConfig: {
-      layout?: components['schemas']['Layout'] | null;
-      miner?: components['schemas']['MinerConfigRaw'] | null;
-      network?: components['schemas']['InputNetworkConfFile'] | null;
-      password?: components['schemas']['PasswordChange'] | null;
-      regional?: components['schemas']['RegionalSettings'] | null;
-      ui?: components['schemas']['UiSettings'] | null;
+      layout?: null | components['schemas']['Layout'];
+      miner?: null | components['schemas']['MinerConfigRaw'];
+      network?: null | components['schemas']['InputNetworkConfFile'];
+      password?: null | components['schemas']['PasswordChange'];
+      regional?: null | components['schemas']['RegionalSettings'];
+      ui?: null | components['schemas']['UiSettings'];
     };
     InputNetworkConfFile: components['schemas']['NetworkConfFile'] & {
       enable_network_check?: boolean;
@@ -1151,7 +1100,7 @@ export interface components {
       } | null;
     };
     /** @enum {string} */
-    Locale: 'ru' | 'en' | 'fa' | 'ua';
+    Locale: 'ru' | 'en' | 'fa' | 'ua' | 'zh';
     /**
      * @description Log type name, `*` for all log types
      * @enum {string}
@@ -1178,22 +1127,36 @@ export interface components {
       hashrate: number;
       /** Format: int32 */
       pcb_max_temp: number;
+      /** Format: int32 */
+      power_consumption: number;
     };
     MetricsReply: {
-      annotations: components['schemas']['TimeRecordMetricAnnotation'][];
-      metrics: components['schemas']['TimeRecordMetricsData'][];
+      annotations: components['schemas']['TimeRecord_MetricAnnotation'][];
+      metrics: components['schemas']['TimeRecord_MetricsData'][];
       timezone: components['schemas']['Timezone'];
     };
     MinerConfigRaw: {
-      cooling?: components['schemas']['CoolingSettingsRaw'] | null;
-      devfee?: components['schemas']['DevfeeSettings'] | null;
-      hotel_fee?: components['schemas']['HotelFee'] | null;
-      misc?: components['schemas']['AdvancedSettings'] | null;
-      overclock?: components['schemas']['OverclockSettingsRaw'] | null;
+      cooling?: null | components['schemas']['CoolingSettingsRaw'];
+      misc?: null | components['schemas']['AdvancedSettings'];
+      overclock?: null | components['schemas']['OverclockSettingsRaw'];
       pools?:
-        | (components['schemas']['Pool'] &
-            components['schemas']['Pool'] &
-            components['schemas']['Pool'])[]
+        | [
+            {
+              pass: string;
+              url: string;
+              user: string;
+            },
+            {
+              pass: string;
+              url: string;
+              user: string;
+            },
+            {
+              pass: string;
+              url: string;
+              user: string;
+            },
+          ]
         | null;
     };
     /** @enum {string} */
@@ -1205,6 +1168,14 @@ export interface components {
       | 'overheat'
       | 'disable_chain'
       | 'enable_chain';
+    MinerFanMinCount: {
+      /** Format: int32 */
+      default: number;
+      /** Format: int32 */
+      max: number;
+      /** Format: int32 */
+      min: number;
+    };
     /** @enum {string} */
     MinerState:
       | 'mining'
@@ -1280,25 +1251,25 @@ export interface components {
     };
     OverclockSettingsRaw: {
       chains?: components['schemas']['ChainRaw'][] | null;
-      globals?: components['schemas']['GlobalsRaw'] | null;
+      globals?: null | components['schemas']['GlobalsRaw'];
       modded_psu?: boolean | null;
       /** @description Profile name */
       preset?: string | null;
-      preset_switcher?: components['schemas']['PresetSwitcherRaw'] | null;
+      preset_switcher?: null | components['schemas']['PresetSwitcherRaw'];
     };
     PasswordChange: {
       current: string;
       pw: string;
     };
     PerfSummary: {
-      current_preset?: components['schemas']['CurrentPreset'] | null;
+      current_preset?: null | components['schemas']['CurrentPreset'];
       preset_switcher: components['schemas']['PresetSwitcherRaw'];
     };
     /**
-     * @description Platform type code aml|bb|cv|xil (Amlogic/BeagleBone/Cvitek/Xilix)
+     * @description Platform type code aml|bb|cv|stm|xil (Amlogic/BeagleBone/Cvitek/STM/Xilix)
      * @enum {string}
      */
-    Platform: 'aml' | 'bb' | 'cv' | 'xil';
+    Platform: 'aml' | 'bb' | 'cv' | 'stm' | 'xil';
     Pool: {
       pass: string;
       url: string;
@@ -1336,14 +1307,17 @@ export interface components {
       | 'rejecting'
       | 'unknown';
     /** @enum {string} */
-    PoolType: 'UserPool' | 'DevFee' | 'HotelFee' | 'Refund';
+    PoolType: 'UserPool' | 'DevFee' | 'Refund';
     /** @description PresetSwitcher settings */
     PresetSwitcherRaw: {
+      autochange_top_preset?: boolean | null;
       /** Format: int32 */
       check_time?: number | null;
       /** Format: int32 */
       decrease_temp?: number | null;
       enabled?: boolean | null;
+      ignore_fan_speed?: boolean | null;
+      min_preset?: string | null;
       /** Format: int32 */
       rise_temp?: number | null;
       /** @description Profile name. Max profile that preset_switcher can switch */
@@ -1353,6 +1327,7 @@ export interface components {
       /**
        * Format: int64
        * @description Number of seconds after the system will reboot
+       *     By default, is 3 seconds
        */
       after: number;
     };
@@ -1371,7 +1346,7 @@ export interface components {
     SchemaFirmwareUpdate: {
       /** Format: binary */
       file: string;
-      keep_settings?: components['schemas']['SchemaBoolEnum'] | null;
+      keep_settings?: null | components['schemas']['SchemaBoolEnum'];
     };
     SchemaSettingsRestore: {
       /** Format: binary */
@@ -1381,12 +1356,14 @@ export interface components {
       components['schemas']['SaveConfigResult'] & {
         /** @description Flag to switch find_miner function on target devices. Optional, default `false` */
         find_miner: boolean;
+        /** Format: int64 */
+        unlock_timeout?: number | null;
         /** @description Show screen-lock status (checks that  any of auth methods satisfies) */
         unlocked: boolean;
         warranty?: components['schemas']['Warranty'];
       };
-    SummaryAntmMinerStats: {
-      miner?: components['schemas']['AntmMinerStats'] | null;
+    Summary: {
+      miner?: null | components['schemas']['AntmMinerStats'];
     };
     SwitchPoolQuery: {
       /** Format: int32 */
@@ -1426,16 +1403,31 @@ export interface components {
     };
     /** @enum {string} */
     TempSensorStatus: 'init' | 'ready' | 'measure' | 'error' | 'unknown';
-    TimeRecordMetricAnnotation: {
-      data: components['schemas']['MetricAnnotation'];
+    TimeRecord_MetricAnnotation: {
+      data: {
+        /** Format: int32 */
+        chain_id?: number | null;
+        type: components['schemas']['MinerEvent'];
+      };
       /**
        * Format: int64
        * @description UNIX time
        */
       time: number;
     };
-    TimeRecordMetricsData: {
-      data: components['schemas']['MetricsData'];
+    TimeRecord_MetricsData: {
+      data: {
+        /** Format: int32 */
+        chip_max_temp: number;
+        /** Format: int32 */
+        fan_duty: number;
+        /** Format: double */
+        hashrate: number;
+        /** Format: int32 */
+        pcb_max_temp: number;
+        /** Format: int32 */
+        power_consumption: number;
+      };
       /**
        * Format: int64
        * @description UNIX time
@@ -1475,12 +1467,12 @@ export interface components {
       current: components['schemas']['Timezone'];
     };
     UiSettings: {
-      consts?: components['schemas']['Consts'] | null;
+      consts?: null | components['schemas']['Consts'];
       dark_side_pane?: boolean | null;
       disable_animation?: boolean | null;
-      locale?: components['schemas']['Locale'] | null;
-      theme?: components['schemas']['UiTheme'] | null;
-      timezone?: components['schemas']['Timezone'] | null;
+      locale?: null | components['schemas']['Locale'];
+      theme?: null | components['schemas']['UiTheme'];
+      timezone?: null | components['schemas']['Timezone'];
     };
     /** @enum {string} */
     UiTheme: 'light' | 'dark' | 'auto';
@@ -1492,10 +1484,10 @@ export interface components {
       token: string;
     };
     ViewConfig: {
-      layout?: components['schemas']['Layout'] | null;
+      layout?: null | components['schemas']['Layout'];
       miner: components['schemas']['MinerConfigRaw'];
       network: components['schemas']['NetworkConfFile'];
-      password?: components['schemas']['PasswordChange'] | null;
+      password?: null | components['schemas']['PasswordChange'];
       regional: components['schemas']['RegionalSettings'];
       ui: components['schemas']['UiSettings'];
     };
@@ -1678,14 +1670,18 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['AuthCheck'];
+        };
       };
       /** @description Unauthorized */
       401: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['AuthCheck'];
+        };
       };
     };
   };
@@ -1912,7 +1908,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['FindMinerStatus'] | null;
+          'application/json': null | components['schemas']['FindMinerStatus'];
         };
       };
       /** @description Unauthorized */
@@ -2051,7 +2047,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['Layout'] | null;
+          'application/json': null | components['schemas']['Layout'];
         };
       };
     };
@@ -2180,6 +2176,13 @@ export interface operations {
         };
         content?: never;
       };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
       /** @description Clean logs error */
       500: {
         headers: {
@@ -2193,13 +2196,11 @@ export interface operations {
   };
   metrics: {
     parameters: {
-      query: {
+      query?: {
         /** @description Amount of seconds until now. Max is 3 days (3 * 24 * 60 * 60) Default is 1 day (24 * 60 * 60) */
-        time_slice: number;
+        time_slice?: number | null;
         /** @description Resample step in seconds to count average, default is 15 min (15 * 60) */
-        step: number;
-        /** @description Pet id */
-        until: number;
+        step?: number | null;
       };
       header?: never;
       path?: never;
@@ -2555,7 +2556,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/octet-stream': string;
+          'application/octet-stream': number[];
         };
       };
       /** @description Unauthorized */
@@ -2685,7 +2686,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SummaryAntmMinerStats'];
+          'application/json': components['schemas']['Summary'];
         };
       };
       /** @description Internal server error */
@@ -2726,6 +2727,35 @@ export interface operations {
       };
     };
   };
+  ui: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Ui read successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UiSettings'];
+        };
+      };
+      /** @description Ui read error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrDescr'];
+        };
+      };
+    };
+  };
   unlock: {
     parameters: {
       query?: never;
@@ -2753,14 +2783,27 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['AuthCheck'];
+        };
+      };
+      /** @description Too many requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AuthCheck'];
+        };
       };
       /** @description Internal server error */
       500: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['AuthCheck'];
+        };
       };
     };
   };

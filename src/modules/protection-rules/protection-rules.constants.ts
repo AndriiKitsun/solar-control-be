@@ -21,3 +21,5 @@ export const ALLOWED_RULES_TO_SAVE: ProtectionRuleId[] = [
   ProtectionRuleId.AC_OUTPUT_VOLTAGE,
   ProtectionRuleId.DC_BATTERY_VOLTAGE,
 ];
+
+export const PROTECTION_RESULT_KEY = 'protectionResult';

@@ -35,18 +35,8 @@ export class AsicsController {
   }
 
   @Delete(':id')
-  remove(@Param() params: IdParams): Promise<void> {
-    return this.asicsService.remove(params.id);
-  }
-
-  @Post(':id/start')
-  start(@Param() params: IdParams): Promise<void> {
-    return this.asicsService.start(params.id);
-  }
-
-  @Post(':id/stop')
-  stop(@Param() params: IdParams): Promise<void> {
-    return this.asicsService.stop(params.id);
+  delete(@Param() params: IdParams): Promise<void> {
+    return this.asicsService.delete(params.id);
   }
 
   @Get(':id/summary')

@@ -8,11 +8,10 @@ import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { EspProtectionRulesApiServiceMock } from '@api/modules/esp/collections/protection-rules/mocks/protection-rules.service.mock';
 import { ProtectionRulesExecutorMock } from './mocks/protection-rules.executor.mock';
-import { AsicsApiService } from '@api/modules';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsServiceMock } from '../asics/mocks/asics.service.mock';
 import { LogsService } from '@modules/logs/logs.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 describe('ProtectionRulesService', () => {
   let service: ProtectionRulesService;
@@ -39,15 +38,15 @@ describe('ProtectionRulesService', () => {
           useClass: ProtectionRulesExecutorMock,
         },
         {
-          provide: AsicsApiService,
-          useClass: AsicsApiServiceMock,
-        },
-        {
           provide: AsicsService,
           useClass: AsicsServiceMock,
         },
         {
           provide: LogsService,
+          useValue: {},
+        },
+        {
+          provide: CACHE_MANAGER,
           useValue: {},
         },
       ],

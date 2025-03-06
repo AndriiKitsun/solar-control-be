@@ -10,7 +10,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     address: 'address',
     password: 'password',
     hostname: 'hostname',
-    token: 'token',
+    t2Active: false,
   };
 
   static readonly asicsMock: Asic[] = [this.asicMock];
@@ -23,6 +23,10 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     return AsicsRepositoryMock.asicsMock;
   }
 
+  async findAllT2Active(): Promise<Asic[]> {
+    return AsicsRepositoryMock.asicsMock;
+  }
+
   async findOne(id: string): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;
   }
@@ -31,7 +35,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     return AsicsRepositoryMock.asicMock;
   }
 
-  async remove(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     return;
   }
 }

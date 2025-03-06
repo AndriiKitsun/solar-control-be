@@ -21,6 +21,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProtectionRulesModule } from '@modules/protection-rules/protection-rules.module';
 import { SensorsModule } from '@modules/sensors/sensors.module';
 import { LogsModule } from '@modules/logs/logs.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { LogsModule } from '@modules/logs/logs.module';
       useFactory: PinoLoggerProvider,
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot({ intervals: false, timeouts: false }),
+    CacheModule.register({ isGlobal: true }),
     AsicsModule,
     LogsModule,
     ProtectionRulesModule,

@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ESP_WS_SERVICE } from './constants';
 import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
-import { EspSensorsWsService } from './ws';
 import {
   EspPzemsApiService,
   EspRelaysApiService,
   EspProtectionRulesApiService,
 } from './collections';
+import { EspSensorsWsService } from './ws';
 
 const PROVIDERS = [
   EspProtectionRulesApiService,

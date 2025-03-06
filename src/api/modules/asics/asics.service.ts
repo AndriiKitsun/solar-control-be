@@ -18,13 +18,13 @@ import { AbstractHttpService } from '../../services';
 export class AsicsApiService extends AbstractHttpService {
   private logger = new Logger(AsicsApiService.name);
 
-  login(ip: string, password: string): Promise<AsicUnlockSuccess> {
+  async login(ip: string, password: string): Promise<string> {
     const url = this.buildUrl(ip, ['unlock']);
-    const body: AsicUnlockScreenBody = {
-      pw: password,
-    };
+    const body: AsicUnlockScreenBody = { pw: password };
 
-    return this.post<AsicUnlockSuccess>(url, body);
+    const response = await this.post<AsicUnlockSuccess>(url, body);
+
+    return response.token;
   }
 
   async start(ip: string, token: string): Promise<void> {

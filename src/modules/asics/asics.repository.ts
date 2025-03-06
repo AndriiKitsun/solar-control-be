@@ -30,6 +30,14 @@ export class AsicsRepository {
     });
   }
 
+  findAllT2Active(): Promise<Asic[]> {
+    return this.asicsRepository.find({
+      where: {
+        t2Active: true,
+      },
+    });
+  }
+
   findOne(id: string): Promise<Asic> {
     return this.asicsRepository.findOneOrFail({
       where: { id },
@@ -55,7 +63,7 @@ export class AsicsRepository {
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const result = await this.asicsRepository.delete(id);
 
     if (!result.affected) {

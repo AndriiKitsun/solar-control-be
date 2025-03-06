@@ -7,6 +7,7 @@ import { AsicsService } from '@modules/asics/asics.service';
 import { Asic } from '@modules/asics/entities';
 import { AsicsRepositoryMock } from './asics.repository.mock';
 import { ClassMock } from '@common/types/test.types';
+import { LogType } from '@modules/logs/enums';
 
 export class AsicsServiceMock implements ClassMock<AsicsService> {
   static readonly asicSummaryResponseDtoMock: AsicSummaryResponseDto = {
@@ -25,6 +26,10 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     currentPreset: '65 TH',
   };
 
+  async handleStartAsicsCron(): Promise<void> {
+    return;
+  }
+
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;
   }
@@ -37,15 +42,7 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     return AsicsRepositoryMock.asicMock;
   }
 
-  async remove(id: string): Promise<void> {
-    return;
-  }
-
-  async start(id: string): Promise<void> {
-    return;
-  }
-
-  async stop(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     return;
   }
 
@@ -55,5 +52,25 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
 
   async getSummary(id: string): Promise<AsicSummaryResponseDto> {
     return AsicsServiceMock.asicSummaryResponseDtoMock;
+  }
+
+  calcStateTime(time: number | undefined): AsicSummaryResponseDto['status'] {
+    return AsicsServiceMock.asicSummaryResponseDtoMock.status;
+  }
+
+  async start(asic: Asic): Promise<void> {
+    return;
+  }
+
+  async startAsics(asics: Asic[], type: LogType): Promise<void> {
+    return;
+  }
+
+  async stop(asic: Asic): Promise<void> {
+    return;
+  }
+
+  async stopAsics(asics: Asic[], type: LogType): Promise<void> {
+    return;
   }
 }
