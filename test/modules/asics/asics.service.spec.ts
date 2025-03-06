@@ -7,6 +7,9 @@ import { AsicsRepositoryMock } from './mocks/asics.repository.mock';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsServiceMock } from './mocks/asics.service.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsServiceMock } from '../logs/mocks/logs.service.mock';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 jest.mock('@common/utils', () => ({
   encrypt: jest.fn(() => 'encrypted'),
@@ -32,6 +35,14 @@ describe('AsicsService', () => {
         {
           provide: AsicsApiService,
           useClass: AsicsApiServiceMock,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: {},
+        },
+        {
+          provide: LogsService,
+          useClass: LogsServiceMock,
         },
       ],
     }).compile();

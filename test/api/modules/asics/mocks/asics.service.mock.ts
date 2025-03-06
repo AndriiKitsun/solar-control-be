@@ -42,8 +42,8 @@ export class AsicsApiServiceMock
     miner: this.asicSummaryMock,
   };
 
-  async login(ip: string, password: string): Promise<AsicUnlockSuccess> {
-    return AsicsApiServiceMock.loginResponseMock;
+  async login(ip: string, password: string): Promise<string> {
+    return AsicsApiServiceMock.loginResponseMock.token;
   }
 
   async start(ip: string, token: string): Promise<void> {

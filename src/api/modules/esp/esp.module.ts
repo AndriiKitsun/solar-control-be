@@ -7,7 +7,7 @@ import {
   EspRelaysApiService,
   EspProtectionRulesApiService,
 } from './collections';
-import { EspFakeSensorsWsService } from './ws';
+import { EspSensorsWsService } from './ws';
 
 const PROVIDERS = [
   EspProtectionRulesApiService,
@@ -30,7 +30,7 @@ const PROVIDERS = [
     ...PROVIDERS,
     {
       provide: ESP_WS_SERVICE,
-      useClass: EspFakeSensorsWsService,
+      useClass: EspSensorsWsService,
     },
   ],
   exports: [...PROVIDERS, ESP_WS_SERVICE],
