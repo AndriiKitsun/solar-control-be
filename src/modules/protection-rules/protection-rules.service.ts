@@ -1,4 +1,4 @@
-import { Injectable, Logger, MessageEvent } from '@nestjs/common';
+import { Injectable, Logger, MessageEvent, Inject } from '@nestjs/common';
 import { ProtectionRuleDto, ProtectionResultDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
@@ -7,13 +7,17 @@ import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT } from '../sensors/sensors.constants';
 import { Sensor } from '../sensors/entities';
-import { AsicsApiService } from '@api/modules';
 import { AsicsService } from '../asics/asics.service';
 import { LogsService } from '../logs/logs.service';
 import { LogType } from '../logs/enums';
 import { Observable, Subject, map } from 'rxjs';
 import { ProtectionRulesExecutor } from './protection-rules.executor';
-import { ALLOWED_RULES_TO_SAVE } from './protection-rules.constants';
+import {
+  ALLOWED_RULES_TO_SAVE,
+  PROTECTION_RESULT_KEY,
+} from './protection-rules.constants';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ProtectionRulesService {
@@ -26,9 +30,10 @@ export class ProtectionRulesService {
     private readonly protectionRulesRepository: ProtectionRulesRepository,
     private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
     private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
-    private readonly asicsApiService: AsicsApiService,
     private readonly asicsService: AsicsService,
     private readonly logsService: LogsService,
+    @Inject(CACHE_MANAGER)
+    private readonly cache: Cache,
   ) {}
 
   @OnEvent(SENSORS_DATA_EVENT)
@@ -56,8 +61,12 @@ export class ProtectionRulesService {
       if (result.triggered && !this.isRequestSent) {
         this.isRequestSent = true;
 
-        await this.stopAllAsics();
+        const asics = await this.asicsService.findAll();
+
+        await this.asicsService.stopAsics(asics, LogType.PROTECTION);
       }
+
+      await this.cache.set(PROTECTION_RESULT_KEY, result);
 
       this.protectionResult$.next(result);
     } catch (err) {
@@ -67,28 +76,6 @@ export class ProtectionRulesService {
         type: LogType.PROTECTION,
         message: 'The error occurred during handling protection rules',
       });
-    }
-  }
-
-  async stopAllAsics(): Promise<void> {
-    const asics = await this.asicsService.findAll();
-
-    for (const asic of asics) {
-      this.logsService.debug({
-        type: LogType.PROTECTION,
-        message: `Stopping the '${asic.hostname}' Asic miner`,
-      });
-
-      try {
-        await this.asicsApiService.stop(asic.ip, asic.token);
-      } catch (err) {
-        this.logger.error(err);
-
-        this.logsService.warn({
-          type: LogType.PROTECTION,
-          message: `The error occurred during stopping the '${asic.hostname}' Asic miner`,
-        });
-      }
     }
   }
 

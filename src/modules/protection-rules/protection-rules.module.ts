@@ -14,7 +14,6 @@ import {
 import { LogsModule } from '../logs/logs.module';
 import { SensorId } from '../sensors/enums';
 import { AsicsModule } from '../asics/asics.module';
-import { AsicsApiModule } from '@api/modules';
 import { ProtectionRulesExecutor } from './protection-rules.executor';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
@@ -25,7 +24,6 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
     EspApiModule,
     LogsModule,
     AsicsModule,
-    AsicsApiModule,
   ],
   controllers: [ProtectionRulesController],
   providers: [

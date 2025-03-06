@@ -19,10 +19,6 @@ export class Asic {
   @Column()
   hostname!: string;
 
-  @Exclude()
-  @Column()
-  token!: string;
-
   @Expose()
   @Column({ default: false })
   t2Active!: boolean;

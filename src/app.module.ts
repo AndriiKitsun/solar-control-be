@@ -22,6 +22,7 @@ import { ProtectionRulesModule } from '@modules/protection-rules/protection-rule
 import { SensorsModule } from '@modules/sensors/sensors.module';
 import { LogsModule } from '@modules/logs/logs.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot({ intervals: false, timeouts: false }),
+    CacheModule.register({ isGlobal: true }),
     AsicsModule,
     LogsModule,
     ProtectionRulesModule,
