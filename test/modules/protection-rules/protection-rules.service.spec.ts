@@ -12,6 +12,8 @@ import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsServiceMock } from '../asics/mocks/asics.service.mock';
 import { LogsService } from '@modules/logs/logs.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { RelaysService } from '@modules/relays/relays.service';
+import { RelaysServiceMock } from '../relays/mocks/relays.service.mock';
 
 describe('ProtectionRulesService', () => {
   let service: ProtectionRulesService;
@@ -48,6 +50,10 @@ describe('ProtectionRulesService', () => {
         {
           provide: CACHE_MANAGER,
           useValue: {},
+        },
+        {
+          provide: RelaysService,
+          useClass: RelaysServiceMock,
         },
       ],
     }).compile();

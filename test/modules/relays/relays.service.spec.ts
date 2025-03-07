@@ -2,6 +2,8 @@ import { Test } from '@nestjs/testing';
 import { RelaysService } from '@modules/relays/relays.service';
 import { EspRelaysApiService } from '@api/modules/esp';
 import { EspRelaysApiServiceMock } from '@api/modules/esp/collections/relays/mocks/relays.service.mock';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsServiceMock } from '../logs/mocks/logs.service.mock';
 
 describe('RelaysService', () => {
   let service: RelaysService;
@@ -16,6 +18,10 @@ describe('RelaysService', () => {
         {
           provide: EspRelaysApiService,
           useClass: EspRelaysApiServiceMock,
+        },
+        {
+          provide: LogsService,
+          useClass: LogsServiceMock,
         },
       ],
     }).compile();

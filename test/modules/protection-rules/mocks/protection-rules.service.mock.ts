@@ -5,7 +5,11 @@ import { ProtectionRulesService } from '@modules/protection-rules/protection-rul
 import { Sensor } from '@modules/sensors/entities';
 import { ProtectionRule } from '@modules/protection-rules/entities';
 import { ProtectionRuleId } from '@modules/protection-rules/enums';
-import { ProtectionRuleDto } from '@modules/protection-rules/dto';
+import {
+  ProtectionRuleDto,
+  ProtectionResultDto,
+} from '@modules/protection-rules/dto';
+import { MessageEvent } from '@nestjs/common';
 
 export class ProtectionRulesServiceMock
   implements ClassMock<ProtectionRulesService>
@@ -14,15 +18,15 @@ export class ProtectionRulesServiceMock
     return;
   }
 
-  async stopAllAsics(): Promise<void> {
-    return;
+  async handleProtectionResult(result: ProtectionResultDto): Promise<void> {
+    return Promise.resolve(undefined);
   }
 
   async getRules(): Promise<ProtectionRule[]> {
     return ProtectionRulesRepositoryMock.protectionRulesMock;
   }
 
-  getRulesResult(): Observable<MessageEvent> {
+  getProtectionResultStream(): Observable<MessageEvent> {
     return of();
   }
 

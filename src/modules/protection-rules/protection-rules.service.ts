@@ -94,7 +94,7 @@ export class ProtectionRulesService {
     return this.protectionRulesRepository.getRules();
   }
 
-  getRulesResult(): Observable<MessageEvent> {
+  getProtectionResultStream(): Observable<MessageEvent> {
     return this.protectionResult$.pipe(map((data) => ({ data })));
   }
 

@@ -25,8 +25,8 @@ export class ProtectionRulesController {
   }
 
   @Sse('sse')
-  getRulesResult(): Observable<MessageEvent> {
-    return this.protectionRulesService.getRulesResult();
+  getProtectionResultStream(): Observable<MessageEvent> {
+    return this.protectionRulesService.getProtectionResultStream();
   }
 
   @Put(':id')
