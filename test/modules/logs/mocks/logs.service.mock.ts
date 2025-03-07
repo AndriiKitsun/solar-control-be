@@ -3,7 +3,7 @@ import { LogParams } from '@modules/logs/params';
 import { LogsService } from '@modules/logs/logs.service';
 import { Log } from '@modules/logs/entities';
 import { CreateLogDto } from '@modules/logs/dto';
-import { LogPayload } from '@modules/logs/logs.types';
+import { LogPayload, RunWithLogOptions } from '@modules/logs/logs.types';
 import { Observable, of } from 'rxjs';
 import { MessageEvent } from '@nestjs/common';
 import { LogsRepositoryMock } from './logs.repository.mock';
@@ -32,4 +32,11 @@ export class LogsServiceMock implements ClassMock<LogsService> {
   warn(logDto: LogPayload): void {}
 
   error(logDto: LogPayload): void {}
+
+  async runWith<T>(
+    callback: () => Promise<T>,
+    options: RunWithLogOptions,
+  ): Promise<void | T> {
+    return;
+  }
 }

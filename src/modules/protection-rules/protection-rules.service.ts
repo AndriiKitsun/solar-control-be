@@ -18,6 +18,7 @@ import {
 } from './protection-rules.constants';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { RelaysService } from '../relays/relays.service';
 
 @Injectable()
 export class ProtectionRulesService {
@@ -34,6 +35,7 @@ export class ProtectionRulesService {
     private readonly logsService: LogsService,
     @Inject(CACHE_MANAGER)
     private readonly cache: Cache,
+    private readonly relaysService: RelaysService,
   ) {}
 
   @OnEvent(SENSORS_DATA_EVENT)
@@ -54,21 +56,7 @@ export class ProtectionRulesService {
         rules,
       );
 
-      if (!result.triggered && this.isRequestSent) {
-        this.isRequestSent = false;
-      }
-
-      if (result.triggered && !this.isRequestSent) {
-        this.isRequestSent = true;
-
-        const asics = await this.asicsService.findAll();
-
-        await this.asicsService.stopAsics(asics, LogType.PROTECTION);
-      }
-
-      await this.cache.set(PROTECTION_RESULT_KEY, result);
-
-      this.protectionResult$.next(result);
+      await this.handleProtectionResult(result);
     } catch (err) {
       this.logger.error(err);
 
@@ -79,11 +67,34 @@ export class ProtectionRulesService {
     }
   }
 
+  async handleProtectionResult(result: ProtectionResultDto): Promise<void> {
+    await this.cache.set(PROTECTION_RESULT_KEY, result);
+
+    this.protectionResult$.next(result);
+
+    if (!result.triggered && this.isRequestSent) {
+      this.isRequestSent = false;
+
+      await this.relaysService.switchPower(true, LogType.PROTECTION);
+    }
+
+    if (result.triggered && !this.isRequestSent) {
+      this.isRequestSent = true;
+
+      const asics = await this.asicsService.findAll();
+
+      await Promise.allSettled(
+        this.asicsService.stopAsics(asics, LogType.PROTECTION),
+      );
+      await this.relaysService.switchPower(false, LogType.PROTECTION);
+    }
+  }
+
   getRules(): Promise<ProtectionRule[]> {
     return this.protectionRulesRepository.getRules();
   }
 
-  getRulesResult(): Observable<MessageEvent> {
+  getProtectionResultStream(): Observable<MessageEvent> {
     return this.protectionResult$.pipe(map((data) => ({ data })));
   }
 
@@ -91,12 +102,8 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    if (ALLOWED_RULES_TO_SAVE.includes(id) && ruleDto.enabled) {
-      await this.espProtectionRulesApiService.saveProtectionRule({
-        id,
-        min: ruleDto.min,
-        max: ruleDto.max,
-      });
+    if (ALLOWED_RULES_TO_SAVE.includes(id)) {
+      await this.espProtectionRulesApiService.saveProtectionRule(id, ruleDto);
     }
 
     return this.protectionRulesRepository.saveRule(id, ruleDto);

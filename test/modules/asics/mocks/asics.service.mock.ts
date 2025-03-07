@@ -62,15 +62,15 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     return;
   }
 
-  async startAsics(asics: Asic[], type: LogType): Promise<void> {
-    return;
+  startAsics(asics: Asic[], type: LogType): Promise<void>[] {
+    return [];
   }
 
   async stop(asic: Asic): Promise<void> {
     return;
   }
 
-  async stopAsics(asics: Asic[], type: LogType): Promise<void> {
-    return;
+  stopAsics(asics: Asic[], type: LogType): Promise<void>[] {
+    return [];
   }
 }

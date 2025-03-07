@@ -4,6 +4,7 @@ import {
   EspProtectionRule,
 } from '@api/modules/esp';
 import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRuleDto } from '@modules/protection-rules/dto';
 
 export class EspProtectionRulesApiServiceMock
   implements ClassMock<EspProtectionRulesApiService>
@@ -14,7 +15,10 @@ export class EspProtectionRulesApiServiceMock
     max: 240,
   };
 
-  async saveProtectionRule(rule: EspProtectionRule): Promise<void> {
+  async saveProtectionRule(
+    id: ProtectionRuleId,
+    ruleDto: ProtectionRuleDto,
+  ): Promise<void> {
     return;
   }
 }
