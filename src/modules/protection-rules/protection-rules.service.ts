@@ -3,7 +3,10 @@ import { ProtectionRuleDto, ProtectionResultDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleId } from './enums';
-import { EspProtectionRulesApiService } from '@api/modules/esp';
+import {
+  EspProtectionRulesApiService,
+  EspRelaysApiService,
+} from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT } from '../sensors/sensors.constants';
 import { Sensor } from '../sensors/entities';
@@ -29,6 +32,7 @@ export class ProtectionRulesService {
   constructor(
     private readonly protectionRulesRepository: ProtectionRulesRepository,
     private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
+    private readonly espRelaysApiService: EspRelaysApiService,
     private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
     private readonly asicsService: AsicsService,
     private readonly logsService: LogsService,
@@ -54,21 +58,7 @@ export class ProtectionRulesService {
         rules,
       );
 
-      if (!result.triggered && this.isRequestSent) {
-        this.isRequestSent = false;
-      }
-
-      if (result.triggered && !this.isRequestSent) {
-        this.isRequestSent = true;
-
-        const asics = await this.asicsService.findAll();
-
-        await this.asicsService.stopAsics(asics, LogType.PROTECTION);
-      }
-
-      await this.cache.set(PROTECTION_RESULT_KEY, result);
-
-      this.protectionResult$.next(result);
+      await this.handleProtectionResult(result);
     } catch (err) {
       this.logger.error(err);
 
@@ -76,6 +66,27 @@ export class ProtectionRulesService {
         type: LogType.PROTECTION,
         message: 'The error occurred during handling protection rules',
       });
+    }
+  }
+
+  async handleProtectionResult(result: ProtectionResultDto): Promise<void> {
+    await this.cache.set(PROTECTION_RESULT_KEY, result);
+
+    this.protectionResult$.next(result);
+
+    if (!result.triggered && this.isRequestSent) {
+      this.isRequestSent = false;
+    }
+
+    if (result.triggered && !this.isRequestSent) {
+      this.isRequestSent = true;
+
+      const asics = await this.asicsService.findAll();
+
+      await Promise.allSettled([
+        ...this.asicsService.stopAsics(asics, LogType.PROTECTION),
+        this.espRelaysApiService.updatePowerRelay(!result.triggered),
+      ]);
     }
   }
 

@@ -6,7 +6,7 @@ import { Subject, Observable, map } from 'rxjs';
 import { plainToClass } from 'class-transformer';
 import { LogParams } from './params';
 import { LogLevel } from './enums';
-import { LogPayload } from './logs.types';
+import { LogPayload, RunWithLogOptions } from './logs.types';
 
 @Injectable()
 export class LogsService {
@@ -46,5 +46,18 @@ export class LogsService {
 
   error(logDto: LogPayload): void {
     void this.saveLog({ ...logDto, level: LogLevel.ERROR });
+  }
+
+  async runWith<T>(
+    callback: () => Promise<T>,
+    options: RunWithLogOptions,
+  ): Promise<T | void> {
+    try {
+      this.debug(options.before);
+
+      return await callback();
+    } catch {
+      this.warn(options.before);
+    }
   }
 }

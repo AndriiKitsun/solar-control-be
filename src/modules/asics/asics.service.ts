@@ -35,7 +35,7 @@ export class AsicsService {
 
     const asics = await this.asicsRepository.findAllT2Active();
 
-    await this.startAsics(asics, LogType.CONTROL);
+    await Promise.allSettled(this.startAsics(asics, LogType.CONTROL));
   }
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
@@ -119,22 +119,19 @@ export class AsicsService {
     return this.asicsApiService.start(asic.ip, token);
   }
 
-  async startAsics(asics: Asic[], type: LogType): Promise<void> {
-    for (const asic of asics) {
-      this.logsService.debug({
-        type,
-        message: `Starting the '${asic.hostname}' Asic miner`,
-      });
-
-      try {
-        await this.start(asic);
-      } catch {
-        this.logsService.warn({
+  startAsics(asics: Asic[], type: LogType): Promise<void>[] {
+    return asics.map((asic) => {
+      return this.logsService.runWith(() => this.start(asic), {
+        before: {
+          type,
+          message: `Starting the '${asic.hostname}' Asic miner`,
+        },
+        after: {
           type,
           message: `The error occurred during starting the '${asic.hostname}' Asic miner`,
-        });
-      }
-    }
+        },
+      });
+    });
   }
 
   async stop(asic: Asic): Promise<void> {
@@ -146,21 +143,18 @@ export class AsicsService {
     return this.asicsApiService.stop(asic.ip, token);
   }
 
-  async stopAsics(asics: Asic[], type: LogType): Promise<void> {
-    for (const asic of asics) {
-      this.logsService.debug({
-        type,
-        message: `Stopping the '${asic.hostname}' Asic miner`,
-      });
-
-      try {
-        await this.stop(asic);
-      } catch {
-        this.logsService.warn({
+  stopAsics(asics: Asic[], type: LogType): Promise<void>[] {
+    return asics.map((asic) => {
+      return this.logsService.runWith(() => this.stop(asic), {
+        before: {
+          type,
+          message: `Stopping the '${asic.hostname}' Asic miner`,
+        },
+        after: {
           type,
           message: `The error occurred during stopping the '${asic.hostname}' Asic miner`,
-        });
-      }
-    }
+        },
+      });
+    });
   }
 }
