@@ -102,12 +102,8 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    if (ALLOWED_RULES_TO_SAVE.includes(id) && ruleDto.enabled) {
-      await this.espProtectionRulesApiService.saveProtectionRule({
-        id,
-        min: ruleDto.min,
-        max: ruleDto.max,
-      });
+    if (ALLOWED_RULES_TO_SAVE.includes(id)) {
+      await this.espProtectionRulesApiService.saveProtectionRule(id, ruleDto);
     }
 
     return this.protectionRulesRepository.saveRule(id, ruleDto);

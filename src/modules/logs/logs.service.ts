@@ -57,7 +57,7 @@ export class LogsService {
 
       return await callback();
     } catch {
-      this.warn(options.before);
+      this.warn(options.after);
     }
   }
 }
