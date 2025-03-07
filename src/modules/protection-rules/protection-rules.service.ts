@@ -3,10 +3,7 @@ import { ProtectionRuleDto, ProtectionResultDto } from './dto';
 import { ProtectionRulesRepository } from './protection-rules.repository';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleId } from './enums';
-import {
-  EspProtectionRulesApiService,
-  EspRelaysApiService,
-} from '@api/modules/esp';
+import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SENSORS_DATA_EVENT } from '../sensors/sensors.constants';
 import { Sensor } from '../sensors/entities';
@@ -21,6 +18,7 @@ import {
 } from './protection-rules.constants';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { RelaysService } from '../relays/relays.service';
 
 @Injectable()
 export class ProtectionRulesService {
@@ -32,12 +30,12 @@ export class ProtectionRulesService {
   constructor(
     private readonly protectionRulesRepository: ProtectionRulesRepository,
     private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
-    private readonly espRelaysApiService: EspRelaysApiService,
     private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
     private readonly asicsService: AsicsService,
     private readonly logsService: LogsService,
     @Inject(CACHE_MANAGER)
     private readonly cache: Cache,
+    private readonly relaysService: RelaysService,
   ) {}
 
   @OnEvent(SENSORS_DATA_EVENT)
@@ -76,6 +74,8 @@ export class ProtectionRulesService {
 
     if (!result.triggered && this.isRequestSent) {
       this.isRequestSent = false;
+
+      await this.relaysService.switchPower(true, LogType.PROTECTION);
     }
 
     if (result.triggered && !this.isRequestSent) {
@@ -83,10 +83,10 @@ export class ProtectionRulesService {
 
       const asics = await this.asicsService.findAll();
 
-      await Promise.allSettled([
-        ...this.asicsService.stopAsics(asics, LogType.PROTECTION),
-        this.espRelaysApiService.updatePowerRelay(!result.triggered),
-      ]);
+      await Promise.allSettled(
+        this.asicsService.stopAsics(asics, LogType.PROTECTION),
+      );
+      await this.relaysService.switchPower(false, LogType.PROTECTION);
     }
   }
 
