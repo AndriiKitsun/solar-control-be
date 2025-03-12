@@ -5,7 +5,9 @@ import { EspSensorsData } from '@api/modules/esp';
 export class EspSensorsWsServiceMock implements ClassMock<EspSensorsWsService> {
   static readonly espSensorsDataMock: EspSensorsData = {
     createdAt: '2025-01-19T16:26:30.550Z',
+    power: false,
     sensors: [],
+    pTriggered: false,
   };
 
   handleMessage(data: EspSensorsData, raw: string): void {}
