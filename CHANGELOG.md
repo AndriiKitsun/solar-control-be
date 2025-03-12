@@ -1,5 +1,23 @@
 # solar-control-be
 
+## 1.4.0
+
+### Minor Changes
+
+- [#49](https://github.com/AndriiKitsun/solar-control-be/pull/49) [`645b3a6`](https://github.com/AndriiKitsun/solar-control-be/commit/645b3a64d8d814e5e03c055196b92866b10d4f01) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-131: Migrate to ESP protection system
+
+- [#47](https://github.com/AndriiKitsun/solar-control-be/pull/47) [`abc7c07`](https://github.com/AndriiKitsun/solar-control-be/commit/abc7c077a548dbc761d6a58a3c8008c204a2daf2) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-116: Add cron job to start Asics during T2 zone
+
+- [#47](https://github.com/AndriiKitsun/solar-control-be/pull/47) [`abc7c07`](https://github.com/AndriiKitsun/solar-control-be/commit/abc7c077a548dbc761d6a58a3c8008c204a2daf2) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-121: Refresh auth token before Asics power off
+
+- [#46](https://github.com/AndriiKitsun/solar-control-be/pull/46) [`6a4debb`](https://github.com/AndriiKitsun/solar-control-be/commit/6a4debbabaad75c80867a98ebe4c8f610f11ab6a) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-126: Delete Barrel exports from feature modules
+
+### Patch Changes
+
+- [#48](https://github.com/AndriiKitsun/solar-control-be/pull/48) [`0ed6deb`](https://github.com/AndriiKitsun/solar-control-be/commit/0ed6deb9359d16d809955cf1889abbb0201978ba) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-123: Turn of ESP power relay when protection has been triggered
+
+- [#48](https://github.com/AndriiKitsun/solar-control-be/pull/48) [`0ed6deb`](https://github.com/AndriiKitsun/solar-control-be/commit/0ed6deb9359d16d809955cf1889abbb0201978ba) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-127: Protection rule is not disabled on ESP
+
 ## 1.3.1
 
 ### Patch Changes
