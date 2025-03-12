@@ -13,6 +13,14 @@ export class Sensor {
   createdAt!: Date | string;
 
   @Expose()
+  @Column()
+  power!: boolean;
+
+  @Expose()
+  @Column()
+  pTriggered!: boolean;
+
+  @Expose()
   @Type(() => SensorItem)
   @OneToMany(() => SensorItem, (item) => item.sensor, { cascade: true })
   sensors!: SensorItem[];

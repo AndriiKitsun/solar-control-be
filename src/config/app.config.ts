@@ -23,6 +23,7 @@ export interface AppConfigType {
   };
   feature: {
     clearSensors: boolean;
+    useEspAvgVoltage: boolean;
     sensorCalcPeriod: number;
   };
   logLevel: PinoLogLevel;
@@ -55,6 +56,10 @@ class AppEnvVariables {
   @IsNotEmpty()
   SENSORS_CLEAR_ON_START!: boolean;
 
+  @IsBoolean()
+  @IsNotEmpty()
+  SENSORS_USE_ESP_AVG_VOLTAGE!: boolean;
+
   @IsNumber()
   @IsNotEmpty()
   SENSORS_CALC_PERIOD!: number;
@@ -84,6 +89,7 @@ export const AppConfig = registerAs<AppConfigType>(
       },
       feature: {
         clearSensors: config.SENSORS_CLEAR_ON_START,
+        useEspAvgVoltage: config.SENSORS_USE_ESP_AVG_VOLTAGE,
         sensorCalcPeriod: config.SENSORS_CALC_PERIOD,
       },
       logLevel: config.LOG_LEVEL,

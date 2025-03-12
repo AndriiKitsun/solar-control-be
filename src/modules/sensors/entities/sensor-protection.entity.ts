@@ -1,6 +1,9 @@
 import { Expose } from 'class-transformer';
+import { ProtectionRuleId } from '../../protection-rules/enums';
 
-export class SensorProtection {
+export class SensorProtection
+  implements Partial<Record<ProtectionRuleId, boolean>>
+{
   @Expose()
   acOutputFrequency?: boolean;
 
@@ -8,5 +11,8 @@ export class SensorProtection {
   acOutputVoltage?: boolean;
 
   @Expose()
-  dcBatteryVoltage?: boolean;
+  acOutputAvgVoltage?: boolean;
+
+  @Expose()
+  dcBatteryAvgVoltage?: boolean;
 }

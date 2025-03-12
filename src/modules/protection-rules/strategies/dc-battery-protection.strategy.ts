@@ -20,13 +20,13 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
     rules: Record<ProtectionRuleId, ProtectionRule>,
   ): ProtectionRuleResult {
     const result: ProtectionRuleResult = {
-      dcBatteryVoltage: false,
+      dcBatteryAvgVoltage: false,
     };
 
-    if (sensor.protection?.dcBatteryVoltage && rules.dcBatteryVoltage) {
-      this.logRule(rules.dcBatteryVoltage, sensor.voltage);
+    if (sensor.protection?.dcBatteryAvgVoltage && rules.dcBatteryAvgVoltage) {
+      this.logRule(rules.dcBatteryAvgVoltage, sensor.voltage);
 
-      result.dcBatteryVoltage = true;
+      result.dcBatteryAvgVoltage = true;
     }
 
     return result;

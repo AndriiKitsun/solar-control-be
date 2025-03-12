@@ -234,7 +234,11 @@ export interface components {
        * @description Data collection date in UTC
        */
       createdAt: string;
+      /** @description Status of the power relay */
+      power: boolean;
       sensors: components['schemas']['Sensor'][];
+      /** @description Indicator to point whether protection has been triggered */
+      pTriggered: boolean;
     };
     Sensor: {
       /** @description The name of the sensor */
@@ -244,6 +248,11 @@ export interface components {
        * @description AC/DC voltage in Volts
        */
       voltage?: number;
+      /**
+       * Format: float
+       * @description AC/DC average voltage in Volts
+       */
+      avgVoltage?: number;
       /**
        * Format: float
        * @description AC/DC current in Amps

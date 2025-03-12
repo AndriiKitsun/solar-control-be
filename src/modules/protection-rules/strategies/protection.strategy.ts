@@ -11,17 +11,6 @@ export abstract class ProtectionStrategy {
 
   protected constructor(protected readonly logsService: LogsService) {}
 
-  protected checkRule(
-    rule: ProtectionRule | undefined,
-    value: number | undefined,
-  ): boolean {
-    if (!value || !rule?.min || !rule.max) {
-      return false;
-    }
-
-    return value < rule.min || value > rule.max;
-  }
-
   protected logRule(rule: ProtectionRule, value: number | undefined): void {
     return this.logsService.info({
       type: LogType.PROTECTION,

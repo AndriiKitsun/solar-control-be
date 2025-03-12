@@ -37,7 +37,7 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
       result.acOutputVoltage = true;
     }
 
-    if (this.checkRule(rules.acOutputAvgVoltage, sensor.avgVoltage)) {
+    if (sensor.protection?.acOutputAvgVoltage && rules.acOutputAvgVoltage) {
       this.logRule(rules.acOutputAvgVoltage, sensor.avgVoltage);
 
       result.acOutputAvgVoltage = true;
