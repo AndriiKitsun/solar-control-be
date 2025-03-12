@@ -6,7 +6,9 @@ export class SensorsRepositoryMock implements ClassMock<SensorsRepository> {
   static readonly sensorMock: Sensor = {
     id: 'id',
     createdAt: new Date(),
+    power: true,
     sensors: [],
+    pTriggered: false,
   };
   static readonly sensorsMock: Sensor[] = [this.sensorMock];
 

@@ -10,6 +10,7 @@ export const AppConfigMock: AppConfigType = {
   },
   feature: {
     clearSensors: false,
+    useEspAvgVoltage: true,
     sensorCalcPeriod: 2,
   },
   logLevel: PinoLogLevel.TRACE,

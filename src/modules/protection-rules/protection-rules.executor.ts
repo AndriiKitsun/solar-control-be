@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SensorId } from '../sensors/enums';
-import { SensorItem } from '../sensors/entities';
+import { Sensor } from '../sensors/entities';
 import { ProtectionRule } from './entities';
 import { ProtectionStrategy } from './strategies';
 import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';
@@ -14,7 +14,7 @@ export class ProtectionRulesExecutor {
     private readonly strategyConfig: Record<SensorId, ProtectionStrategy>,
   ) {}
 
-  execute(sensors: SensorItem[], rules: ProtectionRule[]): ProtectionResultDto {
+  execute(sensor: Sensor, rules: ProtectionRule[]): ProtectionResultDto {
     const mappedRules = rules.reduce(
       (acc, rule) => {
         acc[rule.id] = rule;
@@ -25,23 +25,23 @@ export class ProtectionRulesExecutor {
     );
     const result = new ProtectionResultDto();
 
-    for (const sensor of sensors) {
-      if (!sensor.name) {
+    for (const sensorItem of sensor.sensors) {
+      if (!sensorItem.name) {
         continue;
       }
 
-      const selected = this.strategyConfig[sensor.name];
+      const selected = this.strategyConfig[sensorItem.name];
 
       if (!selected) {
         continue;
       }
 
-      const strategyResult = selected.run(sensor, mappedRules);
+      const strategyResult = selected.run(sensorItem, mappedRules);
 
       Object.assign(result.rules, strategyResult);
     }
 
-    result.triggered = Object.values(result.rules).some(Boolean);
+    result.triggered = sensor.pTriggered;
 
     return result;
   }

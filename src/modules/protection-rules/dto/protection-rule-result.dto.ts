@@ -6,5 +6,5 @@ export class ProtectionRuleResultDto
   acOutputFrequency = false;
   acOutputVoltage = false;
   acOutputAvgVoltage = false;
-  dcBatteryVoltage = false;
+  dcBatteryAvgVoltage = false;
 }

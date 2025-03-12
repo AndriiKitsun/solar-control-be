@@ -1,4 +1,4 @@
-import { ProtectionRulesCacheKey, ProtectionRuleId } from './enums';
+import { ProtectionRulesCacheKey } from './enums';
 import { DateMilliseconds } from '@common/enums/date.enum';
 import { TypeORMCacheConfig } from '@common/types';
 
@@ -15,11 +15,5 @@ export const PROTECTION_RULES_CACHE_CONFIG: TypeORMCacheConfig<ProtectionRulesCa
       milliseconds: DateMilliseconds.DAY,
     },
   };
-
-export const ALLOWED_RULES_TO_SAVE: ProtectionRuleId[] = [
-  ProtectionRuleId.AC_OUTPUT_FREQUENCY,
-  ProtectionRuleId.AC_OUTPUT_VOLTAGE,
-  ProtectionRuleId.DC_BATTERY_VOLTAGE,
-];
 
 export const PROTECTION_RESULT_KEY = 'protectionResult';

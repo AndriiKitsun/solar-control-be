@@ -12,13 +12,9 @@ import { LogsService } from '../logs/logs.service';
 import { LogType } from '../logs/enums';
 import { Observable, Subject, map } from 'rxjs';
 import { ProtectionRulesExecutor } from './protection-rules.executor';
-import {
-  ALLOWED_RULES_TO_SAVE,
-  PROTECTION_RESULT_KEY,
-} from './protection-rules.constants';
+import { PROTECTION_RESULT_KEY } from './protection-rules.constants';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { RelaysService } from '../relays/relays.service';
 
 @Injectable()
 export class ProtectionRulesService {
@@ -35,7 +31,6 @@ export class ProtectionRulesService {
     private readonly logsService: LogsService,
     @Inject(CACHE_MANAGER)
     private readonly cache: Cache,
-    private readonly relaysService: RelaysService,
   ) {}
 
   @OnEvent(SENSORS_DATA_EVENT)
@@ -51,10 +46,7 @@ export class ProtectionRulesService {
         return;
       }
 
-      const result = this.protectionStrategyExecutor.execute(
-        sensor.sensors,
-        rules,
-      );
+      const result = this.protectionStrategyExecutor.execute(sensor, rules);
 
       await this.handleProtectionResult(result);
     } catch (err) {
@@ -74,8 +66,6 @@ export class ProtectionRulesService {
 
     if (!result.triggered && this.isRequestSent) {
       this.isRequestSent = false;
-
-      await this.relaysService.switchPower(true, LogType.PROTECTION);
     }
 
     if (result.triggered && !this.isRequestSent) {
@@ -86,7 +76,6 @@ export class ProtectionRulesService {
       await Promise.allSettled(
         this.asicsService.stopAsics(asics, LogType.PROTECTION),
       );
-      await this.relaysService.switchPower(false, LogType.PROTECTION);
     }
   }
 
@@ -102,9 +91,7 @@ export class ProtectionRulesService {
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    if (ALLOWED_RULES_TO_SAVE.includes(id)) {
-      await this.espProtectionRulesApiService.saveProtectionRule(id, ruleDto);
-    }
+    await this.espProtectionRulesApiService.saveProtectionRule(id, ruleDto);
 
     return this.protectionRulesRepository.saveRule(id, ruleDto);
   }

@@ -56,7 +56,7 @@ export class SensorsService implements OnModuleInit {
       excludeExtraneousValues: true,
     });
 
-    if (!sensors.sensors.length) {
+    if (!sensors.sensors.length || this.appConfig.feature.useEspAvgVoltage) {
       return sensors;
     }
 
@@ -72,7 +72,9 @@ export class SensorsService implements OnModuleInit {
       const fallbackSensor: Sensor = {
         id: '',
         createdAt: new Date().toJSON(),
+        power: true,
         sensors: [],
+        pTriggered: false,
       };
 
       this.logger.error(err);

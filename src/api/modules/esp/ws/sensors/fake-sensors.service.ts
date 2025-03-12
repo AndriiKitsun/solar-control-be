@@ -30,7 +30,9 @@ export class EspFakeSensorsWsService {
 
     return {
       createdAt: new Date().toJSON(),
+      power: true,
       sensors,
+      pTriggered: false,
     };
   }
 

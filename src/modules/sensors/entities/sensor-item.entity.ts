@@ -23,6 +23,10 @@ export class SensorItem {
 
   @Expose()
   @Column({ type: 'float', nullable: true })
+  avgVoltage?: number;
+
+  @Expose()
+  @Column({ type: 'float', nullable: true })
   current?: number;
 
   @Expose()
@@ -48,10 +52,6 @@ export class SensorItem {
   @Expose()
   @Column({ type: 'float', nullable: true })
   t2Energy?: number;
-
-  @Expose()
-  @Column({ type: 'float', nullable: true })
-  avgVoltage?: number;
 
   @Type(() => SensorProtection)
   @Expose()

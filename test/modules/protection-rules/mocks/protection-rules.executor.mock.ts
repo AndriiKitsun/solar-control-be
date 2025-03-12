@@ -2,7 +2,7 @@ import { ClassMock } from '@common/types/test.types';
 import { ProtectionRulesExecutor } from '@modules/protection-rules/protection-rules.executor';
 import { ProtectionResultDto } from '@modules/protection-rules/dto';
 import { ProtectionRule } from '@modules/protection-rules/entities';
-import { SensorItem } from '@modules/sensors/entities';
+import { Sensor } from '@modules/sensors/entities';
 
 export class ProtectionRulesExecutorMock
   implements ClassMock<ProtectionRulesExecutor>
@@ -13,11 +13,11 @@ export class ProtectionRulesExecutorMock
       acOutputFrequency: false,
       acOutputVoltage: false,
       acOutputAvgVoltage: false,
-      dcBatteryVoltage: false,
+      dcBatteryAvgVoltage: false,
     },
   };
 
-  execute(sensors: SensorItem[], rules: ProtectionRule[]): ProtectionResultDto {
+  execute(sensors: Sensor, rules: ProtectionRule[]): ProtectionResultDto {
     return ProtectionRulesExecutorMock.protectionResultMock;
   }
 }
