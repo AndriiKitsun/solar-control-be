@@ -2,6 +2,7 @@ import { AsicsRepository } from '@modules/asics/asics.repository';
 import { Asic } from '@modules/asics/entities';
 import { CreateAsicDto, UpdateAsicDto } from '@modules/asics/dto';
 import { ClassMock } from '@common/types/test.types';
+import { FindOptionsWhere } from 'typeorm';
 
 export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
   static readonly asicMock: Asic = {
@@ -11,6 +12,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     password: 'password',
     hostname: 'hostname',
     t2Active: false,
+    t2EndStop: false,
   };
 
   static readonly asicsMock: Asic[] = [this.asicMock];
@@ -23,7 +25,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     return AsicsRepositoryMock.asicsMock;
   }
 
-  async findAllT2Active(): Promise<Asic[]> {
+  async findWhere(where: FindOptionsWhere<Asic>): Promise<Asic[]> {
     return AsicsRepositoryMock.asicsMock;
   }
 

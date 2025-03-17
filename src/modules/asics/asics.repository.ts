@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Asic } from './entities';
 import { UpdateAsicDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityNotFoundError } from 'typeorm';
+import { Repository, EntityNotFoundError, FindOptionsWhere } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { ASICS_CACHE_CONFIG } from './asics.constants';
 import { getCacheKey } from '@common/utils';
@@ -30,12 +30,8 @@ export class AsicsRepository {
     });
   }
 
-  findAllT2Active(): Promise<Asic[]> {
-    return this.asicsRepository.find({
-      where: {
-        t2Active: true,
-      },
-    });
+  findWhere(where: FindOptionsWhere<Asic>): Promise<Asic[]> {
+    return this.asicsRepository.find({ where });
   }
 
   findOne(id: string): Promise<Asic> {

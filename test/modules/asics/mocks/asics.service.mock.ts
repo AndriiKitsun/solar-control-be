@@ -30,6 +30,10 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
     return;
   }
 
+  async handleStopAsicsCron(): Promise<void> {
+    return;
+  }
+
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;
   }

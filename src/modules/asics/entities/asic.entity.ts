@@ -22,4 +22,8 @@ export class Asic {
   @Expose()
   @Column({ default: false })
   t2Active!: boolean;
+
+  @Expose()
+  @Column({ default: false })
+  t2EndStop!: boolean;
 }
