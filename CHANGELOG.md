@@ -1,5 +1,11 @@
 # solar-control-be
 
+## 1.5.0
+
+### Minor Changes
+
+- [#51](https://github.com/AndriiKitsun/solar-control-be/pull/51) [`2eb68af`](https://github.com/AndriiKitsun/solar-control-be/commit/2eb68af5444707b537bb3443ed00c8cc2c646c41) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-136: Turn off Asics after T2 zone end
+
 ## 1.4.0
 
 ### Minor Changes
