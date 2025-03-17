@@ -33,9 +33,24 @@ export class AsicsService {
       return;
     }
 
-    const asics = await this.asicsRepository.findAllT2Active();
+    const asics = await this.asicsRepository.findWhere({ t2Active: true });
 
     await Promise.allSettled(this.startAsics(asics, LogType.CONTROL));
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_7AM)
+  async handleStopAsicsCron(): Promise<void> {
+    const protection = await this.cache.get<ProtectionResultDto>(
+      PROTECTION_RESULT_KEY,
+    );
+
+    if (protection?.triggered) {
+      return;
+    }
+
+    const asics = await this.asicsRepository.findWhere({ t2EndStop: true });
+
+    await Promise.allSettled(this.stopAsics(asics, LogType.CONTROL));
   }
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
