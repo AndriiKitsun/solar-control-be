@@ -1,15 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { AsicsRepository } from './asics.repository';
 import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt, decrypt } from '@common/utils';
 import { DateMilliseconds } from '@common/enums/date.enum';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { PROTECTION_RESULT_KEY } from '../protection-rules/protection-rules.constants';
-import { ProtectionResultDto } from '../protection-rules/dto';
 import { LogsService } from '../logs/logs.service';
 import { LogType } from '../logs/enums';
 
@@ -18,40 +13,8 @@ export class AsicsService {
   constructor(
     private readonly asicsRepository: AsicsRepository,
     private readonly asicsApiService: AsicsApiService,
-    @Inject(CACHE_MANAGER)
-    private readonly cache: Cache,
     private readonly logsService: LogsService,
   ) {}
-
-  @Cron(CronExpression.EVERY_DAY_AT_11PM)
-  async handleStartAsicsCron(): Promise<void> {
-    const protection = await this.cache.get<ProtectionResultDto>(
-      PROTECTION_RESULT_KEY,
-    );
-
-    if (protection?.triggered) {
-      return;
-    }
-
-    const asics = await this.asicsRepository.findWhere({ t2Active: true });
-
-    await Promise.allSettled(this.startAsics(asics, LogType.CONTROL));
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_7AM)
-  async handleStopAsicsCron(): Promise<void> {
-    const protection = await this.cache.get<ProtectionResultDto>(
-      PROTECTION_RESULT_KEY,
-    );
-
-    if (protection?.triggered) {
-      return;
-    }
-
-    const asics = await this.asicsRepository.findWhere({ t2EndStop: true });
-
-    await Promise.allSettled(this.stopAsics(asics, LogType.CONTROL));
-  }
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     const info = await this.asicsApiService.getInfo(createAsicDto.ip);

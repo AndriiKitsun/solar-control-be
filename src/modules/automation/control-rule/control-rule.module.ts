@@ -9,5 +9,6 @@ import { ControlRuleRepository } from './control-rule.repository';
   imports: [TypeOrmModule.forFeature([ControlRule])],
   controllers: [ControlRuleController],
   providers: [ControlRuleService, ControlRuleRepository],
+  exports: [ControlRuleService],
 })
 export class ControlRuleModule {}

@@ -9,3 +9,5 @@ export const CONTROL_RULE_CACHE_CONFIG: TypeORMCacheConfig<ControlRulesCacheKey>
       milliseconds: DateMilliseconds.DAY,
     },
   };
+
+export const CONTROL_RULE_SAVED_EVENT = 'controlRule:saved';
