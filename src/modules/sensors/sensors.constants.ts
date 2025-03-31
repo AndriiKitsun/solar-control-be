@@ -9,4 +9,5 @@ export const SENSORS_AVG_VOLTAGE_CONFIG: SensorsAvgVoltageConfig = {
   },
 };
 
-export const SENSORS_DATA_EVENT = 'sensors.data';
+export const SENSORS_DATA_EVENT = 'sensors:data';
+export const SENSORS_DATA_CACHE = 'sensors:data:cache';

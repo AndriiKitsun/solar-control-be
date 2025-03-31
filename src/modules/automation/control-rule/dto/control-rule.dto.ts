@@ -17,5 +17,5 @@ export class ControlRuleDto {
 
   @IsNumber()
   @IsNotEmpty()
-  scaleDown!: number;
+  scaleDownValue!: number;
 }

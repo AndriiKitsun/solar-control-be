@@ -6,6 +6,8 @@ import {
   AsicSummaryStats,
   AsicSummary,
   AsicPerfSummary,
+  AsicStatus,
+  AsicPreset,
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { ServerError, HttpSubError } from '@common/interfaces';
@@ -47,6 +49,12 @@ export class AsicsApiService extends AbstractHttpService {
     });
   }
 
+  getStatus(ip: string): Promise<AsicStatus> {
+    const url = this.buildUrl(ip, ['status']);
+
+    return this.get(url);
+  }
+
   getInfo(ip: string): Promise<AsicInfo> {
     const url = this.buildUrl(ip, ['info']);
 
@@ -70,6 +78,16 @@ export class AsicsApiService extends AbstractHttpService {
       this.logger.error(err);
       return null;
     }
+  }
+
+  async getPresets(ip: string, token: string): Promise<AsicPreset[]> {
+    const url = this.buildUrl(ip, ['autotune', 'presets']);
+
+    return this.get(url, {
+      headers: {
+        Authorization: token,
+      },
+    });
   }
 
   protected didEncounterError(error: AxiosError): any {

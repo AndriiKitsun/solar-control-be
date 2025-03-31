@@ -1,0 +1,185 @@
+import { Test } from '@nestjs/testing';
+import { AsicsService } from '@modules/asics/asics.service';
+import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-scale-up.strategy';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
+import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
+import { AsicsServiceMock } from '../mocks/asics.service.mock';
+import { Asic } from '@modules/asics/entities';
+import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
+
+describe('AsicsScaleUpStrategy', () => {
+  let strategy: AsicsScaleUpStrategy;
+  // let asicsService: AsicsService;
+  let asicsApiService: AsicsApiService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        AsicsScaleUpStrategy,
+        {
+          provide: CACHE_MANAGER,
+          useValue: {},
+        },
+        {
+          provide: AsicsService,
+          useClass: AsicsServiceMock,
+        },
+        {
+          provide: AsicsApiService,
+          useClass: AsicsApiServiceMock,
+        },
+      ],
+    }).compile();
+
+    module.useLogger(new LoggerServiceMock());
+
+    strategy = module.get(AsicsScaleUpStrategy);
+    // asicsService = module.get(AsicsService);
+    asicsApiService = module.get(AsicsApiService);
+  });
+
+  it('should be defined', () => {
+    expect(strategy).toBeDefined();
+  });
+
+  describe('getFirstStoppedAsic', () => {
+    let getStatusSpy: jest.SpiedFunction<AsicsApiService['getStatus']>;
+
+    beforeEach(() => {
+      getStatusSpy = jest.spyOn(asicsApiService, 'getStatus');
+    });
+
+    it('should return first asic with stopped status', async () => {
+      const asic1Mock = { ip: '1' };
+      const asic2Mock = { ip: '2' };
+      const asic3Mock = { ip: '3' };
+      const asic4Mock = { ip: '4' };
+      const asicsMock = [asic1Mock, asic2Mock, asic3Mock, asic4Mock] as Asic[];
+
+      const asic1Status = {
+        miner_state: 'mining',
+      } as AsicStatus;
+      const asic3Status = {
+        miner_state: 'stopped',
+      } as AsicStatus;
+      const asic4Status = {
+        miner_state: 'stopped',
+      } as AsicStatus;
+
+      getStatusSpy
+        .mockResolvedValueOnce(asic1Status)
+        .mockRejectedValueOnce(new Error('error'))
+        .mockResolvedValueOnce(asic3Status)
+        .mockResolvedValueOnce(asic4Status);
+
+      const result = await strategy.getFirstStoppedAsic(asicsMock);
+
+      expect(getStatusSpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
+
+      expect(result).toEqual(asic3Mock);
+    });
+
+    it('should return undefined when no stopped asics', async () => {
+      const asic1Mock = { ip: '1' };
+      const asic2Mock = { ip: '2' };
+      const asicsMock = [asic1Mock, asic2Mock] as Asic[];
+
+      const asic1Status = {
+        miner_state: 'initializing',
+      } as AsicStatus;
+
+      getStatusSpy
+        .mockResolvedValueOnce(asic1Status)
+        .mockRejectedValueOnce(new Error('error'));
+
+      const result = await strategy.getFirstStoppedAsic(asicsMock);
+
+      expect(getStatusSpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getAsicWithSmallestPreset', () => {
+    let getPerfSummarySpy: jest.SpiedFunction<
+      AsicsApiService['getPerfSummary']
+    >;
+
+    beforeEach(() => {
+      getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
+    });
+
+    it('should return asic with smallest activated preset', async () => {
+      const asic1Mock = { ip: '1' };
+      const asic2Mock = { ip: '2' };
+      const asic3Mock = { ip: '3' };
+      const asic4Mock = { ip: '4' };
+      const asic5Mock = { ip: '5' };
+      const asicsMock = [
+        asic1Mock,
+        asic2Mock,
+        asic3Mock,
+        asic4Mock,
+        asic5Mock,
+      ] as Asic[];
+
+      const asic1PerfSummaryMock = {
+        current_preset: { name: '2300' },
+      } as AsicPerfSummary;
+      const asic4PerfSummaryMock = {
+        current_preset: { name: '1500' },
+      } as AsicPerfSummary;
+      const asic5PerfSummaryMock = {
+        current_preset: { name: '3200' },
+      } as AsicPerfSummary;
+
+      getPerfSummarySpy
+        .mockResolvedValueOnce(asic1PerfSummaryMock)
+        .mockResolvedValueOnce(undefined)
+        .mockRejectedValueOnce(new Error('error'))
+        .mockResolvedValueOnce(asic4PerfSummaryMock)
+        .mockResolvedValueOnce(asic5PerfSummaryMock);
+
+      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+
+      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
+      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
+      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
+      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
+      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(5, asic5Mock.ip);
+
+      expect(result).toEqual(asic4Mock);
+    });
+
+    it('should return first asic when array contains only one element', async () => {
+      const asic1Mock = { ip: '1' };
+      const asicsMock = [asic1Mock] as Asic[];
+
+      const asic1PerfSummaryMock = {
+        current_preset: { name: '2300' },
+      } as AsicPerfSummary;
+
+      getPerfSummarySpy.mockResolvedValueOnce(asic1PerfSummaryMock);
+
+      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+
+      expect(result).toEqual(asic1Mock);
+    });
+
+    it('should return undefined when perf summary is not provided', async () => {
+      const asic1Mock = { ip: '1' };
+      const asicsMock = [asic1Mock] as Asic[];
+
+      getPerfSummarySpy.mockResolvedValueOnce(undefined);
+
+      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+
+      expect(result).toBeUndefined();
+    });
+  });
+});

@@ -16,5 +16,5 @@ export class ControlRule {
   scaleDownCheckTime!: number;
 
   @Column({ type: 'float' })
-  scaleDown!: number;
+  scaleDownValue!: number;
 }
