@@ -111,14 +111,14 @@ describe('AsicsScaleUpStrategy', () => {
     });
   });
 
-  describe('getFirstStoppedAsic', () => {
+  describe('findFirstStoppedAsic', () => {
     let getStatusSpy: jest.SpiedFunction<AsicsApiService['getStatus']>;
 
     beforeEach(() => {
       getStatusSpy = jest.spyOn(asicsApiService, 'getStatus');
     });
 
-    it('should return first asic with stopped status', async () => {
+    it('should save first asic with stopped status', async () => {
       const asic1Mock = { ip: '1' };
       const asic2Mock = { ip: '2' };
       const asic3Mock = { ip: '3' };
@@ -141,17 +141,17 @@ describe('AsicsScaleUpStrategy', () => {
         .mockResolvedValueOnce(asic3Status)
         .mockResolvedValueOnce(asic4Status);
 
-      const result = await strategy.getFirstStoppedAsic(asicsMock);
+      await strategy.findFirstStoppedAsic(asicsMock);
 
       expect(getStatusSpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
       expect(getStatusSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
       expect(getStatusSpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
       expect(getStatusSpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
 
-      expect(result).toEqual(asic3Mock);
+      expect(strategy.savedAsic).toEqual(asic3Mock);
     });
 
-    it('should return undefined when no stopped asics', async () => {
+    it('should not save when no stopped asics', async () => {
       const asic1Mock = { ip: '1' };
       const asic2Mock = { ip: '2' };
       const asicsMock = [asic1Mock, asic2Mock] as Asic[];
@@ -164,16 +164,16 @@ describe('AsicsScaleUpStrategy', () => {
         .mockResolvedValueOnce(asic1Status)
         .mockRejectedValueOnce(new Error('error'));
 
-      const result = await strategy.getFirstStoppedAsic(asicsMock);
+      await strategy.findFirstStoppedAsic(asicsMock);
 
       expect(getStatusSpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
       expect(getStatusSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
 
-      expect(result).toBeUndefined();
+      expect(strategy.savedAsic).toBeUndefined();
     });
   });
 
-  describe('getAsicWithSmallestPreset', () => {
+  describe('findAsicWithSmallestPreset', () => {
     let getPerfSummarySpy: jest.SpiedFunction<
       AsicsApiService['getPerfSummary']
     >;
@@ -182,7 +182,7 @@ describe('AsicsScaleUpStrategy', () => {
       getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
     });
 
-    it('should return asic with smallest activated preset', async () => {
+    it('should save asic and preset with smallest activated preset', async () => {
       const asic1Mock = { ip: '1' };
       const asic2Mock = { ip: '2' };
       const asic3Mock = { ip: '3' };
@@ -213,7 +213,7 @@ describe('AsicsScaleUpStrategy', () => {
         .mockResolvedValueOnce(asic4PerfSummaryMock)
         .mockResolvedValueOnce(asic5PerfSummaryMock);
 
-      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+      await strategy.findAsicWithSmallestPreset(asicsMock);
 
       expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
       expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
@@ -221,10 +221,11 @@ describe('AsicsScaleUpStrategy', () => {
       expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
       expect(getPerfSummarySpy).toHaveBeenNthCalledWith(5, asic5Mock.ip);
 
-      expect(result).toEqual(asic4Mock);
+      expect(strategy.savedAsic).toEqual(asic4Mock);
+      expect(strategy.savedPerfSummary).toEqual(asic4PerfSummaryMock);
     });
 
-    it('should return first asic when array contains only one element', async () => {
+    it('should saved first asic when array contains only one element', async () => {
       const asic1Mock = { ip: '1' };
       const asicsMock = [asic1Mock] as Asic[];
 
@@ -234,20 +235,22 @@ describe('AsicsScaleUpStrategy', () => {
 
       getPerfSummarySpy.mockResolvedValueOnce(asic1PerfSummaryMock);
 
-      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+      await strategy.findAsicWithSmallestPreset(asicsMock);
 
-      expect(result).toEqual(asic1Mock);
+      expect(strategy.savedAsic).toEqual(asic1Mock);
+      expect(strategy.savedPerfSummary).toEqual(asic1PerfSummaryMock);
     });
 
-    it('should return undefined when perf summary is not provided', async () => {
+    it('should not save when perf summary is not provided', async () => {
       const asic1Mock = { ip: '1' };
       const asicsMock = [asic1Mock] as Asic[];
 
       getPerfSummarySpy.mockResolvedValueOnce(undefined);
 
-      const result = await strategy.getAsicWithSmallestPreset(asicsMock);
+      await strategy.findAsicWithSmallestPreset(asicsMock);
 
-      expect(result).toBeUndefined();
+      expect(strategy.savedAsic).toBeUndefined();
+      expect(strategy.savedPerfSummary).toBeUndefined();
     });
   });
 });

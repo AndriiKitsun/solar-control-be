@@ -7,7 +7,7 @@ import { SENSORS_DATA_CACHE } from '../../../sensors/sensors.constants';
 import { Sensor } from '../../../sensors/entities';
 import { SensorId } from '../../../sensors/enums';
 import { AsicsService } from '../../asics.service';
-import { AsicsApiService } from '@api/modules';
+import { AsicsApiService, AsicPerfSummary } from '@api/modules';
 import { Asic } from '../../entities';
 import { decrypt } from '@common/utils';
 import { delay } from '@common/utils/time.util';
@@ -17,6 +17,9 @@ import { ControlRuleId } from '../../../automation/control-rule/enums';
 
 @Injectable()
 export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
+  savedPerfSummary: Maybe<AsicPerfSummary>;
+  savedAsic: Maybe<Asic>;
+
   private logger = new Logger(AsicsScaleUpStrategy.name);
 
   constructor(
@@ -36,17 +39,22 @@ export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
     }
 
     const asics = await this.asicsService.findAll();
-    const disabledAsic = await this.getFirstStoppedAsic(asics);
 
-    if (disabledAsic) {
+    await this.findFirstStoppedAsic(asics);
+
+    if (this.savedAsic) {
       const token = await this.asicsApiService.login(
-        disabledAsic.ip,
-        decrypt(disabledAsic.password),
+        this.savedAsic.ip,
+        decrypt(this.savedAsic.password),
       );
 
-      await this.asicsApiService.start(disabledAsic.ip, token);
+      await this.asicsApiService.start(this.savedAsic.ip, token);
 
       await delay(ASIC_START_IDLE_TIME);
+
+      this.savedPerfSummary = await this.asicsApiService.getPerfSummary(
+        this.savedAsic.ip,
+      );
     }
   }
 
@@ -66,7 +74,7 @@ export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
     return dcBattery.avgVoltage > rule.scaleUpValue;
   }
 
-  async getFirstStoppedAsic(asics: Asic[]): Promise<Maybe<Asic>> {
+  async findFirstStoppedAsic(asics: Asic[]): Promise<void> {
     const statuses = await Promise.allSettled(
       asics.map((asic) => this.asicsApiService.getStatus(asic.ip)),
     );
@@ -78,15 +86,14 @@ export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
         status.status === 'fulfilled' &&
         status.value.miner_state === 'stopped'
       ) {
-        return asics[i];
+        this.savedAsic = asics[i];
+
+        break;
       }
     }
   }
 
-  async getAsicWithSmallestPreset(asics: Asic[]): Promise<Maybe<Asic>> {
-    let savedPreset = '';
-    let savedAsic: Maybe<Asic>;
-
+  async findAsicWithSmallestPreset(asics: Asic[]): Promise<void> {
     const perfSummaries = await Promise.allSettled(
       asics.map((asic) => this.asicsApiService.getPerfSummary(asic.ip)),
     );
@@ -99,26 +106,14 @@ export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
       }
 
       const preset = perfSummary.value?.current_preset?.name;
+      const savedPreset = this.savedPerfSummary?.current_preset?.name;
 
       if (!preset || (savedPreset && savedPreset < preset)) {
         continue;
       }
 
-      savedPreset = preset;
-      savedAsic = asics[i];
+      this.savedPerfSummary = perfSummary.value;
+      this.savedAsic = asics[i];
     }
-
-    return savedAsic;
   }
-
-  // async switchPreset(asic: Asic, authToken?: string): Promise<void> {
-  //   let token: string;
-  //
-  //   if (!authToken) {
-  //     token = await this.asicsApiService.login(asic.ip, decrypt(asic.password));
-  //   }
-  //
-  //   const presets = await this.asicsApiService.getPresets(asic.ip, token);
-  //   const tuned = presets.filter((preset) => preset.status === 'tuned');
-  // }
 }
