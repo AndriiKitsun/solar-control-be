@@ -4,9 +4,13 @@ import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-sc
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
-import { AsicsServiceMock } from '../mocks/asics.service.mock';
+import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Asic } from '@modules/asics/entities';
 import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
+import { Sensor } from '@modules/sensors/entities';
+import { ControlRule } from '@modules/automation/control-rule/entities';
+import { ControlRuleId } from '@modules/automation/control-rule/enums';
+import { SensorId } from '@modules/sensors/enums';
 
 describe('AsicsScaleUpStrategy', () => {
   let strategy: AsicsScaleUpStrategy;
@@ -41,6 +45,70 @@ describe('AsicsScaleUpStrategy', () => {
 
   it('should be defined', () => {
     expect(strategy).toBeDefined();
+  });
+
+  describe('shouldScale', () => {
+    it('should return false when rule is not related to dc battery sensor', () => {
+      const sensorMock = {} as Sensor;
+      const ruleMock = { id: 'someRule' } as unknown as ControlRule;
+
+      const result = strategy.shouldScale(sensorMock, ruleMock);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when no dc battery sensor data', () => {
+      const sensorMock = { sensors: [] } as unknown as Sensor;
+      const ruleMock = {
+        id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
+        scaleUpValue: 123,
+      } as ControlRule;
+
+      const result = strategy.shouldScale(sensorMock, ruleMock);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when no scale up value specified', () => {
+      const sensorMock = {
+        sensors: [{ name: SensorId.DC_BATTERY }],
+      } as unknown as Sensor;
+      const ruleMock = {
+        id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
+      } as ControlRule;
+
+      const result = strategy.shouldScale(sensorMock, ruleMock);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when dc avg voltage is less than scale up value', () => {
+      const sensorMock = {
+        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 123 }],
+      } as unknown as Sensor;
+      const ruleMock = {
+        id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
+        scaleUpValue: 150,
+      } as ControlRule;
+
+      const result = strategy.shouldScale(sensorMock, ruleMock);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true when dc avg voltage is more than scale up value', () => {
+      const sensorMock = {
+        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 200 }],
+      } as unknown as Sensor;
+      const ruleMock = {
+        id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
+        scaleUpValue: 150,
+      } as ControlRule;
+
+      const result = strategy.shouldScale(sensorMock, ruleMock);
+
+      expect(result).toBe(true);
+    });
   });
 
   describe('getFirstStoppedAsic', () => {

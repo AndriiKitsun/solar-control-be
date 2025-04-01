@@ -13,6 +13,7 @@ import { decrypt } from '@common/utils';
 import { delay } from '@common/utils/time.util';
 import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
+import { ControlRuleId } from '../../../automation/control-rule/enums';
 
 @Injectable()
 export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
@@ -50,11 +51,15 @@ export class AsicsScaleUpStrategy implements AsicsScaleStrategy {
   }
 
   shouldScale(sensor: Sensor, rule: ControlRule): boolean {
+    if (rule.id !== ControlRuleId.DC_BATTERY_AVG_VOLTAGE) {
+      return false;
+    }
+
     const dcBattery = sensor.sensors.find(
       (sensorItem) => sensorItem.name === SensorId.DC_BATTERY,
     );
 
-    if (!dcBattery?.avgVoltage || rule.scaleUpValue) {
+    if (!dcBattery?.avgVoltage || !rule.scaleUpValue) {
       return false;
     }
 
