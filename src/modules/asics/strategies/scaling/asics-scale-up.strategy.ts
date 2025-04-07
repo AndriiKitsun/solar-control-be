@@ -2,52 +2,26 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ControlRule } from '../../../automation/control-rule/entities';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { SENSORS_DATA_CACHE } from '../../../sensors/sensors.constants';
 import { Sensor } from '../../../sensors/entities';
 import { SensorId } from '../../../sensors/enums';
 import { AsicsService } from '../../asics.service';
-import {
-  AsicsApiService,
-  AsicPerfSummary,
-  AsicSetting,
-  AsicSettingSaveResult,
-  AsicPreset,
-} from '@api/modules';
+import { AsicsApiService, AsicPerfSummary } from '@api/modules';
 import { Asic } from '../../entities';
 import { decrypt, delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
-import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
+import { AsicsScaleStrategy } from './asics-scale.strategy';
 
 @Injectable()
-export class AsicsScaleUpStrategy {
+export class AsicsScaleUpStrategy extends AsicsScaleStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
-    private readonly cache: Cache,
-    private readonly asicsService: AsicsService,
-    private readonly asicsApiService: AsicsApiService,
-  ) {}
-
-  async run(rule: ControlRule): Promise<void> {
-    const sensor = await this.cache.get<Sensor>(SENSORS_DATA_CACHE);
-
-    if (!sensor?.sensors?.length || !this.shouldScale(sensor, rule)) {
-      return;
-    }
-
-    const asics = await this.asicsService.findAll();
-    const stoppedAsic = await this.findFirstStoppedAsic(asics);
-
-    if (stoppedAsic) {
-      return this.startAsicOnFirstPreset(stoppedAsic);
-    }
-
-    const { asic, perfSummary } = await this.findAsicWithSmallestPreset(asics);
-
-    if (asic && perfSummary) {
-      return this.incrementAsicPreset(asic, perfSummary);
-    }
+    protected override readonly cache: Cache,
+    protected override readonly asicsService: AsicsService,
+    protected override readonly asicsApiService: AsicsApiService,
+  ) {
+    super(cache, asicsService, asicsApiService);
   }
 
   shouldScale(sensor: Sensor, rule: ControlRule): boolean {
@@ -66,6 +40,23 @@ export class AsicsScaleUpStrategy {
     return dcBattery.avgVoltage > rule.scaleUpValue;
   }
 
+  async scale(): Promise<void> {
+    const stoppedAsic = await this.findFirstStoppedAsic(this.asics);
+
+    if (stoppedAsic) {
+      return this.startAsicOnFirstPreset(stoppedAsic);
+    }
+
+    const { asic, perfSummary } = await this.findAsicWithPreset(
+      this.asics,
+      (savedPreset, preset) => savedPreset < preset,
+    );
+
+    if (asic && perfSummary) {
+      return this.incrementAsicPreset(asic, perfSummary);
+    }
+  }
+
   async findFirstStoppedAsic(asics: Asic[]): Promise<Maybe<Asic>> {
     const statuses = await Promise.allSettled(
       asics.map((asic) => this.asicsApiService.getStatus(asic.ip)),
@@ -81,40 +72,6 @@ export class AsicsScaleUpStrategy {
         return asics[i];
       }
     }
-  }
-
-  async findAsicWithSmallestPreset(
-    asics: Asic[],
-  ): Promise<AsicWithPerfSummary> {
-    const perfSummaries = await Promise.allSettled(
-      asics.map((asic) => this.asicsApiService.getPerfSummary(asic.ip)),
-    );
-
-    let savedAsic: Maybe<Asic>;
-    let savedPerfSummary: Maybe<AsicPerfSummary>;
-
-    for (let i = 0; i < perfSummaries.length; i++) {
-      const perfSummary = perfSummaries[i];
-
-      if (perfSummary.status === 'rejected') {
-        continue;
-      }
-
-      const preset = perfSummary.value?.current_preset?.name;
-      const savedPreset = savedPerfSummary?.current_preset?.name;
-
-      if (!preset || (savedPreset && savedPreset < preset)) {
-        continue;
-      }
-
-      savedAsic = asics[i];
-      savedPerfSummary = perfSummary.value;
-    }
-
-    return {
-      asic: savedAsic,
-      perfSummary: savedPerfSummary,
-    };
   }
 
   async startAsicOnFirstPreset(asic: Asic): Promise<void> {
@@ -153,36 +110,5 @@ export class AsicsScaleUpStrategy {
     }
 
     await this.changePreset(ip, token, preset);
-  }
-
-  async changePreset(
-    ip: string,
-    token: string,
-    preset: AsicPreset,
-  ): Promise<AsicSettingSaveResult> {
-    const settings = await this.asicsApiService.getSettings(ip, token);
-
-    const changePresetSetting: AsicSetting = {
-      miner: {
-        overclock: {
-          preset: preset.name,
-          modded_psu: preset.modded_psu_required,
-          preset_switcher: settings.miner.overclock?.preset_switcher,
-          globals: {
-            freq: preset.tune_settings?.freq,
-            volt: preset.tune_settings?.volt
-              ? preset.tune_settings.volt / 10
-              : undefined,
-          },
-          chains: preset.tune_settings?.chains?.map((chain, i) => ({
-            freq: chain.freq,
-            disabled: settings.miner.overclock?.chains?.[i]?.disabled,
-            chips: chain.chips,
-          })),
-        },
-      },
-    };
-
-    return this.asicsApiService.saveSettings(ip, token, changePresetSetting);
   }
 }

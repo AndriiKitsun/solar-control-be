@@ -8,6 +8,10 @@ import { Cache } from 'cache-manager';
 import { AsicsScaleDownStrategy } from '@modules/asics/strategies/scaling/asics-scale-down.strategy';
 import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-scale-up.strategy';
 import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
+import { AsicsService } from '@modules/asics/asics.service';
+import { AsicsServiceMock } from '../../mocks/asics.service.mock';
+import { AsicsApiService } from '@api/modules';
+import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -25,6 +29,14 @@ describe('AsicsScaleDownStrategy', () => {
         {
           provide: CACHE_MANAGER,
           useClass: Map,
+        },
+        {
+          provide: AsicsService,
+          useClass: AsicsServiceMock,
+        },
+        {
+          provide: AsicsApiService,
+          useClass: AsicsApiServiceMock,
         },
       ],
     }).compile();

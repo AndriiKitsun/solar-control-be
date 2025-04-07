@@ -2,12 +2,7 @@ import { Test } from '@nestjs/testing';
 import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-scale-up.strategy';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  AsicsApiService,
-  AsicPerfSummary,
-  AsicStatus,
-  AsicSetting,
-} from '@api/modules';
+import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Asic } from '@modules/asics/entities';
@@ -36,7 +31,6 @@ describe('AsicsScaleUpStrategy', () => {
     asicUntunedPresetMock,
     asicTunedPreset1Mock,
     asicTunedPreset2Mock,
-    asicSettingSaveResultMock,
     asicPerfSummaryMock,
   } = AsicsApiServiceMock;
   const { asicMock, asicsMock } = AsicsRepositoryMock;
@@ -97,8 +91,8 @@ describe('AsicsScaleUpStrategy', () => {
       AsicsScaleUpStrategy['startAsicOnFirstPreset']
     >;
 
-    let findAsicWithSmallestPresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['findAsicWithSmallestPreset']
+    let findAsicWithPresetSpy: jest.SpiedFunction<
+      AsicsScaleUpStrategy['findAsicWithPreset']
     >;
     let incrementAsicPresetSpy: jest.SpiedFunction<
       AsicsScaleUpStrategy['incrementAsicPreset']
@@ -115,10 +109,7 @@ describe('AsicsScaleUpStrategy', () => {
         'startAsicOnFirstPreset',
       );
 
-      findAsicWithSmallestPresetSpy = jest.spyOn(
-        strategy,
-        'findAsicWithSmallestPreset',
-      );
+      findAsicWithPresetSpy = jest.spyOn(strategy, 'findAsicWithPreset');
       incrementAsicPresetSpy = jest.spyOn(strategy, 'incrementAsicPreset');
 
       startAsicOnFirstPresetSpy.mockImplementation();
@@ -162,7 +153,7 @@ describe('AsicsScaleUpStrategy', () => {
       expect(findFirstStoppedAsicSpy).toHaveBeenCalledWith(asicsMock);
       expect(startAsicOnFirstPresetSpy).toHaveBeenCalledWith(asicMock);
 
-      expect(findAsicWithSmallestPresetSpy).not.toHaveBeenCalled();
+      expect(findAsicWithPresetSpy).not.toHaveBeenCalled();
     });
 
     it('should scale by incrementing asic preset', async () => {
@@ -170,7 +161,10 @@ describe('AsicsScaleUpStrategy', () => {
 
       await strategy.run(ruleMock);
 
-      expect(findAsicWithSmallestPresetSpy).toHaveBeenCalledWith(asicsMock);
+      expect(findAsicWithPresetSpy).toHaveBeenCalledWith(
+        asicsMock,
+        expect.any(Function),
+      );
       expect(incrementAsicPresetSpy).toHaveBeenCalledWith(
         asicMock,
         asicPerfSummaryMock,
@@ -293,87 +287,6 @@ describe('AsicsScaleUpStrategy', () => {
     });
   });
 
-  describe('findAsicWithSmallestPreset', () => {
-    let getPerfSummarySpy: jest.SpiedFunction<
-      AsicsApiService['getPerfSummary']
-    >;
-
-    beforeEach(() => {
-      getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
-    });
-
-    it('should return asic and preset with smallest activated preset', async () => {
-      const asic1Mock = { ip: '1' };
-      const asic2Mock = { ip: '2' };
-      const asic3Mock = { ip: '3' };
-      const asic4Mock = { ip: '4' };
-      const asic5Mock = { ip: '5' };
-      const asicsMock = [
-        asic1Mock,
-        asic2Mock,
-        asic3Mock,
-        asic4Mock,
-        asic5Mock,
-      ] as Asic[];
-
-      const asic1PerfSummaryMock = {
-        current_preset: { name: '2300' },
-      } as AsicPerfSummary;
-      const asic4PerfSummaryMock = {
-        current_preset: { name: '1500' },
-      } as AsicPerfSummary;
-      const asic5PerfSummaryMock = {
-        current_preset: { name: '3200' },
-      } as AsicPerfSummary;
-
-      getPerfSummarySpy
-        .mockResolvedValueOnce(asic1PerfSummaryMock)
-        .mockResolvedValueOnce(undefined)
-        .mockRejectedValueOnce(new Error('error'))
-        .mockResolvedValueOnce(asic4PerfSummaryMock)
-        .mockResolvedValueOnce(asic5PerfSummaryMock);
-
-      const result = await strategy.findAsicWithSmallestPreset(asicsMock);
-
-      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
-      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
-      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
-      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
-      expect(getPerfSummarySpy).toHaveBeenNthCalledWith(5, asic5Mock.ip);
-
-      expect(result.asic).toEqual(asic4Mock);
-      expect(result.perfSummary).toEqual(asic4PerfSummaryMock);
-    });
-
-    it('should return first asic when array contains only one element', async () => {
-      const asic1Mock = { ip: '1' };
-      const asicsMock = [asic1Mock] as Asic[];
-
-      const asic1PerfSummaryMock = {
-        current_preset: { name: '2300' },
-      } as AsicPerfSummary;
-
-      getPerfSummarySpy.mockResolvedValueOnce(asic1PerfSummaryMock);
-
-      const result = await strategy.findAsicWithSmallestPreset(asicsMock);
-
-      expect(result.asic).toEqual(asic1Mock);
-      expect(result.perfSummary).toEqual(asic1PerfSummaryMock);
-    });
-
-    it('should return undefined when perf summary is not provided', async () => {
-      const asic1Mock = { ip: '1' };
-      const asicsMock = [asic1Mock] as Asic[];
-
-      getPerfSummarySpy.mockResolvedValueOnce(undefined);
-
-      const result = await strategy.findAsicWithSmallestPreset(asicsMock);
-
-      expect(result.asic).toBeUndefined();
-      expect(result.perfSummary).toBeUndefined();
-    });
-  });
-
   describe('startAsicOnFirstPreset', () => {
     const asicMock = { ip: 'ip', password: 'hash' } as Asic;
 
@@ -479,69 +392,6 @@ describe('AsicsScaleUpStrategy', () => {
         tokenMock,
         asicTunedPreset2Mock,
       );
-    });
-  });
-
-  describe('changePreset', () => {
-    it('should build correct payload based on preset and settings data', async () => {
-      const expectedSetting: AsicSetting = {
-        miner: {
-          overclock: {
-            preset: '1500',
-            modded_psu: false,
-            preset_switcher: {
-              enabled: false,
-              top_preset: '4000',
-              min_preset: '1500',
-              autochange_top_preset: false,
-              rise_temp: 55,
-              decrease_temp: 75,
-              ignore_fan_speed: false,
-              check_time: 300,
-            },
-            globals: {
-              freq: 485,
-              volt: 1415,
-            },
-            chains: [
-              {
-                freq: 488,
-                disabled: false,
-                chips: [0],
-              },
-              {
-                freq: 488,
-                disabled: false,
-                chips: [0],
-              },
-              {
-                freq: 488,
-                disabled: false,
-                chips: [0],
-              },
-            ],
-          },
-        },
-      };
-      const ipMock = 'ip';
-
-      const getSettingsSpy = jest.spyOn(asicsApiService, 'getSettings');
-      const saveSettingsSpy = jest.spyOn(asicsApiService, 'saveSettings');
-
-      const result = await strategy.changePreset(
-        ipMock,
-        tokenMock,
-        asicTunedPreset1Mock,
-      );
-
-      expect(getSettingsSpy).toHaveBeenCalledWith(ipMock, tokenMock);
-      expect(saveSettingsSpy).toHaveBeenCalledWith(
-        ipMock,
-        tokenMock,
-        expectedSetting,
-      );
-
-      expect(result).toBe(asicSettingSaveResultMock);
     });
   });
 });
