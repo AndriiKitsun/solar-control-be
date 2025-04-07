@@ -18,7 +18,7 @@ import { decrypt, delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
-import { AsicWithSmallestPresetConfig } from '../../types/asic-scaling.types';
+import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
 
 @Injectable()
 export class AsicsScaleUpStrategy {
@@ -37,7 +37,6 @@ export class AsicsScaleUpStrategy {
     }
 
     const asics = await this.asicsService.findAll();
-
     const stoppedAsic = await this.findFirstStoppedAsic(asics);
 
     if (stoppedAsic) {
@@ -86,7 +85,7 @@ export class AsicsScaleUpStrategy {
 
   async findAsicWithSmallestPreset(
     asics: Asic[],
-  ): Promise<AsicWithSmallestPresetConfig> {
+  ): Promise<AsicWithPerfSummary> {
     const perfSummaries = await Promise.allSettled(
       asics.map((asic) => this.asicsApiService.getPerfSummary(asic.ip)),
     );
