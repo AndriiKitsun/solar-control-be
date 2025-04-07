@@ -7,6 +7,9 @@ import {
   AsicPerfSummary,
   AsicPreset,
   AsicStatus,
+  AsicsSettings,
+  AsicSetting,
+  AsicSettingSaveResult,
 } from '@api/modules/asics/asics.types';
 import { ClassMockWithout } from '@common/types/test.types';
 import { Maybe } from '@common/types';
@@ -15,8 +18,9 @@ import { AbstractHttpService } from '@api/services';
 export class AsicsApiServiceMock
   implements ClassMockWithout<AsicsApiService, AbstractHttpService>
 {
+  static readonly tokenMock = 'token';
   static readonly loginResponseMock: AsicUnlockSuccess = {
-    token: '123',
+    token: this.tokenMock,
   };
 
   static readonly asicSummaryMock = {
@@ -41,17 +45,156 @@ export class AsicsApiServiceMock
     },
   } as AsicPerfSummary;
 
-  static readonly asicSummaryStats: AsicSummaryStats = {
+  static readonly asicSummaryStatsMock: AsicSummaryStats = {
     miner: this.asicSummaryMock,
   };
 
-  static readonly asicStatus: AsicStatus = {
+  static readonly asicStatusMock: AsicStatus = {
     miner_state: 'mining',
     miner_state_time: 52,
     find_miner: false,
     restart_required: false,
     reboot_required: false,
     unlocked: false,
+  };
+
+  static readonly asicInfoMock: AsicInfo = {
+    serial: '',
+    hr_measure: 'MH/s',
+    install_type: 'sd',
+    platform: 'xil',
+    build_time: '',
+    fw_name: '',
+    fw_version: '',
+    miner: '',
+    model: '',
+    system: undefined,
+  };
+
+  static readonly asicTunedPreset1Mock: AsicPreset = {
+    name: '1500',
+    pretty: '1500 watt ~ 64 TH',
+    status: 'tuned',
+    modded_psu_required: false,
+    tune_settings: {
+      hashrate: 66407,
+      volt: 14150,
+      freq: 485,
+      chains: [
+        {
+          freq: 488,
+          serial: 'PIEMYP7BBJHBE0X5R',
+          chips: [0],
+        },
+        {
+          freq: 488,
+          serial: 'PIEMYP7BBJHBE0X59',
+          chips: [0],
+        },
+        {
+          freq: 488,
+          serial: 'PIEMYP7BBJHBE0FY9',
+          chips: [0],
+        },
+      ],
+      modified: false,
+    },
+  };
+
+  static readonly asicTunedPreset2Mock: AsicPreset = {
+    name: '2300',
+    pretty: '2300 watt ~ 76 TH',
+    status: 'tuned',
+    modded_psu_required: false,
+    tune_settings: {
+      hashrate: 75910,
+      volt: 14210,
+      freq: 570,
+      chains: [
+        {
+          freq: 570,
+          serial: 'PIEMYP7BBJHBE0X5R',
+          chips: [564],
+        },
+        {
+          freq: 570,
+          serial: 'PIEMYP7BBJHBE0X59',
+          chips: [564],
+        },
+        {
+          freq: 564,
+          serial: 'PIEMYP7BBJHBE0FY9',
+          chips: [552],
+        },
+      ],
+      modified: false,
+    },
+  };
+
+  static readonly asicUntunedPresetMock: AsicPreset = {
+    name: '1700',
+    pretty: '1700 watt ~ 67 TH',
+    status: 'untuned',
+    modded_psu_required: false,
+  };
+
+  static readonly asicPresetsMock: AsicPreset[] = [
+    {
+      name: 'disabled',
+      pretty: 'Disabled',
+      status: 'untuned',
+      modded_psu_required: false,
+    },
+    this.asicTunedPreset1Mock,
+    this.asicUntunedPresetMock,
+    this.asicTunedPreset2Mock,
+  ];
+
+  static readonly asicSettingsMock: AsicsSettings = {
+    miner: {
+      overclock: {
+        preset_switcher: {
+          enabled: false,
+          top_preset: '4000',
+          min_preset: '1500',
+          autochange_top_preset: false,
+          rise_temp: 55,
+          decrease_temp: 75,
+          ignore_fan_speed: false,
+          check_time: 300,
+        },
+        chains: [
+          {
+            disabled: false,
+          },
+          {
+            disabled: false,
+          },
+          {
+            disabled: false,
+          },
+        ],
+      },
+    },
+    network: {
+      dhcp: false,
+      dnsservers: [],
+      gateway: '',
+      hostname: '',
+      ipaddress: '',
+      netmask: '',
+    },
+    regional: {
+      timezone: {
+        current: 'GMT+2',
+      },
+    },
+    ui: {},
+  };
+
+  static readonly asicSettingSaveResultMock: AsicSettingSaveResult = {
+    reboot_required: false,
+    restart_required: false,
   };
 
   async login(ip: string, password: string): Promise<string> {
@@ -66,19 +209,12 @@ export class AsicsApiServiceMock
     return;
   }
 
+  async getStatus(ip: string): Promise<AsicStatus> {
+    return AsicsApiServiceMock.asicStatusMock;
+  }
+
   async getInfo(ip: string): Promise<AsicInfo> {
-    return {
-      serial: '',
-      hr_measure: 'MH/s',
-      install_type: 'sd',
-      platform: 'xil',
-      build_time: '',
-      fw_name: '',
-      fw_version: '',
-      miner: '',
-      model: '',
-      system: undefined,
-    };
+    return AsicsApiServiceMock.asicInfoMock;
   }
 
   async getSummary(ip: string): Promise<Maybe<AsicSummary>> {
@@ -90,10 +226,18 @@ export class AsicsApiServiceMock
   }
 
   async getPresets(ip: string, token: string): Promise<AsicPreset[]> {
-    return [];
+    return AsicsApiServiceMock.asicPresetsMock;
   }
 
-  async getStatus(ip: string): Promise<AsicStatus> {
-    return AsicsApiServiceMock.asicStatus;
+  async getSettings(ip: string, token: string): Promise<AsicsSettings> {
+    return AsicsApiServiceMock.asicSettingsMock;
+  }
+
+  async saveSettings(
+    ip: string,
+    token: string,
+    setting: AsicSetting,
+  ): Promise<AsicSettingSaveResult> {
+    return AsicsApiServiceMock.asicSettingSaveResultMock;
   }
 }

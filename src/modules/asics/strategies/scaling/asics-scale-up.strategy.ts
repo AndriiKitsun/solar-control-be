@@ -14,8 +14,7 @@ import {
   AsicPreset,
 } from '@api/modules';
 import { Asic } from '../../entities';
-import { decrypt } from '@common/utils';
-import { delay } from '@common/utils/time.util';
+import { decrypt, delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';

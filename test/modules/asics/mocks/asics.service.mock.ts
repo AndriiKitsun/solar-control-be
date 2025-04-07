@@ -39,7 +39,7 @@ export class AsicsServiceMock implements ClassMock<AsicsService> {
   }
 
   async findAll(): Promise<Asic[]> {
-    return Promise.resolve([]);
+    return AsicsRepositoryMock.asicsMock;
   }
 
   async findOne(id: string): Promise<Asic> {
