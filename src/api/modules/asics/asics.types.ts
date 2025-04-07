@@ -13,3 +13,7 @@ export type AsicMinerState = components['schemas']['MinerState'];
 
 export type AsicPerfSummary = components['schemas']['PerfSummary'];
 export type AsicPreset = components['schemas']['AutotunePresetDto'];
+
+export type AsicsSettings = components['schemas']['ViewConfig'];
+export type AsicSetting = components['schemas']['InputConfig'];
+export type AsicSettingSaveResult = components['schemas']['SaveConfigResult'];

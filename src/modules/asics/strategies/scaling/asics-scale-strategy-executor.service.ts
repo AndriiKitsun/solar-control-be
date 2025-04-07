@@ -4,7 +4,6 @@ import { AsicsScalingConfig } from '../../types/asics.types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
 import { AsicsScaleUpStrategy } from './asics-scale-up.strategy';
 import { AsicsScaleDownStrategy } from './asics-scale-down.strategy';
-import { LogsService } from '../../../logs/logs.service';
 
 @Injectable()
 export class AsicsScalingStrategyExecutor {
@@ -17,16 +16,15 @@ export class AsicsScalingStrategyExecutor {
   constructor(
     private readonly asicScaleUpStrategy: AsicsScaleUpStrategy,
     private readonly asicScaleDownStrategy: AsicsScaleDownStrategy,
-    private readonly logsService: LogsService,
   ) {}
 
-  execute(rules: ControlRule[] | ControlRule): void {
-    if (Array.isArray(rules)) {
-      rules.forEach((rule) => {
+  execute(ruleOrRules: ControlRule | ControlRule[]): void {
+    if (Array.isArray(ruleOrRules)) {
+      ruleOrRules.forEach((rule) => {
         this.startScalingTimer(rule);
       });
     } else {
-      this.startScalingTimer(rules);
+      this.startScalingTimer(ruleOrRules);
     }
   }
 
@@ -46,17 +44,4 @@ export class AsicsScalingStrategyExecutor {
       scaleDown: setInterval(scaleDownCb, rule.scaleDownCheckTime * 1000),
     };
   }
-
-  // private scaleAsic(rule: ControlRule): Promise<void> {
-  //   this.logsService.runWith(() => this.asicScaleUpStrategy.run(rule), {
-  //     before: {
-  //       type: LogType.CONTROL,
-  //       message: 'Checking asics',
-  //     },
-  //     after: {
-  //       type: LogType.CONTROL,
-  //       message: '',
-  //     },
-  //   });
-  // }
 }

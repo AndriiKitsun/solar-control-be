@@ -225,7 +225,7 @@ describe('AsicsScaleUpStrategy', () => {
       expect(strategy.savedPerfSummary).toEqual(asic4PerfSummaryMock);
     });
 
-    it('should saved first asic when array contains only one element', async () => {
+    it('should save first asic when array contains only one element', async () => {
       const asic1Mock = { ip: '1' };
       const asicsMock = [asic1Mock] as Asic[];
 

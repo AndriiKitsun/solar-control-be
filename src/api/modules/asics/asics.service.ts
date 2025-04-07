@@ -8,6 +8,9 @@ import {
   AsicPerfSummary,
   AsicStatus,
   AsicPreset,
+  AsicSetting,
+  AsicSettingSaveResult,
+  AsicsSettings,
 } from './asics.types';
 import { AxiosError } from 'axios';
 import { ServerError, HttpSubError } from '@common/interfaces';
@@ -29,7 +32,7 @@ export class AsicsApiService extends AbstractHttpService {
     return response.token;
   }
 
-  async start(ip: string, token: string): Promise<void> {
+  start(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'start']);
 
     return this.post(url, null, {
@@ -39,7 +42,7 @@ export class AsicsApiService extends AbstractHttpService {
     });
   }
 
-  async stop(ip: string, token: string): Promise<void> {
+  stop(ip: string, token: string): Promise<void> {
     const url = this.buildUrl(ip, ['mining', 'stop']);
 
     return this.post(url, null, {
@@ -80,10 +83,34 @@ export class AsicsApiService extends AbstractHttpService {
     }
   }
 
-  async getPresets(ip: string, token: string): Promise<AsicPreset[]> {
+  getPresets(ip: string, token: string): Promise<AsicPreset[]> {
     const url = this.buildUrl(ip, ['autotune', 'presets']);
 
     return this.get(url, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  getSettings(ip: string, token: string): Promise<AsicsSettings> {
+    const url = this.buildUrl(ip, ['settings']);
+
+    return this.get(url, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  saveSettings(
+    ip: string,
+    token: string,
+    setting: AsicSetting,
+  ): Promise<AsicSettingSaveResult> {
+    const url = this.buildUrl(ip, ['settings']);
+
+    return this.post(url, setting, {
       headers: {
         Authorization: token,
       },
