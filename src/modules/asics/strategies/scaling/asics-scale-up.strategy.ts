@@ -60,7 +60,7 @@ export class AsicsScaleUpStrategy {
       (sensorItem) => sensorItem.name === SensorId.DC_BATTERY,
     );
 
-    if (!dcBattery?.avgVoltage || !rule.scaleUpValue) {
+    if (!dcBattery?.avgVoltage) {
       return false;
     }
 

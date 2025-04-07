@@ -11,7 +11,6 @@ import {
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Asic } from '@modules/asics/entities';
-import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
@@ -60,8 +59,6 @@ describe('AsicsScaleUpStrategy', () => {
         },
       ],
     }).compile();
-
-    module.useLogger(new LoggerServiceMock());
 
     strategy = module.get(AsicsScaleUpStrategy);
     cache = module.get(CACHE_MANAGER);
@@ -198,19 +195,6 @@ describe('AsicsScaleUpStrategy', () => {
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleUpValue: 123,
-      } as ControlRule;
-
-      const result = strategy.shouldScale(sensorMock, ruleMock);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when no scale up value specified', () => {
-      const sensorMock = {
-        sensors: [{ name: SensorId.DC_BATTERY }],
-      } as unknown as Sensor;
-      const ruleMock = {
-        id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
       } as ControlRule;
 
       const result = strategy.shouldScale(sensorMock, ruleMock);
