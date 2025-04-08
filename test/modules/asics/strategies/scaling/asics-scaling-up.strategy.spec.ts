@@ -12,9 +12,8 @@ import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '@modules/asics/asics.constants';
-import { Cache } from 'cache-manager';
-import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
+import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -23,7 +22,6 @@ jest.mock('@common/utils', () => ({
 
 describe('AsicsScalingUpStrategy', () => {
   let strategy: AsicsScalingUpStrategy;
-  let cache: Cache;
   let asicsApiService: AsicsApiService;
 
   const {
@@ -55,125 +53,11 @@ describe('AsicsScalingUpStrategy', () => {
     }).compile();
 
     strategy = module.get(AsicsScalingUpStrategy);
-    cache = module.get(CACHE_MANAGER);
     asicsApiService = module.get(AsicsApiService);
   });
 
   it('should be defined', () => {
     expect(strategy).toBeDefined();
-  });
-
-  describe('run', () => {
-    const ruleMock: ControlRule = {
-      id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
-      scaleUpValue: 100,
-      scaleUpCheckTime: 180,
-      scaleDownValue: 80,
-      scaleDownCheckTime: 120,
-    };
-    const sensorMock = {
-      sensors: [
-        {
-          name: SensorId.DC_BATTERY,
-          avgVoltage: 110,
-        },
-      ],
-    } as Sensor;
-
-    let getSpy: jest.SpiedFunction<Cache['get']>;
-    let shouldScaleSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['shouldScale']
-    >;
-    let getStatusSpy: jest.SpiedFunction<AsicsApiService['getStatus']>;
-
-    let findFirstStoppedAsicSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['findFirstStoppedAsic']
-    >;
-    let startAsicOnFirstPresetSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['startAsicOnFirstPreset']
-    >;
-
-    let findAsicWithPresetSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['findAsicWithPreset']
-    >;
-    let incrementAsicPresetSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['incrementAsicPreset']
-    >;
-
-    beforeEach(() => {
-      getSpy = jest.spyOn(cache, 'get');
-      shouldScaleSpy = jest.spyOn(strategy, 'shouldScale');
-      getStatusSpy = jest.spyOn(asicsApiService, 'getStatus');
-
-      findFirstStoppedAsicSpy = jest.spyOn(strategy, 'findFirstStoppedAsic');
-      startAsicOnFirstPresetSpy = jest.spyOn(
-        strategy,
-        'startAsicOnFirstPreset',
-      );
-
-      findAsicWithPresetSpy = jest.spyOn(strategy, 'findAsicWithPreset');
-      incrementAsicPresetSpy = jest.spyOn(strategy, 'incrementAsicPreset');
-
-      startAsicOnFirstPresetSpy.mockImplementation();
-      incrementAsicPresetSpy.mockImplementation();
-    });
-
-    it('should return where no saved sensors data', async () => {
-      await strategy.run(ruleMock);
-
-      expect(getSpy).toHaveBeenCalledWith(SENSORS_DATA_CACHE);
-
-      expect(shouldScaleSpy).not.toHaveBeenCalled();
-    });
-
-    it('should return when sensors data prevent scaling', async () => {
-      const sensorMock = {
-        sensors: [
-          {
-            name: SensorId.DC_BATTERY,
-            avgVoltage: 90,
-          },
-        ],
-      } as Sensor;
-
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
-
-      await strategy.run(ruleMock);
-
-      expect(shouldScaleSpy).toHaveBeenCalledWith(sensorMock, ruleMock);
-    });
-
-    it('should scale by starting stopped asic', async () => {
-      const statusMock = { miner_state: 'stopped' } as AsicStatus;
-
-      getStatusSpy.mockResolvedValueOnce(statusMock);
-
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
-
-      await strategy.run(ruleMock);
-
-      expect(findFirstStoppedAsicSpy).toHaveBeenCalledWith(asicsMock);
-      expect(startAsicOnFirstPresetSpy).toHaveBeenCalledWith(asicMock);
-
-      expect(findAsicWithPresetSpy).not.toHaveBeenCalled();
-    });
-
-    it('should scale by incrementing asic preset', async () => {
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
-
-      await strategy.run(ruleMock);
-
-      expect(findAsicWithPresetSpy).toHaveBeenCalledWith(
-        asicsMock,
-        expect.any(Function),
-      );
-      expect(incrementAsicPresetSpy).toHaveBeenCalledWith(
-        asicMock,
-        asicPerfSummaryMock,
-      );
-
-      expect(startAsicOnFirstPresetSpy).not.toHaveBeenCalled();
-    });
   });
 
   describe('shouldScale', () => {
@@ -224,6 +108,71 @@ describe('AsicsScalingUpStrategy', () => {
       const result = strategy.shouldScale(sensorMock, ruleMock);
 
       expect(result).toBe(true);
+    });
+  });
+
+  describe('scale', () => {
+    let findFirstStoppedAsicSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['findFirstStoppedAsic']
+    >;
+    let startAsicOnFirstPresetSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['startAsicOnFirstPreset']
+    >;
+
+    let findAsicWithPresetSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['findAsicWithPreset']
+    >;
+    let incrementAsicPresetSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['incrementAsicPreset']
+    >;
+
+    beforeEach(() => {
+      findFirstStoppedAsicSpy = jest.spyOn(strategy, 'findFirstStoppedAsic');
+      startAsicOnFirstPresetSpy = jest.spyOn(
+        strategy,
+        'startAsicOnFirstPreset',
+      );
+
+      findAsicWithPresetSpy = jest.spyOn(strategy, 'findAsicWithPreset');
+      incrementAsicPresetSpy = jest.spyOn(strategy, 'incrementAsicPreset');
+
+      startAsicOnFirstPresetSpy.mockImplementation();
+      incrementAsicPresetSpy.mockImplementation();
+
+      strategy.asics = asicsMock;
+    });
+
+    it('should scale by starting stopped asic', async () => {
+      findFirstStoppedAsicSpy.mockResolvedValueOnce(asicMock);
+
+      await strategy.scale();
+
+      expect(findFirstStoppedAsicSpy).toHaveBeenCalledWith(asicsMock);
+      expect(startAsicOnFirstPresetSpy).toHaveBeenCalledWith(asicMock);
+
+      expect(findAsicWithPresetSpy).not.toHaveBeenCalled();
+    });
+
+    it('should scale by incrementing asic preset', async () => {
+      const asicWithSummaryMock: AsicWithPerfSummary = {
+        asic: asicMock,
+        perfSummary: asicPerfSummaryMock,
+      };
+
+      findAsicWithPresetSpy.mockResolvedValueOnce(asicWithSummaryMock);
+
+      await strategy.scale();
+
+      expect(findAsicWithPresetSpy).toHaveBeenCalledWith(
+        asicsMock,
+        expect.any(Function),
+      );
+      expect(incrementAsicPresetSpy).toHaveBeenCalledWith(
+        asicMock,
+        asicPerfSummaryMock,
+      );
+
+      expect(startAsicOnFirstPresetSpy).not.toHaveBeenCalled();
     });
   });
 
