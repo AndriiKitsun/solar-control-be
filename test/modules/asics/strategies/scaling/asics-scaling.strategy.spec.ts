@@ -6,13 +6,13 @@ import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock
 import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
-import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { Cache } from 'cache-manager';
 import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsScalingStrategy } from '@modules/asics/strategies/scaling/asics-scaling.strategy';
 import { Injectable, Inject } from '@nestjs/common';
 import { Asic } from '@modules/asics/entities';
+import { ControlRuleRepositoryMock } from '../../../automation/control/mocks/control-rule.repository.mock';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -39,6 +39,7 @@ describe('AsicsScaleStrategy', () => {
   let cache: Cache;
   let asicsApiService: AsicsApiService;
 
+  const { controlRuleMock } = ControlRuleRepositoryMock;
   const { tokenMock, asicTunedPreset1Mock, asicSettingSaveResultMock } =
     AsicsApiServiceMock;
 
@@ -71,13 +72,6 @@ describe('AsicsScaleStrategy', () => {
   });
 
   describe('run', () => {
-    const ruleMock: ControlRule = {
-      id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
-      scaleUpValue: 100,
-      scaleUpCheckTime: 180,
-      scaleDownValue: 80,
-      scaleDownCheckTime: 120,
-    };
     const sensorMock = {
       sensors: [
         {
@@ -98,7 +92,7 @@ describe('AsicsScaleStrategy', () => {
     });
 
     it('should return where no saved sensors data', async () => {
-      await strategy.run(ruleMock);
+      await strategy.run(controlRuleMock);
 
       expect(getSpy).toHaveBeenCalledWith(SENSORS_DATA_CACHE);
 
@@ -108,9 +102,9 @@ describe('AsicsScaleStrategy', () => {
     it('should return when sensors data prevent scaling', async () => {
       await cache.set(SENSORS_DATA_CACHE, sensorMock);
 
-      await strategy.run(ruleMock);
+      await strategy.run(controlRuleMock);
 
-      expect(shouldScaleSpy).toHaveBeenCalledWith(sensorMock, ruleMock);
+      expect(shouldScaleSpy).toHaveBeenCalledWith(sensorMock, controlRuleMock);
     });
 
     it('should scale by starting stopped asic', async () => {
@@ -119,7 +113,7 @@ describe('AsicsScaleStrategy', () => {
       shouldScaleSpy.mockReturnValueOnce(true);
       await cache.set(SENSORS_DATA_CACHE, sensorMock);
 
-      await strategy.run(ruleMock);
+      await strategy.run(controlRuleMock);
 
       expect(scaleSpy).toHaveBeenCalled();
     });

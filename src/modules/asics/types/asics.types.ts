@@ -5,6 +5,4 @@ interface AsicsScalingTimerConfig {
   scaleDown?: NodeJS.Timeout;
 }
 
-export interface AsicsScalingConfig {
-  timer: Record<ControlRuleId, AsicsScalingTimerConfig>;
-}
+export type AsicsTimerConfig = Record<ControlRuleId, AsicsScalingTimerConfig>;
