@@ -4,14 +4,15 @@ import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
-import { Cache } from 'cache-manager';
 import { AsicsScalingDownStrategy } from '@modules/asics/strategies/scaling/asics-scaling-down.strategy';
-import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
-import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsServiceMock } from '../../mocks/asics.service.mock';
-import { AsicsApiService } from '@api/modules';
+import { AsicsApiService, AsicPerfSummary } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
+import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
+import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
+import { Asic } from '@modules/asics/entities';
+import { AsicsScalingUpStrategy } from '@modules/asics/strategies';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -20,7 +21,15 @@ jest.mock('@common/utils', () => ({
 
 describe('AsicsScalingDownStrategy', () => {
   let strategy: AsicsScalingDownStrategy;
-  let cache: Cache;
+  let asicsApiService: AsicsApiService;
+
+  const { asicMock, asicsMock } = AsicsRepositoryMock;
+  const {
+    tokenMock,
+    asicTunedPreset1Mock,
+    asicTunedPreset2Mock,
+    asicPerfSummaryMock,
+  } = AsicsApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -42,56 +51,13 @@ describe('AsicsScalingDownStrategy', () => {
     }).compile();
 
     strategy = module.get(AsicsScalingDownStrategy);
-    cache = module.get(CACHE_MANAGER);
+    asicsApiService = module.get(AsicsApiService);
+
+    strategy.asics = asicsMock;
   });
 
   it('should be defined', () => {
     expect(strategy).toBeDefined();
-  });
-
-  describe('run', () => {
-    const ruleMock: ControlRule = {
-      id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
-      scaleUpValue: 100,
-      scaleUpCheckTime: 180,
-      scaleDownValue: 80,
-      scaleDownCheckTime: 120,
-    };
-
-    let getSpy: jest.SpiedFunction<Cache['get']>;
-    let shouldScaleSpy: jest.SpiedFunction<
-      AsicsScalingUpStrategy['shouldScale']
-    >;
-
-    beforeEach(() => {
-      getSpy = jest.spyOn(cache, 'get');
-      shouldScaleSpy = jest.spyOn(strategy, 'shouldScale');
-    });
-
-    it('should return where no saved sensors data', async () => {
-      await strategy.run(ruleMock);
-
-      expect(getSpy).toHaveBeenCalledWith(SENSORS_DATA_CACHE);
-
-      expect(shouldScaleSpy).not.toHaveBeenCalled();
-    });
-
-    it('should return when sensors data prevent scaling', async () => {
-      const sensorMock = {
-        sensors: [
-          {
-            name: SensorId.DC_BATTERY,
-            avgVoltage: 90,
-          },
-        ],
-      } as Sensor;
-
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
-
-      await strategy.run(ruleMock);
-
-      expect(shouldScaleSpy).toHaveBeenCalledWith(sensorMock, ruleMock);
-    });
   });
 
   describe('shouldScale', () => {
@@ -142,6 +108,95 @@ describe('AsicsScalingDownStrategy', () => {
       const result = strategy.shouldScale(sensorMock, ruleMock);
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe('scale', () => {
+    it('should scale by decrementing asic preset', async () => {
+      const asicWithSummaryMock: AsicWithPerfSummary = {
+        asic: asicMock,
+        perfSummary: asicPerfSummaryMock,
+      };
+      const findAsicWithPresetSpy = jest
+        .spyOn(strategy, 'findAsicWithPreset')
+        .mockResolvedValueOnce(asicWithSummaryMock);
+      const decrementAsicPresetSpy = jest
+        .spyOn(strategy, 'decrementAsicPreset')
+        .mockImplementation();
+
+      await strategy.scale();
+
+      expect(findAsicWithPresetSpy).toHaveBeenCalledWith(
+        asicsMock,
+        expect.any(Function),
+      );
+      expect(decrementAsicPresetSpy).toHaveBeenCalledWith(
+        asicMock,
+        asicPerfSummaryMock,
+      );
+    });
+  });
+
+  describe('decrementAsicPreset', () => {
+    const asicMock = { ip: 'ip', password: 'hash' } as Asic;
+
+    let loginSpy: jest.SpiedFunction<AsicsApiService['login']>;
+    let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
+    let changePresetSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['changePreset']
+    >;
+
+    beforeEach(() => {
+      loginSpy = jest.spyOn(asicsApiService, 'login');
+      getPresetsSpy = jest.spyOn(asicsApiService, 'getPresets');
+      changePresetSpy = jest
+        .spyOn(strategy, 'changePreset')
+        .mockImplementation();
+    });
+
+    it('should login asic and request presets', async () => {
+      const perfSummaryMock = {} as AsicPerfSummary;
+
+      await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
+
+      expect(loginSpy).toHaveBeenCalledWith(asicMock.ip, 'password');
+      expect(getPresetsSpy).toHaveBeenCalledWith(asicMock.ip, tokenMock);
+    });
+
+    it('should not change preset when active preset not found', async () => {
+      const perfSummaryMock = {
+        current_preset: { name: 'kekw' },
+      } as AsicPerfSummary;
+
+      await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
+
+      expect(changePresetSpy).not.toHaveBeenCalled();
+    });
+
+    it('should stop asic when active preset is first', async () => {
+      const perfSummaryMock = {
+        current_preset: { name: asicTunedPreset1Mock.name },
+      } as AsicPerfSummary;
+      const stopSpy = jest.spyOn(asicsApiService, 'stop');
+
+      await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
+
+      expect(stopSpy).toHaveBeenCalledWith(asicMock.ip, tokenMock);
+      expect(changePresetSpy).not.toHaveBeenCalled();
+    });
+
+    it('should change preset using next tuned preset', async () => {
+      const perfSummaryMock = {
+        current_preset: { name: asicTunedPreset2Mock.name },
+      } as AsicPerfSummary;
+
+      await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
+
+      expect(changePresetSpy).toHaveBeenCalledWith(
+        asicMock.ip,
+        tokenMock,
+        asicTunedPreset1Mock,
+      );
     });
   });
 });

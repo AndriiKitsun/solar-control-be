@@ -24,6 +24,7 @@ describe('AsicsScalingUpStrategy', () => {
   let strategy: AsicsScalingUpStrategy;
   let asicsApiService: AsicsApiService;
 
+  const { asicMock, asicsMock } = AsicsRepositoryMock;
   const {
     tokenMock,
     asicUntunedPresetMock,
@@ -31,7 +32,6 @@ describe('AsicsScalingUpStrategy', () => {
     asicTunedPreset2Mock,
     asicPerfSummaryMock,
   } = AsicsApiServiceMock;
-  const { asicMock, asicsMock } = AsicsRepositoryMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -54,6 +54,8 @@ describe('AsicsScalingUpStrategy', () => {
 
     strategy = module.get(AsicsScalingUpStrategy);
     asicsApiService = module.get(AsicsApiService);
+
+    strategy.asics = asicsMock;
   });
 
   it('should be defined', () => {
@@ -127,19 +129,19 @@ describe('AsicsScalingUpStrategy', () => {
     >;
 
     beforeEach(() => {
-      findFirstStoppedAsicSpy = jest.spyOn(strategy, 'findFirstStoppedAsic');
-      startAsicOnFirstPresetSpy = jest.spyOn(
-        strategy,
-        'startAsicOnFirstPreset',
-      );
+      findFirstStoppedAsicSpy = jest
+        .spyOn(strategy, 'findFirstStoppedAsic')
+        .mockImplementation();
+      startAsicOnFirstPresetSpy = jest
+        .spyOn(strategy, 'startAsicOnFirstPreset')
+        .mockImplementation();
 
-      findAsicWithPresetSpy = jest.spyOn(strategy, 'findAsicWithPreset');
-      incrementAsicPresetSpy = jest.spyOn(strategy, 'incrementAsicPreset');
-
-      startAsicOnFirstPresetSpy.mockImplementation();
-      incrementAsicPresetSpy.mockImplementation();
-
-      strategy.asics = asicsMock;
+      findAsicWithPresetSpy = jest
+        .spyOn(strategy, 'findAsicWithPreset')
+        .mockImplementation();
+      incrementAsicPresetSpy = jest
+        .spyOn(strategy, 'incrementAsicPreset')
+        .mockImplementation();
     });
 
     it('should scale by starting stopped asic', async () => {
