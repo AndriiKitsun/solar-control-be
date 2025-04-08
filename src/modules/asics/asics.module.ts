@@ -7,14 +7,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Asic } from './entities';
 import { LogsModule } from '../logs/logs.module';
 import { AsicsAutomationService } from './asics-automation.service';
-import { AsicsScaleUpStrategy } from './strategies/scaling/asics-scale-up.strategy';
-import { AsicsScaleDownStrategy } from './strategies/scaling/asics-scale-down.strategy';
-import { AsicsScalingStrategyExecutor } from './strategies/scaling/asics-scale-strategy-executor.service';
 import { ControlRuleModule } from '../automation/control-rule/control-rule.module';
+import {
+  AsicsScalingDownStrategy,
+  AsicsScalingStrategyExecutor,
+  AsicsScalingUpStrategy,
+} from './strategies';
 
 const SCALING_STRATEGIES = [
-  AsicsScaleUpStrategy,
-  AsicsScaleDownStrategy,
+  AsicsScalingUpStrategy,
+  AsicsScalingDownStrategy,
   AsicsScalingStrategyExecutor,
 ];
 

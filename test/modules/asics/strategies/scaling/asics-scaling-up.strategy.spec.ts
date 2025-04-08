@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AsicsService } from '@modules/asics/asics.service';
-import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-scale-up.strategy';
+import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
@@ -21,8 +21,8 @@ jest.mock('@common/utils', () => ({
   delay: jest.fn(),
 }));
 
-describe('AsicsScaleUpStrategy', () => {
-  let strategy: AsicsScaleUpStrategy;
+describe('AsicsScalingUpStrategy', () => {
+  let strategy: AsicsScalingUpStrategy;
   let cache: Cache;
   let asicsApiService: AsicsApiService;
 
@@ -38,7 +38,7 @@ describe('AsicsScaleUpStrategy', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        AsicsScaleUpStrategy,
+        AsicsScalingUpStrategy,
         {
           provide: CACHE_MANAGER,
           useClass: Map,
@@ -54,7 +54,7 @@ describe('AsicsScaleUpStrategy', () => {
       ],
     }).compile();
 
-    strategy = module.get(AsicsScaleUpStrategy);
+    strategy = module.get(AsicsScalingUpStrategy);
     cache = module.get(CACHE_MANAGER);
     asicsApiService = module.get(AsicsApiService);
   });
@@ -81,21 +81,23 @@ describe('AsicsScaleUpStrategy', () => {
     } as Sensor;
 
     let getSpy: jest.SpiedFunction<Cache['get']>;
-    let shouldScaleSpy: jest.SpiedFunction<AsicsScaleUpStrategy['shouldScale']>;
+    let shouldScaleSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['shouldScale']
+    >;
     let getStatusSpy: jest.SpiedFunction<AsicsApiService['getStatus']>;
 
     let findFirstStoppedAsicSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['findFirstStoppedAsic']
+      AsicsScalingUpStrategy['findFirstStoppedAsic']
     >;
     let startAsicOnFirstPresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['startAsicOnFirstPreset']
+      AsicsScalingUpStrategy['startAsicOnFirstPreset']
     >;
 
     let findAsicWithPresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['findAsicWithPreset']
+      AsicsScalingUpStrategy['findAsicWithPreset']
     >;
     let incrementAsicPresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['incrementAsicPreset']
+      AsicsScalingUpStrategy['incrementAsicPreset']
     >;
 
     beforeEach(() => {
@@ -294,7 +296,7 @@ describe('AsicsScaleUpStrategy', () => {
     let startSpy: jest.SpiedFunction<AsicsApiService['start']>;
     let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
     let changePresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['changePreset']
+      AsicsScalingUpStrategy['changePreset']
     >;
 
     beforeEach(() => {
@@ -340,7 +342,7 @@ describe('AsicsScaleUpStrategy', () => {
     let loginSpy: jest.SpiedFunction<AsicsApiService['login']>;
     let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
     let changePresetSpy: jest.SpiedFunction<
-      AsicsScaleUpStrategy['changePreset']
+      AsicsScalingUpStrategy['changePreset']
     >;
 
     beforeEach(() => {

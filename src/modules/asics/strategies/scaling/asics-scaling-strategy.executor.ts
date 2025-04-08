@@ -2,8 +2,8 @@ import { ControlRule } from '../../../automation/control-rule/entities';
 import { Injectable } from '@nestjs/common';
 import { AsicsScalingConfig } from '../../types/asics.types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
-import { AsicsScaleUpStrategy } from './asics-scale-up.strategy';
-import { AsicsScaleDownStrategy } from './asics-scale-down.strategy';
+import { AsicsScalingUpStrategy } from './asics-scaling-up.strategy';
+import { AsicsScalingDownStrategy } from './asics-scaling-down.strategy';
 
 @Injectable()
 export class AsicsScalingStrategyExecutor {
@@ -14,8 +14,8 @@ export class AsicsScalingStrategyExecutor {
   };
 
   constructor(
-    private readonly asicScaleUpStrategy: AsicsScaleUpStrategy,
-    private readonly asicScaleDownStrategy: AsicsScaleDownStrategy,
+    private readonly asicScaleUpStrategy: AsicsScalingUpStrategy,
+    private readonly asicScaleDownStrategy: AsicsScalingDownStrategy,
   ) {}
 
   execute(ruleOrRules: ControlRule | ControlRule[]): void {

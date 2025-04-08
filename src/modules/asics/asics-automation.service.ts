@@ -8,7 +8,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { AsicsService } from './asics.service';
 import { ControlRuleService } from '../automation/control-rule/control-rule.service';
-import { AsicsScalingStrategyExecutor } from './strategies/scaling/asics-scale-strategy-executor.service';
+import { AsicsScalingStrategyExecutor } from './strategies';
 import { OnEvent } from '@nestjs/event-emitter';
 import { CONTROL_RULE_SAVED_EVENT } from '../automation/control-rule/control-rule.constants';
 import { ControlRule } from '../automation/control-rule/entities';

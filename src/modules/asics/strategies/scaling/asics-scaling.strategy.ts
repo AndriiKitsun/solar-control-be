@@ -16,7 +16,7 @@ import {
   AsicSetting,
 } from '@api/modules';
 
-export abstract class AsicsScaleStrategy {
+export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
 
   protected constructor(

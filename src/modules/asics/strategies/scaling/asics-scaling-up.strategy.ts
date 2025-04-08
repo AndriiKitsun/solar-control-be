@@ -11,10 +11,10 @@ import { decrypt, delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
-import { AsicsScaleStrategy } from './asics-scale.strategy';
+import { AsicsScalingStrategy } from './asics-scaling.strategy';
 
 @Injectable()
-export class AsicsScaleUpStrategy extends AsicsScaleStrategy {
+export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,

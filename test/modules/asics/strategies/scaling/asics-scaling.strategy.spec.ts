@@ -10,12 +10,12 @@ import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { Cache } from 'cache-manager';
 import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
-import { AsicsScaleStrategy } from '@modules/asics/strategies/scaling/asics-scale.strategy';
+import { AsicsScalingStrategy } from '@modules/asics/strategies/scaling/asics-scaling.strategy';
 import { Injectable, Inject } from '@nestjs/common';
 import { Asic } from '@modules/asics/entities';
 
 @Injectable()
-class AsicsScaleStrategyMock extends AsicsScaleStrategy {
+class AsicsScalingStrategyMock extends AsicsScalingStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
@@ -35,7 +35,7 @@ class AsicsScaleStrategyMock extends AsicsScaleStrategy {
 }
 
 describe('AsicsScaleStrategy', () => {
-  let strategy: AsicsScaleStrategyMock;
+  let strategy: AsicsScalingStrategyMock;
   let cache: Cache;
   let asicsApiService: AsicsApiService;
 
@@ -45,7 +45,7 @@ describe('AsicsScaleStrategy', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        AsicsScaleStrategyMock,
+        AsicsScalingStrategyMock,
         {
           provide: CACHE_MANAGER,
           useClass: Map,
@@ -61,7 +61,7 @@ describe('AsicsScaleStrategy', () => {
       ],
     }).compile();
 
-    strategy = module.get(AsicsScaleStrategyMock);
+    strategy = module.get(AsicsScalingStrategyMock);
     cache = module.get(CACHE_MANAGER);
     asicsApiService = module.get(AsicsApiService);
   });
@@ -89,7 +89,7 @@ describe('AsicsScaleStrategy', () => {
 
     let getSpy: jest.SpiedFunction<Cache['get']>;
     let shouldScaleSpy: jest.SpiedFunction<
-      AsicsScaleStrategyMock['shouldScale']
+      AsicsScalingStrategyMock['shouldScale']
     >;
 
     beforeEach(() => {

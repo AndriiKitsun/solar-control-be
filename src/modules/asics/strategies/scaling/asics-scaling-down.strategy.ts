@@ -9,10 +9,10 @@ import { AsicsService } from '../../asics.service';
 import { Asic } from '../../entities';
 import { AsicPerfSummary, AsicsApiService } from '@api/modules';
 import { decrypt } from '@common/utils';
-import { AsicsScaleStrategy } from './asics-scale.strategy';
+import { AsicsScalingStrategy } from './asics-scaling.strategy';
 
 @Injectable()
-export class AsicsScaleDownStrategy extends AsicsScaleStrategy {
+export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,

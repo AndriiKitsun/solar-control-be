@@ -5,8 +5,8 @@ import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { Cache } from 'cache-manager';
-import { AsicsScaleDownStrategy } from '@modules/asics/strategies/scaling/asics-scale-down.strategy';
-import { AsicsScaleUpStrategy } from '@modules/asics/strategies/scaling/asics-scale-up.strategy';
+import { AsicsScalingDownStrategy } from '@modules/asics/strategies/scaling/asics-scaling-down.strategy';
+import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
 import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsServiceMock } from '../../mocks/asics.service.mock';
@@ -18,14 +18,14 @@ jest.mock('@common/utils', () => ({
   delay: jest.fn(),
 }));
 
-describe('AsicsScaleDownStrategy', () => {
-  let strategy: AsicsScaleDownStrategy;
+describe('AsicsScalingDownStrategy', () => {
+  let strategy: AsicsScalingDownStrategy;
   let cache: Cache;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        AsicsScaleDownStrategy,
+        AsicsScalingDownStrategy,
         {
           provide: CACHE_MANAGER,
           useClass: Map,
@@ -41,7 +41,7 @@ describe('AsicsScaleDownStrategy', () => {
       ],
     }).compile();
 
-    strategy = module.get(AsicsScaleDownStrategy);
+    strategy = module.get(AsicsScalingDownStrategy);
     cache = module.get(CACHE_MANAGER);
   });
 
@@ -59,7 +59,9 @@ describe('AsicsScaleDownStrategy', () => {
     };
 
     let getSpy: jest.SpiedFunction<Cache['get']>;
-    let shouldScaleSpy: jest.SpiedFunction<AsicsScaleUpStrategy['shouldScale']>;
+    let shouldScaleSpy: jest.SpiedFunction<
+      AsicsScalingUpStrategy['shouldScale']
+    >;
 
     beforeEach(() => {
       getSpy = jest.spyOn(cache, 'get');
