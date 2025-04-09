@@ -1,18 +1,18 @@
 import { ClassMock } from '@common/types/test.types';
 import { Observable, of } from 'rxjs';
 import { ProtectionRulesRepositoryMock } from './protection-rules.repository.mock';
-import { ProtectionRulesService } from '@modules/protection-rules/protection-rules.service';
+import { ProtectionRuleService } from '@modules/automation/protection-rule/protection-rule.service';
 import { Sensor } from '@modules/sensors/entities';
-import { ProtectionRule } from '@modules/protection-rules/entities';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRule } from '@modules/automation/protection-rule/entities';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import {
   ProtectionRuleDto,
   ProtectionResultDto,
-} from '@modules/protection-rules/dto';
+} from '@modules/automation/protection-rule/dto';
 import { MessageEvent } from '@nestjs/common';
 
 export class ProtectionRulesServiceMock
-  implements ClassMock<ProtectionRulesService>
+  implements ClassMock<ProtectionRuleService>
 {
   async onSensorsEvent(sensor: Sensor): Promise<void> {
     return;

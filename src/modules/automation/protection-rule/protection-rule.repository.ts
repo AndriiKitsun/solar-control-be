@@ -4,10 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProtectionRuleDto } from './dto';
 import { ProtectionRuleId } from './enums';
-import { PROTECTION_RULES_CACHE_CONFIG } from './protection-rules.constants';
+import { PROTECTION_RULES_CACHE_CONFIG } from './protection-rule.constants';
 
 @Injectable()
-export class ProtectionRulesRepository {
+export class ProtectionRuleRepository {
   constructor(
     @InjectRepository(ProtectionRule)
     private readonly repository: Repository<ProtectionRule>,

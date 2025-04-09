@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { ProtectionRulesService } from '@modules/protection-rules/protection-rules.service';
-import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
-import { ProtectionRulesExecutor } from '@modules/protection-rules/protection-rules.executor';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRuleService } from '@modules/automation/protection-rule/protection-rule.service';
+import { ProtectionRuleRepository } from '@modules/automation/protection-rule/protection-rule.repository';
+import { ProtectionRuleExecutor } from '@modules/automation/protection-rule/protection-rule.executor';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { EspProtectionRulesApiService } from '@api/modules/esp';
@@ -16,8 +16,8 @@ import { RelaysService } from '@modules/relays/relays.service';
 import { RelaysServiceMock } from '../relays/mocks/relays.service.mock';
 
 describe('ProtectionRulesService', () => {
-  let service: ProtectionRulesService;
-  let protectionRulesRepository: ProtectionRulesRepository;
+  let service: ProtectionRuleService;
+  let protectionRulesRepository: ProtectionRuleRepository;
 
   const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
   const { protectionRuleMock, protectionRulesMock } =
@@ -26,9 +26,9 @@ describe('ProtectionRulesService', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        ProtectionRulesService,
+        ProtectionRuleService,
         {
-          provide: ProtectionRulesRepository,
+          provide: ProtectionRuleRepository,
           useClass: ProtectionRulesRepositoryMock,
         },
         {
@@ -36,7 +36,7 @@ describe('ProtectionRulesService', () => {
           useClass: EspProtectionRulesApiServiceMock,
         },
         {
-          provide: ProtectionRulesExecutor,
+          provide: ProtectionRuleExecutor,
           useClass: ProtectionRulesExecutorMock,
         },
         {
@@ -58,8 +58,8 @@ describe('ProtectionRulesService', () => {
       ],
     }).compile();
 
-    service = module.get(ProtectionRulesService);
-    protectionRulesRepository = module.get(ProtectionRulesRepository);
+    service = module.get(ProtectionRuleService);
+    protectionRulesRepository = module.get(ProtectionRuleRepository);
   });
 
   it('should be defined', () => {

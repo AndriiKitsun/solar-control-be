@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ProtectionRulesService } from './protection-rules.service';
-import { ProtectionRulesController } from './protection-rules.controller';
+import { ProtectionRuleService } from './protection-rule.service';
+import { ProtectionRuleController } from './protection-rule.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProtectionRule } from './entities';
-import { ProtectionRulesRepository } from './protection-rules.repository';
+import { ProtectionRuleRepository } from './protection-rule.repository';
 import { EspApiModule } from '@api/modules/esp';
-import { PROTECTION_STRATEGY_CONFIG } from './protection-rules.constants';
+import { PROTECTION_STRATEGY_CONFIG } from './protection-rule.constants';
 import {
   DcBatteryProtectionStrategy,
   AcOutputProtectionStrategy,
   ProtectionStrategy,
 } from './strategies';
-import { LogsModule } from '../logs/logs.module';
-import { SensorId } from '../sensors/enums';
-import { AsicsModule } from '../asics/asics.module';
-import { ProtectionRulesExecutor } from './protection-rules.executor';
+import { LogsModule } from '../../logs/logs.module';
+import { SensorId } from '../../sensors/enums';
+import { AsicsModule } from '../../asics/asics.module';
+import { ProtectionRuleExecutor } from './protection-rule.executor';
 
 const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
 
@@ -25,11 +25,11 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
     LogsModule,
     AsicsModule,
   ],
-  controllers: [ProtectionRulesController],
+  controllers: [ProtectionRuleController],
   providers: [
-    ProtectionRulesService,
-    ProtectionRulesRepository,
-    ProtectionRulesExecutor,
+    ProtectionRuleService,
+    ProtectionRuleRepository,
+    ProtectionRuleExecutor,
     {
       provide: PROTECTION_STRATEGY_CONFIG,
       useFactory: (
@@ -49,4 +49,4 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
     ...STRATEGIES,
   ],
 })
-export class ProtectionRulesModule {}
+export class ProtectionRuleModule {}

@@ -1,5 +1,5 @@
-import { ProtectionRuleParams } from '@modules/protection-rules/params';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRuleParams } from '@modules/automation/protection-rule/params';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 
 export class ProtectionRuleParamsMock {
   static readonly protectionRuleParamsMock: ProtectionRuleParams = {

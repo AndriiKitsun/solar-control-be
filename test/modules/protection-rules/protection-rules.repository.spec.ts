@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
-import { ProtectionRule } from '@modules/protection-rules/entities';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRuleRepository } from '@modules/automation/protection-rule/protection-rule.repository';
+import { ProtectionRule } from '@modules/automation/protection-rule/entities';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMock } from '@common/mocks/repository.mock';
 import { Repository } from 'typeorm';
@@ -9,7 +9,7 @@ import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
 
 describe('ProtectionRulesRepository', () => {
-  let repository: ProtectionRulesRepository;
+  let repository: ProtectionRuleRepository;
   let protectionRulesRepository: Repository<ProtectionRule>;
 
   const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
@@ -19,7 +19,7 @@ describe('ProtectionRulesRepository', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        ProtectionRulesRepository,
+        ProtectionRuleRepository,
         {
           provide: getRepositoryToken(ProtectionRule),
           useClass: RepositoryMock<ProtectionRule>,
@@ -27,7 +27,7 @@ describe('ProtectionRulesRepository', () => {
       ],
     }).compile();
 
-    repository = module.get(ProtectionRulesRepository);
+    repository = module.get(ProtectionRuleRepository);
     protectionRulesRepository = module.get(getRepositoryToken(ProtectionRule));
   });
 

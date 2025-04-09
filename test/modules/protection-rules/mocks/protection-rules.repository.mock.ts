@@ -1,11 +1,11 @@
 import { ClassMock } from '@common/types/test.types';
-import { ProtectionRulesRepository } from '@modules/protection-rules/protection-rules.repository';
-import { ProtectionRule } from '@modules/protection-rules/entities';
-import { ProtectionRuleDto } from '@modules/protection-rules/dto';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
+import { ProtectionRuleRepository } from '@modules/automation/protection-rule/protection-rule.repository';
+import { ProtectionRule } from '@modules/automation/protection-rule/entities';
+import { ProtectionRuleDto } from '@modules/automation/protection-rule/dto';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 
 export class ProtectionRulesRepositoryMock
-  implements ClassMock<ProtectionRulesRepository>
+  implements ClassMock<ProtectionRuleRepository>
 {
   static readonly protectionRuleMock: ProtectionRule = {
     id: ProtectionRuleId.AC_OUTPUT_VOLTAGE,

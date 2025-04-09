@@ -1,11 +1,11 @@
 import { TypeORMCacheConfig } from '@common/types';
-import { ControlRulesCacheKey } from './enums';
+import { ControlRuleCacheKey } from './enums';
 import { DateMilliseconds } from '@common/enums';
 
-export const CONTROL_RULE_CACHE_CONFIG: TypeORMCacheConfig<ControlRulesCacheKey> =
+export const CONTROL_RULE_CACHE_CONFIG: TypeORMCacheConfig<ControlRuleCacheKey> =
   {
-    [ControlRulesCacheKey.GET_RULES]: {
-      id: ControlRulesCacheKey.GET_RULES,
+    [ControlRuleCacheKey.GET_RULES]: {
+      id: ControlRuleCacheKey.GET_RULES,
       milliseconds: DateMilliseconds.DAY,
     },
   };

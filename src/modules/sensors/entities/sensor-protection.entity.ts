@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { ProtectionRuleId } from '../../protection-rules/enums';
+import { ProtectionRuleId } from '../../automation/protection-rule/enums';
 
 export class SensorProtection
   implements Partial<Record<ProtectionRuleId, boolean>>

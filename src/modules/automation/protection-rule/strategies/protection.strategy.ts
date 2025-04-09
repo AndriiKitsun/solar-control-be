@@ -1,10 +1,10 @@
-import { SensorId } from '../../sensors/enums';
-import { SensorItem } from '../../sensors/entities';
+import { SensorId } from '../../../sensors/enums';
+import { SensorItem } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
-import { LogsService } from '../../logs/logs.service';
-import { LogType } from '../../logs/enums';
+import { LogsService } from '../../../logs/logs.service';
+import { LogType } from '../../../logs/enums';
 import { ProtectionRuleId } from '../enums';
-import { ProtectionRuleResult } from '../protection-rules.types';
+import { ProtectionRuleResult } from '../protection-rule.types';
 
 export abstract class ProtectionStrategy {
   abstract readonly name: SensorId;

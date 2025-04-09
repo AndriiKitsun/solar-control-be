@@ -1,32 +1,32 @@
 import { Injectable, Logger, MessageEvent, Inject } from '@nestjs/common';
 import { ProtectionRuleDto, ProtectionResultDto } from './dto';
-import { ProtectionRulesRepository } from './protection-rules.repository';
+import { ProtectionRuleRepository } from './protection-rule.repository';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleId } from './enums';
 import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { OnEvent } from '@nestjs/event-emitter';
-import { SENSORS_DATA_EVENT } from '../sensors/sensors.constants';
-import { Sensor } from '../sensors/entities';
-import { AsicsService } from '../asics/asics.service';
-import { LogsService } from '../logs/logs.service';
-import { LogType } from '../logs/enums';
+import { SENSORS_DATA_EVENT } from '../../sensors/sensors.constants';
+import { Sensor } from '../../sensors/entities';
+import { AsicsService } from '../../asics/asics.service';
+import { LogsService } from '../../logs/logs.service';
+import { LogType } from '../../logs/enums';
 import { Observable, Subject, map } from 'rxjs';
-import { ProtectionRulesExecutor } from './protection-rules.executor';
-import { PROTECTION_RESULT_KEY } from './protection-rules.constants';
+import { ProtectionRuleExecutor } from './protection-rule.executor';
+import { PROTECTION_RESULT_KEY } from './protection-rule.constants';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
 @Injectable()
-export class ProtectionRulesService {
-  private readonly logger = new Logger(ProtectionRulesService.name);
+export class ProtectionRuleService {
+  private readonly logger = new Logger(ProtectionRuleService.name);
   private readonly protectionResult$ = new Subject<ProtectionResultDto>();
 
   private isRequestSent = false;
 
   constructor(
-    private readonly protectionRulesRepository: ProtectionRulesRepository,
+    private readonly protectionRuleRepository: ProtectionRuleRepository,
     private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
-    private readonly protectionStrategyExecutor: ProtectionRulesExecutor,
+    private readonly protectionStrategyExecutor: ProtectionRuleExecutor,
     private readonly asicsService: AsicsService,
     private readonly logsService: LogsService,
     @Inject(CACHE_MANAGER)
@@ -40,7 +40,7 @@ export class ProtectionRulesService {
     }
 
     try {
-      const rules = await this.protectionRulesRepository.getEnabledRules();
+      const rules = await this.protectionRuleRepository.getEnabledRules();
 
       if (!rules.length) {
         return;
@@ -80,7 +80,7 @@ export class ProtectionRulesService {
   }
 
   getRules(): Promise<ProtectionRule[]> {
-    return this.protectionRulesRepository.getRules();
+    return this.protectionRuleRepository.getRules();
   }
 
   getProtectionResultStream(): Observable<MessageEvent> {
@@ -93,6 +93,6 @@ export class ProtectionRulesService {
   ): Promise<ProtectionRule> {
     await this.espProtectionRulesApiService.saveProtectionRule(id, ruleDto);
 
-    return this.protectionRulesRepository.saveRule(id, ruleDto);
+    return this.protectionRuleRepository.saveRule(id, ruleDto);
   }
 }

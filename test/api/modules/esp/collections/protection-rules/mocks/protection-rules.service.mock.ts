@@ -3,8 +3,8 @@ import {
   EspProtectionRulesApiService,
   EspProtectionRule,
 } from '@api/modules/esp';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
-import { ProtectionRuleDto } from '@modules/protection-rules/dto';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
+import { ProtectionRuleDto } from '@modules/automation/protection-rule/dto';
 
 export class EspProtectionRulesApiServiceMock
   implements ClassMock<EspProtectionRulesApiService>

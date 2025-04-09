@@ -5,7 +5,7 @@ export enum ProtectionRuleId {
   DC_BATTERY_AVG_VOLTAGE = 'dcBatteryAvgVoltage',
 }
 
-export const enum ProtectionRulesCacheKey {
+export const enum ProtectionRuleCacheKey {
   GET_RULES = 'getRules',
   GET_ENABLED_RULES = 'getEnabledRules',
 }

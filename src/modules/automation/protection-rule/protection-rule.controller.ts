@@ -7,26 +7,24 @@ import {
   Sse,
   MessageEvent,
 } from '@nestjs/common';
-import { ProtectionRulesService } from './protection-rules.service';
+import { ProtectionRuleService } from './protection-rule.service';
 import { ProtectionRule } from './entities';
 import { ProtectionRuleDto } from './dto';
 import { ProtectionRuleParams } from './params';
 import { Observable } from 'rxjs';
 
-@Controller('protection-rules')
-export class ProtectionRulesController {
-  constructor(
-    private readonly protectionRulesService: ProtectionRulesService,
-  ) {}
+@Controller('automation/protection')
+export class ProtectionRuleController {
+  constructor(private readonly protectionRuleService: ProtectionRuleService) {}
 
   @Get()
   getRules(): Promise<ProtectionRule[]> {
-    return this.protectionRulesService.getRules();
+    return this.protectionRuleService.getRules();
   }
 
   @Sse('sse')
   getProtectionResultStream(): Observable<MessageEvent> {
-    return this.protectionRulesService.getProtectionResultStream();
+    return this.protectionRuleService.getProtectionResultStream();
   }
 
   @Put(':id')
@@ -34,6 +32,6 @@ export class ProtectionRulesController {
     @Param() params: ProtectionRuleParams,
     @Body() ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    return this.protectionRulesService.saveRule(params.id, ruleDto);
+    return this.protectionRuleService.saveRule(params.id, ruleDto);
   }
 }

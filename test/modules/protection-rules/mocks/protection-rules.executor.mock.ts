@@ -1,11 +1,11 @@
 import { ClassMock } from '@common/types/test.types';
-import { ProtectionRulesExecutor } from '@modules/protection-rules/protection-rules.executor';
-import { ProtectionResultDto } from '@modules/protection-rules/dto';
-import { ProtectionRule } from '@modules/protection-rules/entities';
+import { ProtectionRuleExecutor } from '@modules/automation/protection-rule/protection-rule.executor';
+import { ProtectionResultDto } from '@modules/automation/protection-rule/dto';
+import { ProtectionRule } from '@modules/automation/protection-rule/entities';
 import { Sensor } from '@modules/sensors/entities';
 
 export class ProtectionRulesExecutorMock
-  implements ClassMock<ProtectionRulesExecutor>
+  implements ClassMock<ProtectionRuleExecutor>
 {
   static readonly protectionResultMock: ProtectionResultDto = {
     triggered: false,
