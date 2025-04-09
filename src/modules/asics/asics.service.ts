@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAsicDto, UpdateAsicDto, AsicSummaryResponseDto } from './dto';
 import { AsicsRepository } from './asics.repository';
-import { AsicsApiService } from '@api/modules';
 import { Asic } from './entities';
 import { encrypt, decrypt } from '@common/utils';
 import { DateMilliseconds } from '@common/enums/date.enum';
 import { LogsService } from '../logs/logs.service';
 import { LogType } from '../logs/enums';
+import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
 
 @Injectable()
 export class AsicsService {
   constructor(
     private readonly asicsRepository: AsicsRepository,
-    private readonly asicsApiService: AsicsApiService,
+    private readonly asicsApiFacade: AsicsApiFacade,
     private readonly logsService: LogsService,
   ) {}
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
-    const info = await this.asicsApiService.getInfo(createAsicDto.ip);
+    const info = await this.asicsApiFacade.getInfo(createAsicDto.ip);
 
     const payload: Partial<Asic> = {
       ...createAsicDto,
@@ -46,8 +46,8 @@ export class AsicsService {
 
   async getSummary(id: string): Promise<AsicSummaryResponseDto> {
     const asic = await this.asicsRepository.findOne(id);
-    const summary = await this.asicsApiService.getSummary(asic.ip);
-    const perfSummary = await this.asicsApiService.getPerfSummary(asic.ip);
+    const summary = await this.asicsApiFacade.getSummary(asic.ip);
+    const perfSummary = await this.asicsApiFacade.getPerfSummary(asic.ip);
 
     const response: AsicSummaryResponseDto = {
       hostname: asic.hostname,
@@ -89,12 +89,12 @@ export class AsicsService {
   }
 
   async start(asic: Asic): Promise<void> {
-    const token = await this.asicsApiService.login(
+    const token = await this.asicsApiFacade.login(
       asic.ip,
       decrypt(asic.password),
     );
 
-    return this.asicsApiService.start(asic.ip, token);
+    return this.asicsApiFacade.start(asic.ip, token);
   }
 
   startAsics(asics: Asic[], type: LogType): Promise<void>[] {
@@ -113,12 +113,12 @@ export class AsicsService {
   }
 
   async stop(asic: Asic): Promise<void> {
-    const token = await this.asicsApiService.login(
+    const token = await this.asicsApiFacade.login(
       asic.ip,
       decrypt(asic.password),
     );
 
-    return this.asicsApiService.stop(asic.ip, token);
+    return this.asicsApiFacade.stop(asic.ip, token);
   }
 
   stopAsics(asics: Asic[], type: LogType): Promise<void>[] {

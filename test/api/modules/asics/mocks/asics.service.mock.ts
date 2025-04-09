@@ -1,23 +1,18 @@
-import { AsicsApiService } from '@api/modules/asics/asics.service';
+import { AsicUnlockSuccess } from '@api/modules/asics/collections/auth';
 import {
-  AsicInfo,
-  AsicUnlockSuccess,
   AsicSummary,
-  AsicSummaryStats,
   AsicPerfSummary,
-  AsicPreset,
+  AsicSummaryStats,
   AsicStatus,
+  AsicInfo,
+} from '@api/modules/asics/collections/other';
+import { AsicPreset } from '@api/modules/asics/collections/autotune';
+import {
   AsicsSettings,
-  AsicSetting,
   AsicSettingSaveResult,
-} from '@api/modules/asics/asics.types';
-import { ClassMockWithout } from '@common/types/test.types';
-import { Maybe } from '@common/types';
-import { AbstractHttpService } from '@api/services';
+} from '@api/modules/asics/collections/settings';
 
-export class AsicsApiServiceMock
-  implements ClassMockWithout<AsicsApiService, AbstractHttpService>
-{
+export class AsicsApiServiceMock {
   static readonly tokenMock = 'token';
   static readonly loginResponseMock: AsicUnlockSuccess = {
     token: this.tokenMock,
@@ -196,48 +191,4 @@ export class AsicsApiServiceMock
     reboot_required: false,
     restart_required: false,
   };
-
-  async login(ip: string, password: string): Promise<string> {
-    return AsicsApiServiceMock.loginResponseMock.token;
-  }
-
-  async start(ip: string, token: string): Promise<void> {
-    return;
-  }
-
-  async stop(ip: string, token: string): Promise<void> {
-    return;
-  }
-
-  async getStatus(ip: string): Promise<AsicStatus> {
-    return AsicsApiServiceMock.asicStatusMock;
-  }
-
-  async getInfo(ip: string): Promise<AsicInfo> {
-    return AsicsApiServiceMock.asicInfoMock;
-  }
-
-  async getSummary(ip: string): Promise<Maybe<AsicSummary>> {
-    return AsicsApiServiceMock.asicSummaryMock;
-  }
-
-  async getPerfSummary(ip: string): Promise<Maybe<AsicPerfSummary>> {
-    return AsicsApiServiceMock.asicPerfSummaryMock;
-  }
-
-  async getPresets(ip: string, token: string): Promise<AsicPreset[]> {
-    return AsicsApiServiceMock.asicPresetsMock;
-  }
-
-  async getSettings(ip: string, token: string): Promise<AsicsSettings> {
-    return AsicsApiServiceMock.asicSettingsMock;
-  }
-
-  async saveSettings(
-    ip: string,
-    token: string,
-    setting: AsicSetting,
-  ): Promise<AsicSettingSaveResult> {
-    return AsicsApiServiceMock.asicSettingSaveResultMock;
-  }
 }

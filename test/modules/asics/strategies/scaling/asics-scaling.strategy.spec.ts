@@ -13,6 +13,7 @@ import { Asic } from '@modules/asics/entities';
 import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
 import { AsicsRepository } from '@modules/asics/asics.repository';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
+import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -20,9 +21,9 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
-    protected override readonly asicsApiService: AsicsApiService,
+    protected override readonly asicsApiFacade: AsicsApiFacade,
   ) {
-    super(cache, asicsRepository, asicsApiService);
+    super(cache, asicsRepository, asicsApiFacade);
   }
 
   scale(): Promise<void> {

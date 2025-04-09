@@ -1,23 +1,24 @@
 import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
-import {
-  AsicUnlockScreenBody,
-  AsicUnlockSuccess,
-  AsicInfo,
-  AsicSummaryStats,
-  AsicSummary,
-  AsicPerfSummary,
-  AsicStatus,
-  AsicPreset,
-  AsicSetting,
-  AsicSettingSaveResult,
-  AsicsSettings,
-} from './asics.types';
 import { AxiosError } from 'axios';
 import { ServerError, HttpSubError } from '@common/interfaces';
 import { Maybe } from '@common/types';
 import { randomUUID } from 'node:crypto';
 import { SystemName, ErrorCode } from '@common/enums';
 import { AbstractHttpService } from '../../services';
+import { AsicUnlockScreenBody, AsicUnlockSuccess } from './collections/auth';
+import {
+  AsicStatus,
+  AsicInfo,
+  AsicSummary,
+  AsicSummaryStats,
+  AsicPerfSummary,
+} from './collections/other';
+import { AsicPreset } from './collections/autotune';
+import {
+  AsicsSettings,
+  AsicSetting,
+  AsicSettingSaveResult,
+} from './collections/settings';
 
 @Injectable()
 export class AsicsApiService extends AbstractHttpService {

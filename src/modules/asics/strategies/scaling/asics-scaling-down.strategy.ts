@@ -6,10 +6,11 @@ import { SensorId } from '../../../sensors/enums';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Asic } from '../../entities';
-import { AsicPerfSummary, AsicsApiService } from '@api/modules';
 import { decrypt } from '@common/utils';
 import { AsicsScalingStrategy } from './asics-scaling.strategy';
 import { AsicsRepository } from '../../asics.repository';
+import { AsicPerfSummary } from '@api/modules/asics/collections/other';
+import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
 
 @Injectable()
 export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
@@ -17,9 +18,9 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
-    protected override readonly asicsApiService: AsicsApiService,
+    protected override readonly asicsApiFacade: AsicsApiFacade,
   ) {
-    super(cache, asicsRepository, asicsApiService);
+    super(cache, asicsRepository, asicsApiFacade);
   }
 
   shouldScale(sensor: Sensor, rule: ControlRule): boolean {
@@ -54,9 +55,9 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     perfSummary: AsicPerfSummary,
   ): Promise<void> {
     const { ip, password } = asic;
-    const token = await this.asicsApiService.login(ip, decrypt(password));
+    const token = await this.asicsApiFacade.login(ip, decrypt(password));
 
-    const presets = await this.asicsApiService.getPresets(ip, token);
+    const presets = await this.asicsApiFacade.getPresets(ip, token);
     const tunedPresets = presets.filter((preset) => preset.status === 'tuned');
     const activePresetIdx = tunedPresets.findIndex(
       (preset) => preset.name === perfSummary.current_preset?.name,
@@ -67,7 +68,7 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     }
 
     if (activePresetIdx === 0) {
-      await this.asicsApiService.stop(ip, token);
+      await this.asicsApiFacade.stop(ip, token);
 
       return;
     }
