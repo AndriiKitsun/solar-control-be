@@ -7,6 +7,8 @@ import {
 import { AsicsScalingUpStrategyMock } from './mocks/asics-scaling-up.strategy.mock';
 import { AsicsScalingDownStrategyMock } from './mocks/asics-scaling-down.strategy.mock';
 import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
+import { AppConfig } from '@config/app.config';
+import { AppConfigMock } from '@config/mocks/app.config.mock';
 
 describe('AsicsScalingStrategyExecutor', () => {
   let executor: AsicsScalingStrategyExecutor;
@@ -29,6 +31,10 @@ describe('AsicsScalingStrategyExecutor', () => {
           provide: AsicsScalingDownStrategy,
           useClass: AsicsScalingDownStrategyMock,
         },
+        {
+          provide: AppConfig.KEY,
+          useValue: AppConfigMock,
+        },
       ],
     }).compile();
 
@@ -48,6 +54,16 @@ describe('AsicsScalingStrategyExecutor', () => {
 
     beforeEach(() => {
       startScalingTimerSpy = jest.spyOn(executor, 'startScalingTimer');
+
+      AppConfigMock.feature.asicsControlEnabled = true;
+    });
+
+    it('should not execute when feature switcher is disabled', () => {
+      AppConfigMock.feature.asicsControlEnabled = false;
+
+      executor.execute(controlRuleMock);
+
+      expect(startScalingTimerSpy).not.toHaveBeenCalled();
     });
 
     it('should handle array of rules', () => {

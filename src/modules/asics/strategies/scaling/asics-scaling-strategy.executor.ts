@@ -1,9 +1,10 @@
 import { ControlRule } from '../../../automation/control-rule/entities';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
 import { AsicsScalingUpStrategy } from './asics-scaling-up.strategy';
 import { AsicsScalingDownStrategy } from './asics-scaling-down.strategy';
 import { AsicsTimerConfig } from '../../types/asics.types';
+import { AppConfigType, AppConfig } from '@config/app.config';
 
 @Injectable()
 export class AsicsScalingStrategyExecutor {
@@ -14,9 +15,15 @@ export class AsicsScalingStrategyExecutor {
   constructor(
     private readonly asicsScalingUpStrategy: AsicsScalingUpStrategy,
     private readonly asicsScalingDownStrategy: AsicsScalingDownStrategy,
+    @Inject(AppConfig.KEY)
+    private readonly appConfig: AppConfigType,
   ) {}
 
   execute(ruleOrRules: ControlRule | ControlRule[]): void {
+    if (!this.appConfig.feature.asicsControlEnabled) {
+      return;
+    }
+
     if (Array.isArray(ruleOrRules)) {
       ruleOrRules.forEach((rule) => {
         this.startScalingTimer(rule);
