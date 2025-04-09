@@ -18,7 +18,6 @@ import { RelaysModule } from '@modules/relays/relays.module';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeORMExceptionFilter } from '@common/filters';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ProtectionRulesModule } from '@modules/protection-rules/protection-rules.module';
 import { SensorsModule } from '@modules/sensors/sensors.module';
 import { LogsModule } from '@modules/logs/logs.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -46,7 +45,6 @@ import { AsicsConfig } from '@config/asics.config';
     AsicsModule,
     AutomationModule,
     LogsModule,
-    ProtectionRulesModule,
     PzemsModule,
     RelaysModule,
     SensorsModule,

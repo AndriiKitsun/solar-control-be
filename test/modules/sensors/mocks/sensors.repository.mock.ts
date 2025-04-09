@@ -7,9 +7,24 @@ export class SensorsRepositoryMock implements ClassMock<SensorsRepository> {
     id: 'id',
     createdAt: new Date(),
     power: true,
+    sensors: [
+      {
+        pid: '',
+        avgVoltage: 123,
+        sensor: {} as Sensor,
+      },
+    ],
+    pTriggered: false,
+  };
+
+  static readonly emptySensorMock: Sensor = {
+    id: 'id',
+    createdAt: new Date(),
+    power: true,
     sensors: [],
     pTriggered: false,
   };
+
   static readonly sensorsMock: Sensor[] = [this.sensorMock];
 
   async save(sensorsData: Sensor): Promise<Sensor> {

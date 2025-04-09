@@ -55,6 +55,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/dot-notation': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
       'sonarjs/no-hardcoded-passwords': 'off',
       'sonarjs/no-hardcoded-ip': 'off',
     },

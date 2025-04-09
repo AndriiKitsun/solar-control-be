@@ -1,7 +1,7 @@
 import { EspHttpBaseApiService } from '../../services';
 import { Injectable } from '@nestjs/common';
-import { ProtectionRuleId } from '@modules/protection-rules/enums';
-import { ProtectionRuleDto } from '@modules/protection-rules/dto';
+import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
+import { ProtectionRuleDto } from '@modules/automation/protection-rule/dto';
 import { EspProtectionRule } from './protection-rules.types';
 
 @Injectable()

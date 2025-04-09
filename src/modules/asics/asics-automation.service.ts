@@ -1,7 +1,7 @@
 import { Injectable, Inject, OnApplicationBootstrap } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ProtectionResultDto } from '../protection-rules/dto';
-import { PROTECTION_RESULT_KEY } from '../protection-rules/protection-rules.constants';
+import { ProtectionResultDto } from '../automation/protection-rule/dto';
+import { PROTECTION_RESULT_KEY } from '../automation/protection-rule/protection-rule.constants';
 import { LogType } from '../logs/enums';
 import { AsicsRepository } from './asics.repository';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
