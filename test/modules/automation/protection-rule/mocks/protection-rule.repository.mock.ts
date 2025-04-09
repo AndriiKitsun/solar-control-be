@@ -4,7 +4,7 @@ import { ProtectionRule } from '@modules/automation/protection-rule/entities';
 import { ProtectionRuleDto } from '@modules/automation/protection-rule/dto';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 
-export class ProtectionRulesRepositoryMock
+export class ProtectionRuleRepositoryMock
   implements ClassMock<ProtectionRuleRepository>
 {
   static readonly protectionRuleMock: ProtectionRule = {
@@ -19,17 +19,17 @@ export class ProtectionRulesRepositoryMock
   ];
 
   async getRules(): Promise<ProtectionRule[]> {
-    return ProtectionRulesRepositoryMock.protectionRulesMock;
+    return ProtectionRuleRepositoryMock.protectionRulesMock;
   }
 
   async getEnabledRules(): Promise<ProtectionRule[]> {
-    return ProtectionRulesRepositoryMock.protectionRulesMock;
+    return ProtectionRuleRepositoryMock.protectionRulesMock;
   }
 
   async saveRule(
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    return ProtectionRulesRepositoryMock.protectionRuleMock;
+    return ProtectionRuleRepositoryMock.protectionRuleMock;
   }
 }

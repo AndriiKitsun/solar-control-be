@@ -3,25 +3,25 @@ import { ProtectionRuleService } from '@modules/automation/protection-rule/prote
 import { ProtectionRuleRepository } from '@modules/automation/protection-rule/protection-rule.repository';
 import { ProtectionStrategyExecutor } from '@modules/automation/protection-rule/strategies/protection-strategy.executor';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
-import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
-import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
+import { ProtectionRuleRepositoryMock } from './mocks/protection-rule.repository.mock';
+import { ProtectionRuleDtoMock } from './dto/mocks/protection-rule.dto.mock';
 import { EspProtectionRulesApiService } from '@api/modules/esp';
 import { EspProtectionRulesApiServiceMock } from '@api/modules/esp/collections/protection-rules/mocks/protection-rules.service.mock';
-import { ProtectionRulesExecutorMock } from './mocks/protection-rules.executor.mock';
+import { ProtectionStrategyExecutorMock } from './strategies/mocks/protection-strategy.executor.mock';
 import { AsicsService } from '@modules/asics/asics.service';
-import { AsicsServiceMock } from '../asics/mocks/asics.service.mock';
+import { AsicsServiceMock } from '../../asics/mocks/asics.service.mock';
 import { LogsService } from '@modules/logs/logs.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { RelaysService } from '@modules/relays/relays.service';
-import { RelaysServiceMock } from '../relays/mocks/relays.service.mock';
+import { RelaysServiceMock } from '../../relays/mocks/relays.service.mock';
 
-describe('ProtectionRulesService', () => {
+describe('ProtectionRuleService', () => {
   let service: ProtectionRuleService;
   let protectionRulesRepository: ProtectionRuleRepository;
 
   const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
   const { protectionRuleMock, protectionRulesMock } =
-    ProtectionRulesRepositoryMock;
+    ProtectionRuleRepositoryMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -29,7 +29,7 @@ describe('ProtectionRulesService', () => {
         ProtectionRuleService,
         {
           provide: ProtectionRuleRepository,
-          useClass: ProtectionRulesRepositoryMock,
+          useClass: ProtectionRuleRepositoryMock,
         },
         {
           provide: EspProtectionRulesApiService,
@@ -37,7 +37,7 @@ describe('ProtectionRulesService', () => {
         },
         {
           provide: ProtectionStrategyExecutor,
-          useClass: ProtectionRulesExecutorMock,
+          useClass: ProtectionStrategyExecutorMock,
         },
         {
           provide: AsicsService,

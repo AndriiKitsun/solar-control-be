@@ -1,19 +1,19 @@
 import { Test } from '@nestjs/testing';
 import { ProtectionRuleService } from '@modules/automation/protection-rule/protection-rule.service';
 import { ProtectionRuleController } from '@modules/automation/protection-rule/protection-rule.controller';
-import { ProtectionRulesServiceMock } from './mocks/protection-rules.service.mock';
-import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
-import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
+import { ProtectionRuleServiceMock } from './mocks/protection-rule.service.mock';
+import { ProtectionRuleDtoMock } from './dto/mocks/protection-rule.dto.mock';
+import { ProtectionRuleRepositoryMock } from './mocks/protection-rule.repository.mock';
 import { ProtectionRuleParamsMock } from './params/protection-rule.params.mock';
 
-describe('ProtectionRulesController', () => {
+describe('ProtectionRuleController', () => {
   let controller: ProtectionRuleController;
   let protectionRulesService: ProtectionRuleService;
 
   const { protectionRuleParamsMock } = ProtectionRuleParamsMock;
   const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
   const { protectionRuleMock, protectionRulesMock } =
-    ProtectionRulesRepositoryMock;
+    ProtectionRuleRepositoryMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -21,7 +21,7 @@ describe('ProtectionRulesController', () => {
       providers: [
         {
           provide: ProtectionRuleService,
-          useClass: ProtectionRulesServiceMock,
+          useClass: ProtectionRuleServiceMock,
         },
       ],
     }).compile();

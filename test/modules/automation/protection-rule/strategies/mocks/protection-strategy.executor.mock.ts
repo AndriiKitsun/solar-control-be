@@ -4,7 +4,7 @@ import { ProtectionResultDto } from '@modules/automation/protection-rule/dto';
 import { ProtectionRule } from '@modules/automation/protection-rule/entities';
 import { Sensor } from '@modules/sensors/entities';
 
-export class ProtectionRulesExecutorMock
+export class ProtectionStrategyExecutorMock
   implements ClassMock<ProtectionStrategyExecutor>
 {
   static readonly protectionResultMock: ProtectionResultDto = {
@@ -18,6 +18,6 @@ export class ProtectionRulesExecutorMock
   };
 
   execute(sensors: Sensor, rules: ProtectionRule[]): ProtectionResultDto {
-    return ProtectionRulesExecutorMock.protectionResultMock;
+    return ProtectionStrategyExecutorMock.protectionResultMock;
   }
 }

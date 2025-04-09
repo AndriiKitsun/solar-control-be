@@ -1,6 +1,6 @@
 import { ClassMock } from '@common/types/test.types';
 import { Observable, of } from 'rxjs';
-import { ProtectionRulesRepositoryMock } from './protection-rules.repository.mock';
+import { ProtectionRuleRepositoryMock } from './protection-rule.repository.mock';
 import { ProtectionRuleService } from '@modules/automation/protection-rule/protection-rule.service';
 import { Sensor } from '@modules/sensors/entities';
 import { ProtectionRule } from '@modules/automation/protection-rule/entities';
@@ -11,7 +11,7 @@ import {
 } from '@modules/automation/protection-rule/dto';
 import { MessageEvent } from '@nestjs/common';
 
-export class ProtectionRulesServiceMock
+export class ProtectionRuleServiceMock
   implements ClassMock<ProtectionRuleService>
 {
   async onSensorsEvent(sensor: Sensor): Promise<void> {
@@ -23,7 +23,7 @@ export class ProtectionRulesServiceMock
   }
 
   async getRules(): Promise<ProtectionRule[]> {
-    return ProtectionRulesRepositoryMock.protectionRulesMock;
+    return ProtectionRuleRepositoryMock.protectionRulesMock;
   }
 
   getProtectionResultStream(): Observable<MessageEvent> {
@@ -34,6 +34,6 @@ export class ProtectionRulesServiceMock
     id: ProtectionRuleId,
     ruleDto: ProtectionRuleDto,
   ): Promise<ProtectionRule> {
-    return ProtectionRulesRepositoryMock.protectionRuleMock;
+    return ProtectionRuleRepositoryMock.protectionRuleMock;
   }
 }
