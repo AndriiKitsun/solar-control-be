@@ -1,17 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SensorId } from '../../../sensors/enums';
 import { Sensor } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
-import { ProtectionStrategy } from './index';
 import { PROTECTION_STRATEGY_CONFIG } from '../protection-rule.constants';
 import { ProtectionResultDto } from '../dto';
-import { ProtectionMappedRule } from '../protection-rule.types';
+import {
+  ProtectionMappedRule,
+  ProtectionStrategyConfig,
+} from '../protection-rule.types';
 
 @Injectable()
 export class ProtectionStrategyExecutor {
   constructor(
     @Inject(PROTECTION_STRATEGY_CONFIG)
-    private readonly strategyConfig: Record<SensorId, ProtectionStrategy>,
+    private readonly strategyConfig: ProtectionStrategyConfig,
   ) {}
 
   execute(sensor: Sensor, rules: ProtectionRule[]): ProtectionResultDto {

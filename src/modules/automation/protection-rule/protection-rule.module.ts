@@ -13,8 +13,8 @@ import {
   ProtectionStrategyExecutor,
 } from './strategies';
 import { LogsModule } from '../../logs/logs.module';
-import { SensorId } from '../../sensors/enums';
 import { AsicsModule } from '../../asics/asics.module';
+import { ProtectionStrategyConfig } from './protection-rule.types';
 
 const PROTECTION_STRATEGIES = [
   AcOutputProtectionStrategy,
@@ -37,15 +37,12 @@ const PROTECTION_STRATEGIES = [
       provide: PROTECTION_STRATEGY_CONFIG,
       useFactory: (
         ...strategies: ProtectionStrategy[]
-      ): Record<SensorId, ProtectionStrategy> => {
-        return strategies.reduce(
-          (acc, strategy) => {
-            acc[strategy.name] = strategy;
+      ): ProtectionStrategyConfig => {
+        return strategies.reduce((acc, strategy) => {
+          acc[strategy.name] = strategy;
 
-            return acc;
-          },
-          {} as Record<SensorId, ProtectionStrategy>,
-        );
+          return acc;
+        }, {} as ProtectionStrategyConfig);
       },
       inject: PROTECTION_STRATEGIES,
     },
