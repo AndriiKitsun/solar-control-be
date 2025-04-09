@@ -11,7 +11,7 @@ import { AsicsService } from '../../asics/asics.service';
 import { LogsService } from '../../logs/logs.service';
 import { LogType } from '../../logs/enums';
 import { Observable, Subject, map } from 'rxjs';
-import { ProtectionRuleExecutor } from './protection-rule.executor';
+import { ProtectionStrategyExecutor } from './strategies/protection-strategy.executor';
 import { PROTECTION_RESULT_KEY } from './protection-rule.constants';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -26,7 +26,7 @@ export class ProtectionRuleService {
   constructor(
     private readonly protectionRuleRepository: ProtectionRuleRepository,
     private readonly espProtectionRulesApiService: EspProtectionRulesApiService,
-    private readonly protectionStrategyExecutor: ProtectionRuleExecutor,
+    private readonly protectionStrategyExecutor: ProtectionStrategyExecutor,
     private readonly asicsService: AsicsService,
     private readonly logsService: LogsService,
     @Inject(CACHE_MANAGER)

@@ -10,13 +10,17 @@ import {
   DcBatteryProtectionStrategy,
   AcOutputProtectionStrategy,
   ProtectionStrategy,
+  ProtectionStrategyExecutor,
 } from './strategies';
 import { LogsModule } from '../../logs/logs.module';
 import { SensorId } from '../../sensors/enums';
 import { AsicsModule } from '../../asics/asics.module';
-import { ProtectionRuleExecutor } from './protection-rule.executor';
 
-const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
+const PROTECTION_STRATEGIES = [
+  AcOutputProtectionStrategy,
+  DcBatteryProtectionStrategy,
+  ProtectionStrategyExecutor,
+];
 
 @Module({
   imports: [
@@ -29,7 +33,6 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
   providers: [
     ProtectionRuleService,
     ProtectionRuleRepository,
-    ProtectionRuleExecutor,
     {
       provide: PROTECTION_STRATEGY_CONFIG,
       useFactory: (
@@ -44,9 +47,9 @@ const STRATEGIES = [AcOutputProtectionStrategy, DcBatteryProtectionStrategy];
           {} as Record<SensorId, ProtectionStrategy>,
         );
       },
-      inject: STRATEGIES,
+      inject: PROTECTION_STRATEGIES,
     },
-    ...STRATEGIES,
+    ...PROTECTION_STRATEGIES,
   ],
 })
 export class ProtectionRuleModule {}

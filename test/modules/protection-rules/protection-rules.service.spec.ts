@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ProtectionRuleService } from '@modules/automation/protection-rule/protection-rule.service';
 import { ProtectionRuleRepository } from '@modules/automation/protection-rule/protection-rule.repository';
-import { ProtectionRuleExecutor } from '@modules/automation/protection-rule/protection-rule.executor';
+import { ProtectionStrategyExecutor } from '@modules/automation/protection-rule/strategies/protection-strategy.executor';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import { ProtectionRulesRepositoryMock } from './mocks/protection-rules.repository.mock';
 import { ProtectionRuleDtoMock } from './dto/mocks/protection-rules.dto.mock';
@@ -36,7 +36,7 @@ describe('ProtectionRulesService', () => {
           useClass: EspProtectionRulesApiServiceMock,
         },
         {
-          provide: ProtectionRuleExecutor,
+          provide: ProtectionStrategyExecutor,
           useClass: ProtectionRulesExecutorMock,
         },
         {
