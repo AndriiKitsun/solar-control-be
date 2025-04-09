@@ -19,7 +19,6 @@ import { AsicsModule } from '../../asics/asics.module';
 const PROTECTION_STRATEGIES = [
   AcOutputProtectionStrategy,
   DcBatteryProtectionStrategy,
-  ProtectionStrategyExecutor,
 ];
 
 @Module({
@@ -33,6 +32,7 @@ const PROTECTION_STRATEGIES = [
   providers: [
     ProtectionRuleService,
     ProtectionRuleRepository,
+    ProtectionStrategyExecutor,
     {
       provide: PROTECTION_STRATEGY_CONFIG,
       useFactory: (
