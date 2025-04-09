@@ -1,11 +1,12 @@
 import { SensorId } from '../../../sensors/enums';
 import { SensorItem } from '../../../sensors/entities';
 import { Injectable } from '@nestjs/common';
-import { ProtectionRuleId } from '../enums';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../../logs/logs.service';
-import { ProtectionRule } from '../entities';
-import { ProtectionRulesResult } from '../protection-rule.types';
+import {
+  ProtectionRulesResult,
+  ProtectionMappedRule,
+} from '../protection-rule.types';
 
 @Injectable()
 export class DcBatteryProtectionStrategy extends ProtectionStrategy {
@@ -15,16 +16,13 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
     super(logsService);
   }
 
-  run(
-    sensor: SensorItem,
-    rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): ProtectionRulesResult {
+  run(sensor: SensorItem, rules: ProtectionMappedRule): ProtectionRulesResult {
     const result: ProtectionRulesResult = {
       dcBatteryAvgVoltage: false,
     };
 
     if (sensor.protection?.dcBatteryAvgVoltage && rules.dcBatteryAvgVoltage) {
-      this.logRule(rules.dcBatteryAvgVoltage, sensor.voltage);
+      this.logRule(rules.dcBatteryAvgVoltage, sensor.avgVoltage);
 
       result.dcBatteryAvgVoltage = true;
     }

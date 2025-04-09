@@ -9,7 +9,7 @@ export class ProtectionRuleRepositoryMock
 {
   static readonly protectionRuleMock: ProtectionRule = {
     id: ProtectionRuleId.AC_OUTPUT_VOLTAGE,
-    min: 180.3,
+    min: 180,
     max: 240,
     enabled: true,
   };

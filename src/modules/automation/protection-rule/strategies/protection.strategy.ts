@@ -2,9 +2,11 @@ import { SensorId } from '../../../sensors/enums';
 import { SensorItem } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
 import { LogsService } from '../../../logs/logs.service';
+import {
+  ProtectionRulesResult,
+  ProtectionMappedRule,
+} from '../protection-rule.types';
 import { LogType } from '../../../logs/enums';
-import { ProtectionRuleId } from '../enums';
-import { ProtectionRulesResult } from '../protection-rule.types';
 
 export abstract class ProtectionStrategy {
   abstract readonly name: SensorId;
@@ -20,6 +22,6 @@ export abstract class ProtectionStrategy {
 
   abstract run(
     sensor: SensorItem,
-    rules: Record<ProtectionRuleId, ProtectionRule>,
+    rules: ProtectionMappedRule,
   ): ProtectionRulesResult;
 }

@@ -4,8 +4,8 @@ import { Sensor } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
 import { ProtectionStrategy } from './index';
 import { PROTECTION_STRATEGY_CONFIG } from '../protection-rule.constants';
-import { ProtectionRuleId } from '../enums';
 import { ProtectionResultDto } from '../dto';
+import { ProtectionMappedRule } from '../protection-rule.types';
 
 @Injectable()
 export class ProtectionStrategyExecutor {
@@ -15,14 +15,11 @@ export class ProtectionStrategyExecutor {
   ) {}
 
   execute(sensor: Sensor, rules: ProtectionRule[]): ProtectionResultDto {
-    const mappedRules = rules.reduce(
-      (acc, rule) => {
-        acc[rule.id] = rule;
+    const mappedRules = rules.reduce((acc, rule) => {
+      acc[rule.id] = rule;
 
-        return acc;
-      },
-      {} as Record<ProtectionRuleId, ProtectionRule>,
-    );
+      return acc;
+    }, {} as ProtectionMappedRule);
     const result = new ProtectionResultDto();
 
     for (const sensorItem of sensor.sensors) {

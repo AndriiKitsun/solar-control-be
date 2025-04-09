@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ProtectionRuleId } from '../enums';
 import { SensorId } from '../../../sensors/enums';
 import { SensorItem } from '../../../sensors/entities';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../../logs/logs.service';
-import { ProtectionRule } from '../entities';
-import { ProtectionRulesResult } from '../protection-rule.types';
+import {
+  ProtectionRulesResult,
+  ProtectionMappedRule,
+} from '../protection-rule.types';
 
 @Injectable()
 export class AcOutputProtectionStrategy extends ProtectionStrategy {
@@ -15,10 +16,7 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
     super(logsService);
   }
 
-  run(
-    sensor: SensorItem,
-    rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): ProtectionRulesResult {
+  run(sensor: SensorItem, rules: ProtectionMappedRule): ProtectionRulesResult {
     const result: ProtectionRulesResult = {
       acOutputFrequency: false,
       acOutputVoltage: false,
