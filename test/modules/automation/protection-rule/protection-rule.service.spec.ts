@@ -186,6 +186,21 @@ describe('ProtectionRuleService', () => {
       expect(stopAsicsSpy).toHaveBeenCalledTimes(1);
       expect(stopAsicsSpy).toHaveBeenCalledWith(asicsMock, LogType.PROTECTION);
     });
+
+    it('should stop asics two times after result change', async () => {
+      const resultTrueMock = { triggered: true } as ProtectionResultDto;
+      const resultFalseMock = { triggered: false } as ProtectionResultDto;
+
+      const stopAsicsSpy = jest.spyOn(asicsService, 'stopAsics');
+
+      await service.handleProtectionResult(resultTrueMock);
+      await service.handleProtectionResult(resultTrueMock);
+      await service.handleProtectionResult(resultFalseMock);
+      await service.handleProtectionResult(resultTrueMock);
+
+      expect(stopAsicsSpy).toHaveBeenCalledTimes(2);
+      expect(stopAsicsSpy).toHaveBeenCalledWith(asicsMock, LogType.PROTECTION);
+    });
   });
 
   describe('getRules', () => {
