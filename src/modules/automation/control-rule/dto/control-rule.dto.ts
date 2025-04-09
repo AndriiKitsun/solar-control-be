@@ -1,7 +1,7 @@
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, Min } from 'class-validator';
 
 export class ControlRuleDto {
-  // @Min(180)
+  @Min(180)
   @IsNumber()
   @IsNotEmpty()
   scaleUpCheckTime!: number;
@@ -10,7 +10,7 @@ export class ControlRuleDto {
   @IsNotEmpty()
   scaleUpValue!: number;
 
-  // @Min(90)
+  @Min(90)
   @IsNumber()
   @IsNotEmpty()
   scaleDownCheckTime!: number;

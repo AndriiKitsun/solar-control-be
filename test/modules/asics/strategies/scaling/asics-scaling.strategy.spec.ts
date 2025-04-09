@@ -12,7 +12,7 @@ import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsScalingStrategy } from '@modules/asics/strategies/scaling/asics-scaling.strategy';
 import { Injectable, Inject } from '@nestjs/common';
 import { Asic } from '@modules/asics/entities';
-import { ControlRuleRepositoryMock } from '../../../automation/control/mocks/control-rule.repository.mock';
+import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {

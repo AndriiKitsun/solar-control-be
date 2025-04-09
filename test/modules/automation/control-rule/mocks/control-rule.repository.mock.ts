@@ -15,8 +15,10 @@ export class ControlRuleRepositoryMock
     scaleDownCheckTime: 120,
   };
 
-  getRules(): Promise<ControlRule[]> {
-    return Promise.resolve([]);
+  static readonly controlRulesMock: ControlRule[] = [this.controlRuleMock];
+
+  async getRules(): Promise<ControlRule[]> {
+    return ControlRuleRepositoryMock.controlRulesMock;
   }
 
   async saveRule(

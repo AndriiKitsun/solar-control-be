@@ -6,7 +6,7 @@ import {
 } from '@modules/asics/strategies';
 import { AsicsScalingUpStrategyMock } from './mocks/asics-scaling-up.strategy.mock';
 import { AsicsScalingDownStrategyMock } from './mocks/asics-scaling-down.strategy.mock';
-import { ControlRuleRepositoryMock } from '../../../automation/control/mocks/control-rule.repository.mock';
+import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
 
 describe('AsicsScalingStrategyExecutor', () => {
   let executor: AsicsScalingStrategyExecutor;
