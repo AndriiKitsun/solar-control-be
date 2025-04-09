@@ -10,10 +10,11 @@ describe('ProtectionRuleController', () => {
   let controller: ProtectionRuleController;
   let protectionRulesService: ProtectionRuleService;
 
-  const { protectionRuleParamsMock } = ProtectionRuleParamsMock;
-  const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
   const { protectionRuleMock, protectionRulesMock } =
     ProtectionRuleRepositoryMock;
+  const { protectionResultMessage } = ProtectionRuleServiceMock;
+  const { protectionRuleParamsMock } = ProtectionRuleParamsMock;
+  const { protectionRuleDtoMock } = ProtectionRuleDtoMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -34,6 +35,30 @@ describe('ProtectionRuleController', () => {
     expect(controller).toBeDefined();
   });
 
+  describe('getRules', () => {
+    it('should return all rules', async () => {
+      const getRulesSpy = jest.spyOn(protectionRulesService, 'getRules');
+
+      const result = await controller.getRules();
+
+      expect(getRulesSpy).toHaveBeenCalled();
+
+      expect(result).toBe(protectionRulesMock);
+    });
+  });
+
+  describe('getProtectionResultStream', () => {
+    it('should return protection result events', (done) => {
+      controller.getProtectionResultStream().subscribe({
+        next: (value) => {
+          expect(value).toEqual(protectionResultMessage);
+
+          done();
+        },
+      });
+    });
+  });
+
   describe('saveRule', () => {
     it('should return saved rule', async () => {
       const saveRuleSpy = jest.spyOn(protectionRulesService, 'saveRule');
@@ -49,18 +74,6 @@ describe('ProtectionRuleController', () => {
       );
 
       expect(result).toBe(protectionRuleMock);
-    });
-  });
-
-  describe('getRules', () => {
-    it('should return all rules', async () => {
-      const getRulesSpy = jest.spyOn(protectionRulesService, 'getRules');
-
-      const result = await controller.getRules();
-
-      expect(getRulesSpy).toHaveBeenCalled();
-
-      expect(result).toBe(protectionRulesMock);
     });
   });
 });

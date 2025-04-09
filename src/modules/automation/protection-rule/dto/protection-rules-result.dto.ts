@@ -1,6 +1,6 @@
 import { ProtectionRuleId } from '../enums';
 
-export class ProtectionRuleResultDto
+export class ProtectionRulesResultDto
   implements Record<ProtectionRuleId, boolean>
 {
   acOutputFrequency = false;

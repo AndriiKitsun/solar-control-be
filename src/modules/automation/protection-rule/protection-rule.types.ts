@@ -1,3 +1,3 @@
-import { ProtectionRuleResultDto } from './dto';
+import { ProtectionRulesResultDto } from './dto';
 
-export type ProtectionRuleResult = Partial<ProtectionRuleResultDto>;
+export type ProtectionRulesResult = Partial<ProtectionRulesResultDto>;

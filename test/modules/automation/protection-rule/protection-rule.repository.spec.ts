@@ -35,6 +35,39 @@ describe('ProtectionRuleRepository', () => {
     expect(repository).toBeDefined();
   });
 
+  describe('getRules', () => {
+    it('should return all rules', async () => {
+      const findSpy = jest
+        .spyOn(protectionRulesRepository, 'find')
+        .mockResolvedValueOnce(protectionRulesMock);
+
+      const result = await repository.getRules();
+
+      expect(findSpy).toHaveBeenCalled();
+
+      expect(result).toBe(protectionRulesMock);
+    });
+  });
+
+  describe('getEnabledRules', () => {
+    it('should return all enabled rules', async () => {
+      const findSpy = jest
+        .spyOn(protectionRulesRepository, 'find')
+        .mockResolvedValueOnce(protectionRulesMock);
+
+      const result = await repository.getEnabledRules();
+
+      expect(findSpy).toHaveBeenCalledWith({
+        where: {
+          enabled: true,
+        },
+        cache: expect.any(Object),
+      });
+
+      expect(result).toBe(protectionRulesMock);
+    });
+  });
+
   describe('saveRule', () => {
     it('should return saved rule', async () => {
       const saveSpy = jest
@@ -53,20 +86,6 @@ describe('ProtectionRuleRepository', () => {
       expect(saveSpy).toHaveBeenCalledWith(expectedPayload);
 
       expect(result).toBe(protectionRuleMock);
-    });
-  });
-
-  describe('getRules', () => {
-    it('should return all rules', async () => {
-      const findSpy = jest
-        .spyOn(protectionRulesRepository, 'find')
-        .mockResolvedValueOnce(protectionRulesMock);
-
-      const result = await repository.getRules();
-
-      expect(findSpy).toHaveBeenCalled();
-
-      expect(result).toBe(protectionRulesMock);
     });
   });
 });

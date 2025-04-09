@@ -5,7 +5,7 @@ import { ProtectionRuleId } from '../enums';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../../logs/logs.service';
 import { ProtectionRule } from '../entities';
-import { ProtectionRuleResult } from '../protection-rule.types';
+import { ProtectionRulesResult } from '../protection-rule.types';
 
 @Injectable()
 export class DcBatteryProtectionStrategy extends ProtectionStrategy {
@@ -18,8 +18,8 @@ export class DcBatteryProtectionStrategy extends ProtectionStrategy {
   run(
     sensor: SensorItem,
     rules: Record<ProtectionRuleId, ProtectionRule>,
-  ): ProtectionRuleResult {
-    const result: ProtectionRuleResult = {
+  ): ProtectionRulesResult {
+    const result: ProtectionRulesResult = {
       dcBatteryAvgVoltage: false,
     };
 

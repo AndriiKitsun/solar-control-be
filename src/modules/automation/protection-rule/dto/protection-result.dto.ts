@@ -1,6 +1,6 @@
-import { ProtectionRuleResultDto } from './protection-rule-result.dto';
+import { ProtectionRulesResultDto } from './protection-rules-result.dto';
 
 export class ProtectionResultDto {
   triggered!: boolean;
-  rules = new ProtectionRuleResultDto();
+  rules = new ProtectionRulesResultDto();
 }

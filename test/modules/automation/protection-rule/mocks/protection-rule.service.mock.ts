@@ -10,10 +10,15 @@ import {
   ProtectionResultDto,
 } from '@modules/automation/protection-rule/dto';
 import { MessageEvent } from '@nestjs/common';
+import { ProtectionStrategyExecutorMock } from '../strategies/mocks/protection-strategy.executor.mock';
 
 export class ProtectionRuleServiceMock
   implements ClassMock<ProtectionRuleService>
 {
+  static readonly protectionResultMessage: MessageEvent = {
+    data: ProtectionStrategyExecutorMock.protectionResultMock,
+  };
+
   async onSensorsEvent(sensor: Sensor): Promise<void> {
     return;
   }
@@ -27,7 +32,7 @@ export class ProtectionRuleServiceMock
   }
 
   getProtectionResultStream(): Observable<MessageEvent> {
-    return of();
+    return of(ProtectionRuleServiceMock.protectionResultMessage);
   }
 
   async saveRule(
