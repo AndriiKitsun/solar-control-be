@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { AppConfigType, AppConfig } from '@config/app.config';
-import { AsicsOtherApiService } from './collections/other';
-import { AsicsAuthApiService } from './collections/auth';
-import { AsicsAutotuneApiService } from './collections/autotune';
-import { AsicsMiningApiService } from './collections/mining';
-import { AsicsSettingsApiService } from './collections/settings';
-import { AsicsApiFacade } from './services/asics-api.facade';
+import {
+  AsicsAuthApiService,
+  AsicsAutotuneApiService,
+  AsicsMiningApiService,
+  AsicsOtherApiService,
+  AsicsSettingsApiService,
+} from './collections';
+import { AsicsApiFacade } from './services';
 
 const PROVIDERS = [
   AsicsAuthApiService,

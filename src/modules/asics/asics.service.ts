@@ -6,7 +6,7 @@ import { encrypt, decrypt } from '@common/utils';
 import { DateMilliseconds } from '@common/enums/date.enum';
 import { LogsService } from '../logs/logs.service';
 import { LogType } from '../logs/enums';
-import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
+import { AsicsApiFacade } from '@api/modules/asics';
 
 @Injectable()
 export class AsicsService {

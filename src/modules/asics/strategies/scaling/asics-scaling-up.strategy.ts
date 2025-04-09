@@ -12,7 +12,7 @@ import { ControlRuleId } from '../../../automation/control-rule/enums';
 import { AsicsScalingStrategy } from './asics-scaling.strategy';
 import { AsicsRepository } from '../../asics.repository';
 import { AsicPerfSummary } from '@api/modules/asics/collections/other';
-import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
+import { AsicsApiFacade } from '@api/modules/asics';
 
 @Injectable()
 export class AsicsScalingUpStrategy extends AsicsScalingStrategy {

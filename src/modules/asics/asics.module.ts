@@ -7,13 +7,18 @@ import { Asic } from './entities';
 import { LogsModule } from '../logs/logs.module';
 import { AsicsAutomationService } from './asics-automation.service';
 import { ControlRuleModule } from '../automation/control-rule/control-rule.module';
-import { AsicsApiModule } from '@api/modules/asics/asics.module';
+import { AsicsApiModule } from '@api/modules/asics';
+import {
+  AsicsScalingUpStrategy,
+  AsicsScalingDownStrategy,
+  AsicsScalingStrategyExecutor,
+} from './strategies';
 
-// const SCALING_STRATEGIES = [
-//   AsicsScalingUpStrategy,
-//   AsicsScalingDownStrategy,
-//   AsicsScalingStrategyExecutor,
-// ];
+const SCALING_STRATEGIES = [
+  AsicsScalingUpStrategy,
+  AsicsScalingDownStrategy,
+  AsicsScalingStrategyExecutor,
+];
 
 @Module({
   imports: [
@@ -27,7 +32,7 @@ import { AsicsApiModule } from '@api/modules/asics/asics.module';
     AsicsService,
     AsicsRepository,
     AsicsAutomationService,
-    // ...SCALING_STRATEGIES,
+    ...SCALING_STRATEGIES,
   ],
   exports: [AsicsService],
 })

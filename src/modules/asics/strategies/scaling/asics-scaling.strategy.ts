@@ -14,7 +14,7 @@ import {
   AsicSettingSaveResult,
   AsicSetting,
 } from '@api/modules/asics/collections/settings';
-import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
+import { AsicsApiFacade } from '@api/modules/asics';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];

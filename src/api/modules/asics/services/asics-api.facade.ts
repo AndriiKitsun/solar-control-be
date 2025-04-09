@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { Maybe } from '@common/types';
 import {
+  AsicsAuthApiService,
+  AsicsAutotuneApiService,
+  AsicsMiningApiService,
   AsicsOtherApiService,
+  AsicsSettingsApiService,
+  AsicPreset,
   AsicStatus,
   AsicInfo,
   AsicSummary,
   AsicPerfSummary,
-} from '../collections/other';
-import { AsicsAuthApiService } from '../collections/auth';
-import {
-  AsicsSettingsApiService,
   AsicsSettings,
   AsicSetting,
   AsicSettingSaveResult,
-} from '../collections/settings';
-import { AsicsMiningApiService } from '../collections/mining';
-import { AsicsAutotuneApiService, AsicPreset } from '../collections/autotune';
-import { Maybe } from '@common/types';
+} from '../collections';
 
 @Injectable()
 export class AsicsApiFacade {
