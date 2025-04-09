@@ -12,3 +12,5 @@ export const ASICS_CACHE_CONFIG: TypeORMCacheConfig<AsicsCacheKey> = {
     milliseconds: DateMilliseconds.DAY,
   },
 };
+
+export const ASIC_START_IDLE_TIME = 200_000; // 200s

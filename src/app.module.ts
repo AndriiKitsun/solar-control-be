@@ -23,6 +23,7 @@ import { SensorsModule } from '@modules/sensors/sensors.module';
 import { LogsModule } from '@modules/logs/logs.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
+import { AutomationModule } from '@modules/automation/automation.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     ScheduleModule.forRoot({ intervals: false, timeouts: false }),
     CacheModule.register({ isGlobal: true }),
     AsicsModule,
+    AutomationModule,
     LogsModule,
     ProtectionRulesModule,
     PzemsModule,

@@ -14,7 +14,7 @@ describe('AsicsApiService', () => {
   const ipMock = '192.168.0.1';
 
   const { urlMock, responseDataMock } = HttpServiceMock;
-  const { asicSummaryMock, asicSummaryStats } = AsicsApiServiceMock;
+  const { asicSummaryMock, asicSummaryStatsMock } = AsicsApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -45,7 +45,7 @@ describe('AsicsApiService', () => {
 
   describe('getSummary', () => {
     it('should return summary', async () => {
-      getSpy.mockResolvedValueOnce(asicSummaryStats);
+      getSpy.mockResolvedValueOnce(asicSummaryStatsMock);
 
       const result = await service.getSummary(ipMock);
 

@@ -19,7 +19,10 @@ import { plainToInstance } from 'class-transformer';
 import {
   SENSORS_AVG_VOLTAGE_CONFIG,
   SENSORS_DATA_EVENT,
+  SENSORS_DATA_CACHE,
 } from './sensors.constants';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class SensorsService implements OnModuleInit {
@@ -31,6 +34,8 @@ export class SensorsService implements OnModuleInit {
     @Inject(AppConfig.KEY)
     private readonly appConfig: AppConfigType,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(CACHE_MANAGER)
+    private readonly cache: Cache,
   ) {}
 
   @OnEvent(ESP_SENSORS_EVENT)
@@ -39,6 +44,7 @@ export class SensorsService implements OnModuleInit {
 
     this.sensors$.next(sensor);
     this.eventEmitter.emit(SENSORS_DATA_EVENT, sensor);
+    await this.cache.set(SENSORS_DATA_CACHE, sensor);
   }
 
   onModuleInit(): void {
