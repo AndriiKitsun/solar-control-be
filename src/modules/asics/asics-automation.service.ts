@@ -8,6 +8,10 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { AsicsService } from './asics.service';
 import { ControlRuleService } from '../automation/control-rule/control-rule.service';
+import { AsicsScalingStrategyExecutor } from './strategies';
+import { OnEvent } from '@nestjs/event-emitter';
+import { CONTROL_RULE_SAVED_EVENT } from '../automation/control-rule/control-rule.constants';
+import { ControlRule } from '../automation/control-rule/entities';
 
 @Injectable()
 export class AsicsAutomationService implements OnApplicationBootstrap {
@@ -17,7 +21,7 @@ export class AsicsAutomationService implements OnApplicationBootstrap {
     private readonly asicsRepository: AsicsRepository,
     private readonly asicsService: AsicsService,
     private readonly controlRuleService: ControlRuleService,
-    // private readonly asicScalingStrategyExecutor: AsicsScalingStrategyExecutor,
+    private readonly asicScalingStrategyExecutor: AsicsScalingStrategyExecutor,
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_11PM)
@@ -54,14 +58,14 @@ export class AsicsAutomationService implements OnApplicationBootstrap {
     );
   }
 
-  // @OnEvent(CONTROL_RULE_SAVED_EVENT)
-  // restartAsicScalingStrategies(rule: ControlRule): void {
-  //   this.asicScalingStrategyExecutor.execute(rule);
-  // }
-  //
+  @OnEvent(CONTROL_RULE_SAVED_EVENT)
+  restartAsicScalingStrategies(rule: ControlRule): void {
+    this.asicScalingStrategyExecutor.execute(rule);
+  }
+
   async onApplicationBootstrap(): Promise<void> {
-    //   const rules = await this.controlRuleService.getRules();
-    //
-    //   this.asicScalingStrategyExecutor.execute(rules);
+    const rules = await this.controlRuleService.getRules();
+
+    this.asicScalingStrategyExecutor.execute(rules);
   }
 }

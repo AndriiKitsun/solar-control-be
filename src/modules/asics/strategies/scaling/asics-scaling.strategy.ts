@@ -8,13 +8,13 @@ import { Asic } from '../../entities';
 import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
 import { Maybe } from '@common/types';
 import { AsicsRepository } from '../../asics.repository';
-import { AsicPerfSummary } from '@api/modules/asics/collections/other';
-import { AsicPreset } from '@api/modules/asics/collections/autotune';
 import {
+  AsicsApiFacade,
+  AsicPerfSummary,
+  AsicPreset,
   AsicSettingSaveResult,
   AsicSetting,
-} from '@api/modules/asics/collections/settings';
-import { AsicsApiFacade } from '@api/modules/asics';
+} from '@api/modules/asics';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
