@@ -4,7 +4,6 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Sensor } from '../../../sensors/entities';
 import { SensorId } from '../../../sensors/enums';
-import { AsicsService } from '../../asics.service';
 import { AsicsApiService, AsicPerfSummary } from '@api/modules';
 import { Asic } from '../../entities';
 import { decrypt, delay } from '@common/utils';
@@ -12,16 +11,17 @@ import { ASIC_START_IDLE_TIME } from '../../asics.constants';
 import { Maybe } from '@common/types';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
 import { AsicsScalingStrategy } from './asics-scaling.strategy';
+import { AsicsRepository } from '../../asics.repository';
 
 @Injectable()
 export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
-    protected override readonly asicsService: AsicsService,
+    protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiService: AsicsApiService,
   ) {
-    super(cache, asicsService, asicsApiService);
+    super(cache, asicsRepository, asicsApiService);
   }
 
   shouldScale(sensor: Sensor, rule: ControlRule): boolean {
