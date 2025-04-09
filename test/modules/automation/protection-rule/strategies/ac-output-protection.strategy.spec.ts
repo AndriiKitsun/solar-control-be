@@ -4,8 +4,10 @@ import { AcOutputProtectionStrategy } from '@modules/automation/protection-rule/
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
 import { SensorItem, Sensor } from '@modules/sensors/entities';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
-import { ProtectionRule } from '@modules/automation/protection-rule/entities';
-import { ProtectionRulesResult } from '@modules/automation/protection-rule/protection-rule.types';
+import {
+  ProtectionRulesResult,
+  ProtectionMappedRule,
+} from '@modules/automation/protection-rule/protection-rule.types';
 
 describe('AcOutputProtectionStrategy', () => {
   let strategy: AcOutputProtectionStrategy;
@@ -44,7 +46,7 @@ describe('AcOutputProtectionStrategy', () => {
           acOutputFrequency: true,
         },
       };
-      const rulesMock: Partial<Record<ProtectionRuleId, ProtectionRule>> = {
+      const rulesMock: ProtectionMappedRule = {
         [ProtectionRuleId.AC_OUTPUT_FREQUENCY]: {
           id: ProtectionRuleId.AC_OUTPUT_FREQUENCY,
           enabled: true,
@@ -77,7 +79,7 @@ describe('AcOutputProtectionStrategy', () => {
           acOutputVoltage: true,
         },
       };
-      const rulesMock: Partial<Record<ProtectionRuleId, ProtectionRule>> = {
+      const rulesMock: ProtectionMappedRule = {
         [ProtectionRuleId.AC_OUTPUT_VOLTAGE]: {
           id: ProtectionRuleId.AC_OUTPUT_VOLTAGE,
           enabled: true,
@@ -110,7 +112,7 @@ describe('AcOutputProtectionStrategy', () => {
           acOutputAvgVoltage: true,
         },
       };
-      const rulesMock: Partial<Record<ProtectionRuleId, ProtectionRule>> = {
+      const rulesMock: ProtectionMappedRule = {
         [ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE]: {
           id: ProtectionRuleId.AC_OUTPUT_AVG_VOLTAGE,
           enabled: true,
