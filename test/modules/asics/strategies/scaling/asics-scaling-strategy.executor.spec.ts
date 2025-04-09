@@ -4,8 +4,7 @@ import {
   AsicsScalingUpStrategy,
   AsicsScalingDownStrategy,
 } from '@modules/asics/strategies';
-import { AsicsScalingUpStrategyMock } from './mocks/asics-scaling-up.strategy.mock';
-import { AsicsScalingDownStrategyMock } from './mocks/asics-scaling-down.strategy.mock';
+import { AsicsScalingStrategyMock } from './mocks/asics-scaling.strategy.mock';
 import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
 import { AppConfig } from '@config/app.config';
 import { AppConfigMock } from '@config/mocks/app.config.mock';
@@ -25,11 +24,11 @@ describe('AsicsScalingStrategyExecutor', () => {
         AsicsScalingStrategyExecutor,
         {
           provide: AsicsScalingUpStrategy,
-          useClass: AsicsScalingUpStrategyMock,
+          useClass: AsicsScalingStrategyMock,
         },
         {
           provide: AsicsScalingDownStrategy,
-          useClass: AsicsScalingDownStrategyMock,
+          useClass: AsicsScalingStrategyMock,
         },
         {
           provide: AppConfig.KEY,

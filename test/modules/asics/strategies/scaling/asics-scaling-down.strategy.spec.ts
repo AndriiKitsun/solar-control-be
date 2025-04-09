@@ -5,13 +5,16 @@ import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { AsicsScalingDownStrategy } from '@modules/asics/strategies/scaling/asics-scaling-down.strategy';
-import { AsicsApiService, AsicPerfSummary } from '@api/modules';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
 import { Asic } from '@modules/asics/entities';
 import { AsicsScalingUpStrategy } from '@modules/asics/strategies';
 import { AsicsRepository } from '@modules/asics/asics.repository';
+import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/mocks/auth.service.mock';
+import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
+import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/mocks/other.service.mock';
+import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
+import { AsicPerfSummary, AsicsApiFacade } from '@api/modules/asics';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -20,15 +23,13 @@ jest.mock('@common/utils', () => ({
 
 describe('AsicsScalingDownStrategy', () => {
   let strategy: AsicsScalingDownStrategy;
-  let asicsApiService: AsicsApiService;
+  let asicsApiFacade: AsicsApiFacade;
 
   const { asicMock, asicsMock } = AsicsRepositoryMock;
-  const {
-    tokenMock,
-    asicTunedPreset1Mock,
-    asicTunedPreset2Mock,
-    asicPerfSummaryMock,
-  } = AsicsApiServiceMock;
+  const { tokenMock } = AsicsAuthApiServiceMock;
+  const { asicTunedPreset1Mock, asicTunedPreset2Mock } =
+    AsicsAutotuneApiServiceMock;
+  const { asicPerfSummaryMock } = AsicsOtherApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -43,14 +44,14 @@ describe('AsicsScalingDownStrategy', () => {
           useClass: AsicsRepositoryMock,
         },
         {
-          provide: AsicsApiService,
-          useClass: AsicsApiServiceMock,
+          provide: AsicsApiFacade,
+          useClass: AsicsApiFacadeMock,
         },
       ],
     }).compile();
 
     strategy = module.get(AsicsScalingDownStrategy);
-    asicsApiService = module.get(AsicsApiService);
+    asicsApiFacade = module.get(AsicsApiFacade);
 
     strategy.asics = asicsMock;
   });
@@ -139,15 +140,15 @@ describe('AsicsScalingDownStrategy', () => {
   describe('decrementAsicPreset', () => {
     const asicMock = { ip: 'ip', password: 'hash' } as Asic;
 
-    let loginSpy: jest.SpiedFunction<AsicsApiService['login']>;
-    let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
+    let loginSpy: jest.SpiedFunction<AsicsApiFacade['login']>;
+    let getPresetsSpy: jest.SpiedFunction<AsicsApiFacade['getPresets']>;
     let changePresetSpy: jest.SpiedFunction<
       AsicsScalingUpStrategy['changePreset']
     >;
 
     beforeEach(() => {
-      loginSpy = jest.spyOn(asicsApiService, 'login');
-      getPresetsSpy = jest.spyOn(asicsApiService, 'getPresets');
+      loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      getPresetsSpy = jest.spyOn(asicsApiFacade, 'getPresets');
       changePresetSpy = jest
         .spyOn(strategy, 'changePreset')
         .mockImplementation();
@@ -176,7 +177,7 @@ describe('AsicsScalingDownStrategy', () => {
       const perfSummaryMock = {
         current_preset: { name: asicTunedPreset1Mock.name },
       } as AsicPerfSummary;
-      const stopSpy = jest.spyOn(asicsApiService, 'stop');
+      const stopSpy = jest.spyOn(asicsApiFacade, 'stop');
 
       await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
 
