@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { AsicsService } from '@modules/asics/asics.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { AsicsApiService, AsicSetting, AsicPerfSummary } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
-import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { SensorId } from '@modules/sensors/enums';
@@ -13,16 +11,18 @@ import { AsicsScalingStrategy } from '@modules/asics/strategies/scaling/asics-sc
 import { Injectable, Inject } from '@nestjs/common';
 import { Asic } from '@modules/asics/entities';
 import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
+import { AsicsRepository } from '@modules/asics/asics.repository';
+import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
-    protected override readonly asicsService: AsicsService,
+    protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiService: AsicsApiService,
   ) {
-    super(cache, asicsService, asicsApiService);
+    super(cache, asicsRepository, asicsApiService);
   }
 
   scale(): Promise<void> {
@@ -37,11 +37,13 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
 describe('AsicsScaleStrategy', () => {
   let strategy: AsicsScalingStrategyMock;
   let cache: Cache;
+  let asicsRepository: AsicsRepository;
   let asicsApiService: AsicsApiService;
 
   const { controlRuleMock } = ControlRuleRepositoryMock;
   const { tokenMock, asicTunedPreset1Mock, asicSettingSaveResultMock } =
     AsicsApiServiceMock;
+  const { asicsMock } = AsicsRepositoryMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -52,8 +54,8 @@ describe('AsicsScaleStrategy', () => {
           useClass: Map,
         },
         {
-          provide: AsicsService,
-          useClass: AsicsServiceMock,
+          provide: AsicsRepository,
+          useClass: AsicsRepositoryMock,
         },
         {
           provide: AsicsApiService,
@@ -64,6 +66,7 @@ describe('AsicsScaleStrategy', () => {
 
     strategy = module.get(AsicsScalingStrategyMock);
     cache = module.get(CACHE_MANAGER);
+    asicsRepository = module.get(AsicsRepository);
     asicsApiService = module.get(AsicsApiService);
   });
 
@@ -107,7 +110,20 @@ describe('AsicsScaleStrategy', () => {
       expect(shouldScaleSpy).toHaveBeenCalledWith(sensorMock, controlRuleMock);
     });
 
-    it('should scale by starting stopped asic', async () => {
+    it('should fetch list of automated asics', async () => {
+      const findWhereSpy = jest.spyOn(asicsRepository, 'findWhere');
+
+      shouldScaleSpy.mockReturnValueOnce(true);
+      await cache.set(SENSORS_DATA_CACHE, sensorMock);
+
+      await strategy.run(controlRuleMock);
+
+      expect(findWhereSpy).toHaveBeenCalledWith({ automated: true });
+
+      expect(strategy.asics).toBe(asicsMock);
+    });
+
+    it('should execute scaling method', async () => {
       const scaleSpy = jest.spyOn(strategy, 'scale');
 
       shouldScaleSpy.mockReturnValueOnce(true);

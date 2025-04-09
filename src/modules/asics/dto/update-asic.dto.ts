@@ -10,4 +10,8 @@ export class UpdateAsicDto extends PartialType(CreateAsicDto) {
   @IsBoolean()
   @IsOptional()
   t2EndStop?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  automated?: boolean;
 }

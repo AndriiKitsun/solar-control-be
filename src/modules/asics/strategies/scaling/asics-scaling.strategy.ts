@@ -5,7 +5,6 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { SENSORS_DATA_CACHE } from '../../../sensors/sensors.constants';
 import { Asic } from '../../entities';
-import { AsicsService } from '../../asics.service';
 import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
 import { Maybe } from '@common/types';
 import {
@@ -15,6 +14,7 @@ import {
   AsicSettingSaveResult,
   AsicSetting,
 } from '@api/modules';
+import { AsicsRepository } from '../../asics.repository';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
@@ -22,7 +22,7 @@ export abstract class AsicsScalingStrategy {
   protected constructor(
     @Inject(CACHE_MANAGER)
     protected readonly cache: Cache,
-    protected readonly asicsService: AsicsService,
+    protected readonly asicsRepository: AsicsRepository,
     protected readonly asicsApiService: AsicsApiService,
   ) {}
 
@@ -33,7 +33,7 @@ export abstract class AsicsScalingStrategy {
       return;
     }
 
-    this.asics = await this.asicsService.findAll();
+    this.asics = await this.asicsRepository.findWhere({ automated: true });
 
     await this.scale();
   }

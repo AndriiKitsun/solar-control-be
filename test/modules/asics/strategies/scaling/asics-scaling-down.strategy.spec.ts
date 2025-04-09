@@ -5,14 +5,13 @@ import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
 import { SensorId } from '@modules/sensors/enums';
 import { AsicsScalingDownStrategy } from '@modules/asics/strategies/scaling/asics-scaling-down.strategy';
-import { AsicsService } from '@modules/asics/asics.service';
-import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { AsicsApiService, AsicPerfSummary } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
 import { Asic } from '@modules/asics/entities';
 import { AsicsScalingUpStrategy } from '@modules/asics/strategies';
+import { AsicsRepository } from '@modules/asics/asics.repository';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -40,8 +39,8 @@ describe('AsicsScalingDownStrategy', () => {
           useClass: Map,
         },
         {
-          provide: AsicsService,
-          useClass: AsicsServiceMock,
+          provide: AsicsRepository,
+          useClass: AsicsRepositoryMock,
         },
         {
           provide: AsicsApiService,

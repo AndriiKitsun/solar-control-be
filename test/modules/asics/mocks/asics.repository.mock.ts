@@ -13,6 +13,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     hostname: 'hostname',
     t2Active: false,
     t2EndStop: false,
+    automated: false,
   };
 
   static readonly asicsMock: Asic[] = [this.asicMock];

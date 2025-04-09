@@ -1,10 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { AsicsService } from '@modules/asics/asics.service';
 import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
 import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
-import { AsicsServiceMock } from '../../mocks/asics.service.mock';
 import { Asic } from '@modules/asics/entities';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
@@ -14,6 +12,7 @@ import { delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '@modules/asics/asics.constants';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
 import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
+import { AsicsRepository } from '@modules/asics/asics.repository';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -42,8 +41,8 @@ describe('AsicsScalingUpStrategy', () => {
           useClass: Map,
         },
         {
-          provide: AsicsService,
-          useClass: AsicsServiceMock,
+          provide: AsicsRepository,
+          useClass: AsicsRepositoryMock,
         },
         {
           provide: AsicsApiService,
