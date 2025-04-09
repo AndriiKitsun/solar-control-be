@@ -17,10 +17,6 @@ export const APP_NAMESPACE = 'APP_NAMESPACE';
 export interface AppConfigType {
   env: NodeEnv;
   port: number;
-  http: {
-    espTimeout: number;
-    asicsTimeout: number;
-  };
   feature: {
     clearSensors: boolean;
     useEspAvgVoltage: boolean;
@@ -68,14 +64,6 @@ class AppEnvVariables {
   @IsNumber()
   @IsNotEmpty()
   SENSORS_CALC_PERIOD!: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  ESP_HTTP_TIMEOUT!: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  ASICS_HTTP_TIMEOUT!: number;
 }
 
 export const AppConfig = registerAs<AppConfigType>(
@@ -88,10 +76,6 @@ export const AppConfig = registerAs<AppConfigType>(
     return {
       env: config.NODE_ENV,
       port: config.PORT,
-      http: {
-        espTimeout: config.ESP_HTTP_TIMEOUT,
-        asicsTimeout: config.ASICS_HTTP_TIMEOUT,
-      },
       feature: {
         clearSensors: config.SENSORS_CLEAR_ON_START,
         useEspAvgVoltage: config.SENSORS_USE_ESP_AVG_VOLTAGE,

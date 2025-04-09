@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 import { validateEnv } from '@common/validators';
 
 const ESP_NAMESPACE = 'ESP_NAMESPACE';
@@ -7,6 +7,7 @@ const ESP_NAMESPACE = 'ESP_NAMESPACE';
 export interface EspConfigType {
   endpoint: string;
   wsEndpoint: string;
+  httpTimeout: number;
 }
 
 class EspEnvVariables {
@@ -17,6 +18,10 @@ class EspEnvVariables {
   @IsString()
   @IsNotEmpty()
   ESP_WS_ENDPOINT!: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ESP_HTTP_TIMEOUT!: number;
 }
 
 export const EspConfig = registerAs<EspConfigType>(
@@ -27,6 +32,7 @@ export const EspConfig = registerAs<EspConfigType>(
     return {
       endpoint: config.ESP_ENDPOINT,
       wsEndpoint: config.ESP_WS_ENDPOINT,
+      httpTimeout: config.ESP_HTTP_TIMEOUT,
     };
   },
 );
