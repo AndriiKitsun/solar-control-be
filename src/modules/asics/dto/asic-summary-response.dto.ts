@@ -1,4 +1,4 @@
-import { AsicMinerState } from '@api/modules';
+import { AsicMinerState } from '@api/modules/asics';
 
 export class AsicSummaryResponseDto {
   hostname!: string;

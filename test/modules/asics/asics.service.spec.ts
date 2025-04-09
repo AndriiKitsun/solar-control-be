@@ -2,14 +2,14 @@ import { Test } from '@nestjs/testing';
 import { AsicsRepository } from '@modules/asics/asics.repository';
 import { AsicsService } from '@modules/asics/asics.service';
 import { UpdateAsicDto, AsicSummaryResponseDto } from '@modules/asics/dto';
-import { AsicsApiService } from '@api/modules';
 import { AsicsRepositoryMock } from './mocks/asics.repository.mock';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { AsicsServiceMock } from './mocks/asics.service.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
 import { LogsService } from '@modules/logs/logs.service';
 import { LogsServiceMock } from '../logs/mocks/logs.service.mock';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { AsicsApiFacade, AsicPerfSummary } from '@api/modules/asics';
+import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
 
 jest.mock('@common/utils', () => ({
   encrypt: jest.fn(() => 'encrypted'),
@@ -18,7 +18,7 @@ jest.mock('@common/utils', () => ({
 describe('AsicsService', () => {
   let service: AsicsService;
   let asicsRepository: AsicsRepository;
-  let asicsApiService: AsicsApiService;
+  let asicsApiFacade: AsicsApiFacade;
 
   const { asicSummaryResponseDtoMock } = AsicsServiceMock;
   const { asicMock } = AsicsRepositoryMock;
@@ -33,8 +33,8 @@ describe('AsicsService', () => {
           useClass: AsicsRepositoryMock,
         },
         {
-          provide: AsicsApiService,
-          useClass: AsicsApiServiceMock,
+          provide: AsicsApiFacade,
+          useClass: AsicsApiFacadeMock,
         },
         {
           provide: CACHE_MANAGER,
@@ -49,7 +49,7 @@ describe('AsicsService', () => {
 
     service = module.get(AsicsService);
     asicsRepository = module.get(AsicsRepository);
-    asicsApiService = module.get(AsicsApiService);
+    asicsApiFacade = module.get(AsicsApiFacade);
   });
 
   it('should be defined', () => {
@@ -88,8 +88,8 @@ describe('AsicsService', () => {
   describe('getSummary', () => {
     it('should return mapped summary response', async () => {
       const findOneSpy = jest.spyOn(asicsRepository, 'findOne');
-      const getSummarySpy = jest.spyOn(asicsApiService, 'getSummary');
-      const getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
+      const getSummarySpy = jest.spyOn(asicsApiFacade, 'getSummary');
+      const getPerfSummarySpy = jest.spyOn(asicsApiFacade, 'getPerfSummary');
 
       const result = await service.getSummary(idMock);
 
@@ -112,8 +112,10 @@ describe('AsicsService', () => {
         },
       };
 
-      jest.spyOn(asicsApiService, 'getSummary').mockResolvedValueOnce(null);
-      jest.spyOn(asicsApiService, 'getPerfSummary').mockResolvedValueOnce(null);
+      jest.spyOn(asicsApiFacade, 'getSummary').mockResolvedValueOnce(null);
+      jest
+        .spyOn(asicsApiFacade, 'getPerfSummary')
+        .mockResolvedValueOnce({} as AsicPerfSummary);
 
       const result = await service.getSummary(idMock);
 

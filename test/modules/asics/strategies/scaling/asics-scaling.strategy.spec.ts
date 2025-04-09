@@ -1,7 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { AsicsApiService, AsicSetting, AsicPerfSummary } from '@api/modules';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { SensorId } from '@modules/sensors/enums';
@@ -13,6 +11,12 @@ import { Asic } from '@modules/asics/entities';
 import { ControlRuleRepositoryMock } from '../../../automation/control-rule/mocks/control-rule.repository.mock';
 import { AsicsRepository } from '@modules/asics/asics.repository';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
+import { AsicsApiFacade } from '@api/modules/asics/services/asics-api.facade';
+import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
+import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/mocks/auth.service.mock';
+import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
+import { AsicsSettingsApiServiceMock } from '@api/modules/asics/collections/settings/mocks/settings.service.mock';
+import { AsicPerfSummary, AsicSetting } from '@api/modules/asics';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -20,9 +24,9 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
-    protected override readonly asicsApiService: AsicsApiService,
+    protected override readonly asicsApiFacade: AsicsApiFacade,
   ) {
-    super(cache, asicsRepository, asicsApiService);
+    super(cache, asicsRepository, asicsApiFacade);
   }
 
   scale(): Promise<void> {
@@ -38,11 +42,12 @@ describe('AsicsScaleStrategy', () => {
   let strategy: AsicsScalingStrategyMock;
   let cache: Cache;
   let asicsRepository: AsicsRepository;
-  let asicsApiService: AsicsApiService;
+  let asicsApiFacade: AsicsApiFacade;
 
   const { controlRuleMock } = ControlRuleRepositoryMock;
-  const { tokenMock, asicTunedPreset1Mock, asicSettingSaveResultMock } =
-    AsicsApiServiceMock;
+  const { tokenMock } = AsicsAuthApiServiceMock;
+  const { asicTunedPreset1Mock } = AsicsAutotuneApiServiceMock;
+  const { asicSettingSaveResultMock } = AsicsSettingsApiServiceMock;
   const { asicsMock } = AsicsRepositoryMock;
 
   beforeEach(async () => {
@@ -58,8 +63,8 @@ describe('AsicsScaleStrategy', () => {
           useClass: AsicsRepositoryMock,
         },
         {
-          provide: AsicsApiService,
-          useClass: AsicsApiServiceMock,
+          provide: AsicsApiFacade,
+          useClass: AsicsApiFacadeMock,
         },
       ],
     }).compile();
@@ -67,7 +72,7 @@ describe('AsicsScaleStrategy', () => {
     strategy = module.get(AsicsScalingStrategyMock);
     cache = module.get(CACHE_MANAGER);
     asicsRepository = module.get(AsicsRepository);
-    asicsApiService = module.get(AsicsApiService);
+    asicsApiFacade = module.get(AsicsApiFacade);
   });
 
   it('should be defined', () => {
@@ -136,12 +141,10 @@ describe('AsicsScaleStrategy', () => {
   });
 
   describe('findAsicWithPreset', () => {
-    let getPerfSummarySpy: jest.SpiedFunction<
-      AsicsApiService['getPerfSummary']
-    >;
+    let getPerfSummarySpy: jest.SpiedFunction<AsicsApiFacade['getPerfSummary']>;
 
     beforeEach(() => {
-      getPerfSummarySpy = jest.spyOn(asicsApiService, 'getPerfSummary');
+      getPerfSummarySpy = jest.spyOn(asicsApiFacade, 'getPerfSummary');
     });
 
     describe('to get asic with smallest preset', () => {
@@ -154,31 +157,28 @@ describe('AsicsScaleStrategy', () => {
         const asic2Mock = { ip: '2' };
         const asic3Mock = { ip: '3' };
         const asic4Mock = { ip: '4' };
-        const asic5Mock = { ip: '5' };
         const asicsMock = [
           asic1Mock,
           asic2Mock,
           asic3Mock,
           asic4Mock,
-          asic5Mock,
         ] as Asic[];
 
         const asic1PerfSummaryMock = {
           current_preset: { name: '2300' },
         } as AsicPerfSummary;
-        const asic4PerfSummaryMock = {
+        const asic3PerfSummaryMock = {
           current_preset: { name: '1500' },
         } as AsicPerfSummary;
-        const asic5PerfSummaryMock = {
+        const asic4PerfSummaryMock = {
           current_preset: { name: '3200' },
         } as AsicPerfSummary;
 
         getPerfSummarySpy
           .mockResolvedValueOnce(asic1PerfSummaryMock)
-          .mockResolvedValueOnce(undefined)
           .mockRejectedValueOnce(new Error('error'))
-          .mockResolvedValueOnce(asic4PerfSummaryMock)
-          .mockResolvedValueOnce(asic5PerfSummaryMock);
+          .mockResolvedValueOnce(asic3PerfSummaryMock)
+          .mockResolvedValueOnce(asic4PerfSummaryMock);
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
@@ -189,7 +189,88 @@ describe('AsicsScaleStrategy', () => {
         expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
         expect(getPerfSummarySpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
         expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(5, asic5Mock.ip);
+
+        expect(result.asic).toEqual(asic3Mock);
+        expect(result.perfSummary).toEqual(asic3PerfSummaryMock);
+      });
+
+      it('should return first asic when array contains only one element', async () => {
+        const asic1Mock = { ip: '1' };
+        const asicsMock = [asic1Mock] as Asic[];
+
+        const asic1PerfSummaryMock = {
+          current_preset: { name: '2300' },
+        } as AsicPerfSummary;
+
+        getPerfSummarySpy.mockResolvedValueOnce(asic1PerfSummaryMock);
+
+        const result = await strategy.findAsicWithPreset(
+          asicsMock,
+          presetPredicate,
+        );
+
+        expect(result.asic).toEqual(asic1Mock);
+        expect(result.perfSummary).toEqual(asic1PerfSummaryMock);
+      });
+
+      it('should return undefined when perf summary is not provided', async () => {
+        const asic1Mock = { ip: '1' };
+        const asicsMock = [asic1Mock] as Asic[];
+
+        getPerfSummarySpy.mockRejectedValueOnce(new Error('error'));
+
+        const result = await strategy.findAsicWithPreset(
+          asicsMock,
+          presetPredicate,
+        );
+
+        expect(result.asic).toBeUndefined();
+        expect(result.perfSummary).toBeUndefined();
+      });
+    });
+
+    describe('to get asic with highest preset', () => {
+      function presetPredicate(savedPreset: string, preset: string): boolean {
+        return savedPreset > preset;
+      }
+
+      it('should return asic and preset with highest activated preset', async () => {
+        const asic1Mock = { ip: '1' };
+        const asic2Mock = { ip: '2' };
+        const asic3Mock = { ip: '3' };
+        const asic4Mock = { ip: '4' };
+        const asicsMock = [
+          asic1Mock,
+          asic2Mock,
+          asic3Mock,
+          asic4Mock,
+        ] as Asic[];
+
+        const asic1PerfSummaryMock = {
+          current_preset: { name: '2300' },
+        } as AsicPerfSummary;
+        const asic3PerfSummaryMock = {
+          current_preset: { name: '1500' },
+        } as AsicPerfSummary;
+        const asic4PerfSummaryMock = {
+          current_preset: { name: '3200' },
+        } as AsicPerfSummary;
+
+        getPerfSummarySpy
+          .mockResolvedValueOnce(asic1PerfSummaryMock)
+          .mockRejectedValueOnce(new Error('error'))
+          .mockResolvedValueOnce(asic3PerfSummaryMock)
+          .mockResolvedValueOnce(asic4PerfSummaryMock);
+
+        const result = await strategy.findAsicWithPreset(
+          asicsMock,
+          presetPredicate,
+        );
+
+        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
+        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
+        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
+        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
 
         expect(result.asic).toEqual(asic4Mock);
         expect(result.perfSummary).toEqual(asic4PerfSummaryMock);
@@ -218,93 +299,7 @@ describe('AsicsScaleStrategy', () => {
         const asic1Mock = { ip: '1' };
         const asicsMock = [asic1Mock] as Asic[];
 
-        getPerfSummarySpy.mockResolvedValueOnce(undefined);
-
-        const result = await strategy.findAsicWithPreset(
-          asicsMock,
-          presetPredicate,
-        );
-
-        expect(result.asic).toBeUndefined();
-        expect(result.perfSummary).toBeUndefined();
-      });
-    });
-
-    describe('to get asic with highest preset', () => {
-      function presetPredicate(savedPreset: string, preset: string): boolean {
-        return savedPreset > preset;
-      }
-
-      it('should return asic and preset with highest activated preset', async () => {
-        const asic1Mock = { ip: '1' };
-        const asic2Mock = { ip: '2' };
-        const asic3Mock = { ip: '3' };
-        const asic4Mock = { ip: '4' };
-        const asic5Mock = { ip: '5' };
-        const asicsMock = [
-          asic1Mock,
-          asic2Mock,
-          asic3Mock,
-          asic4Mock,
-          asic5Mock,
-        ] as Asic[];
-
-        const asic1PerfSummaryMock = {
-          current_preset: { name: '2300' },
-        } as AsicPerfSummary;
-        const asic4PerfSummaryMock = {
-          current_preset: { name: '1500' },
-        } as AsicPerfSummary;
-        const asic5PerfSummaryMock = {
-          current_preset: { name: '3200' },
-        } as AsicPerfSummary;
-
-        getPerfSummarySpy
-          .mockResolvedValueOnce(asic1PerfSummaryMock)
-          .mockResolvedValueOnce(undefined)
-          .mockRejectedValueOnce(new Error('error'))
-          .mockResolvedValueOnce(asic4PerfSummaryMock)
-          .mockResolvedValueOnce(asic5PerfSummaryMock);
-
-        const result = await strategy.findAsicWithPreset(
-          asicsMock,
-          presetPredicate,
-        );
-
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(4, asic4Mock.ip);
-        expect(getPerfSummarySpy).toHaveBeenNthCalledWith(5, asic5Mock.ip);
-
-        expect(result.asic).toEqual(asic5Mock);
-        expect(result.perfSummary).toEqual(asic5PerfSummaryMock);
-      });
-
-      it('should return first asic when array contains only one element', async () => {
-        const asic1Mock = { ip: '1' };
-        const asicsMock = [asic1Mock] as Asic[];
-
-        const asic1PerfSummaryMock = {
-          current_preset: { name: '2300' },
-        } as AsicPerfSummary;
-
-        getPerfSummarySpy.mockResolvedValueOnce(asic1PerfSummaryMock);
-
-        const result = await strategy.findAsicWithPreset(
-          asicsMock,
-          presetPredicate,
-        );
-
-        expect(result.asic).toEqual(asic1Mock);
-        expect(result.perfSummary).toEqual(asic1PerfSummaryMock);
-      });
-
-      it('should return undefined when perf summary is not provided', async () => {
-        const asic1Mock = { ip: '1' };
-        const asicsMock = [asic1Mock] as Asic[];
-
-        getPerfSummarySpy.mockResolvedValueOnce(undefined);
+        getPerfSummarySpy.mockRejectedValueOnce(new Error('error'));
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
@@ -360,8 +355,8 @@ describe('AsicsScaleStrategy', () => {
       };
       const ipMock = 'ip';
 
-      const getSettingsSpy = jest.spyOn(asicsApiService, 'getSettings');
-      const saveSettingsSpy = jest.spyOn(asicsApiService, 'saveSettings');
+      const getSettingsSpy = jest.spyOn(asicsApiFacade, 'getSettings');
+      const saveSettingsSpy = jest.spyOn(asicsApiFacade, 'saveSettings');
 
       const result = await strategy.changePreset(
         ipMock,

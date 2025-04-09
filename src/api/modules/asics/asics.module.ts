@@ -1,20 +1,36 @@
 import { Module } from '@nestjs/common';
-import { AsicsApiService } from './asics.service';
 import { HttpModule } from '@nestjs/axios';
-import { AppConfig, AppConfigType } from '@config/app.config';
+import {
+  AsicsAuthApiService,
+  AsicsAutotuneApiService,
+  AsicsMiningApiService,
+  AsicsOtherApiService,
+  AsicsSettingsApiService,
+} from './collections';
+import { AsicsApiFacade } from './services';
+import { AsicsConfigType, AsicsConfig } from '@config/asics.config';
+
+const PROVIDERS = [
+  AsicsAuthApiService,
+  AsicsAutotuneApiService,
+  AsicsMiningApiService,
+  AsicsOtherApiService,
+  AsicsSettingsApiService,
+  AsicsApiFacade,
+];
 
 @Module({
   imports: [
     HttpModule.registerAsync({
-      useFactory: (config: AppConfigType) => {
+      useFactory: (config: AsicsConfigType) => {
         return {
-          timeout: config.http.asicsTimeout,
+          timeout: config.httpTimeout,
         };
       },
-      inject: [AppConfig.KEY],
+      inject: [AsicsConfig.KEY],
     }),
   ],
-  providers: [AsicsApiService],
-  exports: [AsicsApiService],
+  providers: PROVIDERS,
+  exports: [AsicsApiFacade],
 })
 export class AsicsApiModule {}

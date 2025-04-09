@@ -24,12 +24,13 @@ import { LogsModule } from '@modules/logs/logs.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AutomationModule } from '@modules/automation/automation.module';
+import { AsicsConfig } from '@config/asics.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [AppConfig, EspConfig, PostgresConfig],
+      load: [AppConfig, AsicsConfig, EspConfig, PostgresConfig],
     }),
     TypeOrmModule.forRootAsync({
       useClass: PostgresProvider,

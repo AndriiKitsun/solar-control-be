@@ -22,7 +22,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json",
     "types:esp": "npx openapi-typescript https://raw.githubusercontent.com/AndriiKitsun/solar-control-arduino/main/api/openapi.yaml -o src/api/modules/esp/types/esp.schema.d.ts",
-    "types:asics": "npx openapi-typescript http://192.168.1.21/docs/api-doc.json -o src/api/modules/asics/asics.schema.d.ts",
+    "types:asics": "npx openapi-typescript http://192.168.1.21/docs/api-doc.json -o src/api/modules/asics/types/asics.schema.d.ts",
     "prepare": "husky",
     "changeset:add": "changeset",
     "changeset:publish": "changeset publish",

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ESP_WS_SERVICE } from './constants';
-import { AppConfig, AppConfigType } from '@config/app.config';
 import { HttpModule } from '@nestjs/axios';
 import {
   EspPzemsApiService,
@@ -8,6 +7,7 @@ import {
   EspProtectionRulesApiService,
 } from './collections';
 import { EspSensorsWsService } from './ws';
+import { EspConfig, EspConfigType } from '@config/esp.config';
 
 const PROVIDERS = [
   EspProtectionRulesApiService,
@@ -18,12 +18,12 @@ const PROVIDERS = [
 @Module({
   imports: [
     HttpModule.registerAsync({
-      useFactory: (config: AppConfigType) => {
+      useFactory: (config: EspConfigType) => {
         return {
-          timeout: config.http.espTimeout,
+          timeout: config.httpTimeout,
         };
       },
-      inject: [AppConfig.KEY],
+      inject: [EspConfig.KEY],
     }),
   ],
   providers: [

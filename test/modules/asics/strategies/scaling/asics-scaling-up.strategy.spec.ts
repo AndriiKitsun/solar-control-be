@@ -1,8 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { AsicsApiService, AsicPerfSummary, AsicStatus } from '@api/modules';
-import { AsicsApiServiceMock } from '@api/modules/asics/mocks/asics.service.mock';
 import { Asic } from '@modules/asics/entities';
 import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
@@ -13,6 +11,15 @@ import { ASIC_START_IDLE_TIME } from '@modules/asics/asics.constants';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
 import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
 import { AsicsRepository } from '@modules/asics/asics.repository';
+import {
+  AsicsApiFacade,
+  AsicStatus,
+  AsicPerfSummary,
+} from '@api/modules/asics';
+import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/mocks/auth.service.mock';
+import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
+import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/mocks/other.service.mock';
+import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -21,16 +28,13 @@ jest.mock('@common/utils', () => ({
 
 describe('AsicsScalingUpStrategy', () => {
   let strategy: AsicsScalingUpStrategy;
-  let asicsApiService: AsicsApiService;
+  let asicsApiFacade: AsicsApiFacade;
 
   const { asicMock, asicsMock } = AsicsRepositoryMock;
-  const {
-    tokenMock,
-    asicUntunedPresetMock,
-    asicTunedPreset1Mock,
-    asicTunedPreset2Mock,
-    asicPerfSummaryMock,
-  } = AsicsApiServiceMock;
+  const { tokenMock } = AsicsAuthApiServiceMock;
+  const { asicUntunedPresetMock, asicTunedPreset1Mock, asicTunedPreset2Mock } =
+    AsicsAutotuneApiServiceMock;
+  const { asicPerfSummaryMock } = AsicsOtherApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -45,14 +49,14 @@ describe('AsicsScalingUpStrategy', () => {
           useClass: AsicsRepositoryMock,
         },
         {
-          provide: AsicsApiService,
-          useClass: AsicsApiServiceMock,
+          provide: AsicsApiFacade,
+          useClass: AsicsApiFacadeMock,
         },
       ],
     }).compile();
 
     strategy = module.get(AsicsScalingUpStrategy);
-    asicsApiService = module.get(AsicsApiService);
+    asicsApiFacade = module.get(AsicsApiFacade);
 
     strategy.asics = asicsMock;
   });
@@ -178,10 +182,10 @@ describe('AsicsScalingUpStrategy', () => {
   });
 
   describe('findFirstStoppedAsic', () => {
-    let getStatusSpy: jest.SpiedFunction<AsicsApiService['getStatus']>;
+    let getStatusSpy: jest.SpiedFunction<AsicsApiFacade['getStatus']>;
 
     beforeEach(() => {
-      getStatusSpy = jest.spyOn(asicsApiService, 'getStatus');
+      getStatusSpy = jest.spyOn(asicsApiFacade, 'getStatus');
     });
 
     it('should return first asic with stopped status', async () => {
@@ -242,17 +246,17 @@ describe('AsicsScalingUpStrategy', () => {
   describe('startAsicOnFirstPreset', () => {
     const asicMock = { ip: 'ip', password: 'hash' } as Asic;
 
-    let loginSpy: jest.SpiedFunction<AsicsApiService['login']>;
-    let startSpy: jest.SpiedFunction<AsicsApiService['start']>;
-    let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
+    let loginSpy: jest.SpiedFunction<AsicsApiFacade['login']>;
+    let startSpy: jest.SpiedFunction<AsicsApiFacade['start']>;
+    let getPresetsSpy: jest.SpiedFunction<AsicsApiFacade['getPresets']>;
     let changePresetSpy: jest.SpiedFunction<
       AsicsScalingUpStrategy['changePreset']
     >;
 
     beforeEach(() => {
-      loginSpy = jest.spyOn(asicsApiService, 'login');
-      startSpy = jest.spyOn(asicsApiService, 'start');
-      getPresetsSpy = jest.spyOn(asicsApiService, 'getPresets');
+      loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      startSpy = jest.spyOn(asicsApiFacade, 'start');
+      getPresetsSpy = jest.spyOn(asicsApiFacade, 'getPresets');
       changePresetSpy = jest.spyOn(strategy, 'changePreset');
 
       changePresetSpy.mockImplementation();
@@ -289,15 +293,15 @@ describe('AsicsScalingUpStrategy', () => {
   describe('incrementAsicPreset', () => {
     const asicMock = { ip: 'ip', password: 'hash' } as Asic;
 
-    let loginSpy: jest.SpiedFunction<AsicsApiService['login']>;
-    let getPresetsSpy: jest.SpiedFunction<AsicsApiService['getPresets']>;
+    let loginSpy: jest.SpiedFunction<AsicsApiFacade['login']>;
+    let getPresetsSpy: jest.SpiedFunction<AsicsApiFacade['getPresets']>;
     let changePresetSpy: jest.SpiedFunction<
       AsicsScalingUpStrategy['changePreset']
     >;
 
     beforeEach(() => {
-      loginSpy = jest.spyOn(asicsApiService, 'login');
-      getPresetsSpy = jest.spyOn(asicsApiService, 'getPresets');
+      loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      getPresetsSpy = jest.spyOn(asicsApiFacade, 'getPresets');
       changePresetSpy = jest.spyOn(strategy, 'changePreset');
 
       changePresetSpy.mockImplementation();

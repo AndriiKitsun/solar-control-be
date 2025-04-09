@@ -7,14 +7,14 @@ import { SENSORS_DATA_CACHE } from '../../../sensors/sensors.constants';
 import { Asic } from '../../entities';
 import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
 import { Maybe } from '@common/types';
+import { AsicsRepository } from '../../asics.repository';
 import {
+  AsicsApiFacade,
   AsicPerfSummary,
-  AsicsApiService,
   AsicPreset,
   AsicSettingSaveResult,
   AsicSetting,
-} from '@api/modules';
-import { AsicsRepository } from '../../asics.repository';
+} from '@api/modules/asics';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
@@ -23,7 +23,7 @@ export abstract class AsicsScalingStrategy {
     @Inject(CACHE_MANAGER)
     protected readonly cache: Cache,
     protected readonly asicsRepository: AsicsRepository,
-    protected readonly asicsApiService: AsicsApiService,
+    protected readonly asicsApiFacade: AsicsApiFacade,
   ) {}
 
   async run(rule: ControlRule): Promise<void> {
@@ -43,7 +43,7 @@ export abstract class AsicsScalingStrategy {
     presetPredicate: (savedPreset: string, preset: string) => boolean,
   ): Promise<AsicWithPerfSummary> {
     const perfSummaries = await Promise.allSettled(
-      asics.map((asic) => this.asicsApiService.getPerfSummary(asic.ip)),
+      asics.map((asic) => this.asicsApiFacade.getPerfSummary(asic.ip)),
     );
 
     let savedAsic: Maybe<Asic>;
@@ -78,7 +78,7 @@ export abstract class AsicsScalingStrategy {
     token: string,
     preset: AsicPreset,
   ): Promise<AsicSettingSaveResult> {
-    const settings = await this.asicsApiService.getSettings(ip, token);
+    const settings = await this.asicsApiFacade.getSettings(ip, token);
 
     const changePresetSetting: AsicSetting = {
       miner: {
@@ -101,7 +101,7 @@ export abstract class AsicsScalingStrategy {
       },
     };
 
-    return this.asicsApiService.saveSettings(ip, token, changePresetSetting);
+    return this.asicsApiFacade.saveSettings(ip, token, changePresetSetting);
   }
 
   abstract shouldScale(sensor: Sensor, rule: ControlRule): boolean;
