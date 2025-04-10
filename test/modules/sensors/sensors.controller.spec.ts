@@ -2,13 +2,13 @@ import { Test } from '@nestjs/testing';
 import { SensorsController } from '@modules/sensors/sensors.controller';
 import { SensorsService } from '@modules/sensors/sensors.service';
 import { SensorsServiceMock } from './mocks/sensors.service.mock';
-import { SensorsRepositoryMock } from './mocks/sensors.repository.mock';
+import { EspSensorsWsServiceMock } from '@api/modules/esp/ws/sensors/mocks/sensors.service.mock';
 
 describe('SensorsController', () => {
   let controller: SensorsController;
   let sensorsService: SensorsService;
 
-  const { sensorMock } = SensorsRepositoryMock;
+  const { sensorMock } = EspSensorsWsServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({

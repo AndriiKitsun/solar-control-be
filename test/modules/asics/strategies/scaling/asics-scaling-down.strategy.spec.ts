@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
-import { SensorId } from '@modules/sensors/enums';
 import { AsicsScalingDownStrategy } from '@modules/asics/strategies/scaling/asics-scaling-down.strategy';
 import { AsicWithPerfSummary } from '@modules/asics/types/asic-scaling.types';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
@@ -15,6 +13,7 @@ import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/auto
 import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/mocks/other.service.mock';
 import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
 import { AsicPerfSummary, AsicsApiFacade } from '@api/modules/asics';
+import { EspSensorsData, EspSensorId } from '@api/modules/esp';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -62,7 +61,7 @@ describe('AsicsScalingDownStrategy', () => {
 
   describe('shouldScale', () => {
     it('should return false when rule is not related to dc battery sensor', () => {
-      const sensorMock = {} as Sensor;
+      const sensorMock = {} as EspSensorsData;
       const ruleMock = { id: 'someRule' } as unknown as ControlRule;
 
       const result = strategy.shouldScale(sensorMock, ruleMock);
@@ -71,7 +70,7 @@ describe('AsicsScalingDownStrategy', () => {
     });
 
     it('should return false when no dc battery sensor data', () => {
-      const sensorMock = { sensors: [] } as unknown as Sensor;
+      const sensorMock = { sensors: [] } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleDownValue: 123,
@@ -84,8 +83,8 @@ describe('AsicsScalingDownStrategy', () => {
 
     it('should return true when dc avg voltage is less than scale down value', () => {
       const sensorMock = {
-        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 50 }],
-      } as unknown as Sensor;
+        sensors: [{ name: EspSensorId.DC_BATTERY, avgVoltage: 50 }],
+      } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleDownValue: 60,
@@ -98,8 +97,8 @@ describe('AsicsScalingDownStrategy', () => {
 
     it('should return false when dc avg voltage is more than scale down value', () => {
       const sensorMock = {
-        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 70 }],
-      } as unknown as Sensor;
+        sensors: [{ name: EspSensorId.DC_BATTERY, avgVoltage: 70 }],
+      } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleDownValue: 60,

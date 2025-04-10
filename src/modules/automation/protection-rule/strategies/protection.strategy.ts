@@ -1,5 +1,3 @@
-import { SensorId } from '../../../sensors/enums';
-import { SensorItem } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
 import { LogsService } from '../../../logs/logs.service';
 import {
@@ -7,9 +5,10 @@ import {
   ProtectionMappedRule,
 } from '../protection-rule.types';
 import { LogType } from '../../../logs/enums';
+import { EspSensor, EspSensorId } from '@api/modules/esp';
 
 export abstract class ProtectionStrategy {
-  abstract readonly name: SensorId;
+  abstract readonly name: EspSensorId;
 
   protected constructor(protected readonly logsService: LogsService) {}
 
@@ -21,7 +20,7 @@ export abstract class ProtectionStrategy {
   }
 
   abstract run(
-    sensor: SensorItem,
+    sensor: EspSensor,
     rules: ProtectionMappedRule,
   ): ProtectionRulesResult;
 }

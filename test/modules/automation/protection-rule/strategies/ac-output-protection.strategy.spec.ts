@@ -2,12 +2,12 @@ import { Test } from '@nestjs/testing';
 import { LogsService } from '@modules/logs/logs.service';
 import { AcOutputProtectionStrategy } from '@modules/automation/protection-rule/strategies';
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
-import { SensorItem, Sensor } from '@modules/sensors/entities';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import {
   ProtectionRulesResult,
   ProtectionMappedRule,
 } from '@modules/automation/protection-rule/protection-rule.types';
+import { EspSensor } from '@api/modules/esp';
 
 describe('AcOutputProtectionStrategy', () => {
   let strategy: AcOutputProtectionStrategy;
@@ -38,9 +38,7 @@ describe('AcOutputProtectionStrategy', () => {
     });
 
     it('should log ac output frequency rule', () => {
-      const sensorMock: SensorItem = {
-        pid: '',
-        sensor: {} as Sensor,
+      const sensorMock: EspSensor = {
         frequency: 123,
         protection: {
           acOutputFrequency: true,
@@ -71,9 +69,7 @@ describe('AcOutputProtectionStrategy', () => {
     });
 
     it('should log ac output voltage rule', () => {
-      const sensorMock: SensorItem = {
-        pid: '',
-        sensor: {} as Sensor,
+      const sensorMock: EspSensor = {
         voltage: 123,
         protection: {
           acOutputVoltage: true,
@@ -104,9 +100,7 @@ describe('AcOutputProtectionStrategy', () => {
     });
 
     it('should log ac output average voltage rule', () => {
-      const sensorMock: SensorItem = {
-        pid: '',
-        sensor: {} as Sensor,
+      const sensorMock: EspSensor = {
         avgVoltage: 123,
         protection: {
           acOutputAvgVoltage: true,
