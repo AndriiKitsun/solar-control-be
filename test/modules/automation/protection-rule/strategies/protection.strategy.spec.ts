@@ -2,27 +2,26 @@ import { Test } from '@nestjs/testing';
 import { LogsService } from '@modules/logs/logs.service';
 import { ProtectionStrategy } from '@modules/automation/protection-rule/strategies';
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
-import { SensorItem } from '@modules/sensors/entities';
 import {
   ProtectionRulesResult,
   ProtectionMappedRule,
 } from '@modules/automation/protection-rule/protection-rule.types';
-import { SensorId } from '@modules/sensors/enums';
 import { ProtectionRuleRepositoryMock } from '../mocks/protection-rule.repository.mock';
 import { LogType } from '@modules/logs/enums';
 import { LogPayload } from '@modules/logs/logs.types';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import { Injectable } from '@nestjs/common';
+import { EspSensorId, EspSensor } from '@api/modules/esp';
 
 @Injectable()
 class ProtectionStrategyMock extends ProtectionStrategy {
-  readonly name: SensorId = SensorId.AC_INPUT;
+  readonly name = EspSensorId.AC_INPUT;
 
   constructor(protected override readonly logsService: LogsService) {
     super(logsService);
   }
 
-  run(sensor: SensorItem, rules: ProtectionMappedRule): ProtectionRulesResult {
+  run(sensor: EspSensor, rules: ProtectionMappedRule): ProtectionRulesResult {
     return {
       dcBatteryAvgVoltage: false,
     };
@@ -59,7 +58,7 @@ describe('ProtectionStrategy', () => {
       const infoSpy = jest.spyOn(logsService, 'info');
       const expectedPayload: LogPayload = {
         type: LogType.PROTECTION,
-        message: `Protection rule '${ProtectionRuleId.AC_OUTPUT_VOLTAGE}' was triggered for '${SensorId.AC_INPUT}' sensor. Value: 123. Min: 180. Max: 240`,
+        message: `Protection rule '${ProtectionRuleId.AC_OUTPUT_VOLTAGE}' was triggered for '${EspSensorId.AC_INPUT}' sensor. Value: 123. Min: 180. Max: 240`,
       };
 
       strategy['logRule'](protectionRuleMock, 123);

@@ -19,8 +19,8 @@ import { ProtectionResultDto } from '@modules/automation/protection-rule/dto';
 import { AsicsRepositoryMock } from '../../asics/mocks/asics.repository.mock';
 import { LogType } from '@modules/logs/enums';
 import { LogsServiceMock } from '../../logs/mocks/logs.service.mock';
-import { SensorsRepositoryMock } from '../../sensors/mocks/sensors.repository.mock';
 import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
+import { EspSensorsWsServiceMock } from '@api/modules/esp/ws/sensors/mocks/sensors.service.mock';
 
 describe('ProtectionRuleService', () => {
   let service: ProtectionRuleService;
@@ -31,7 +31,7 @@ describe('ProtectionRuleService', () => {
   let logsService: LogsService;
   let cache: Cache;
 
-  const { emptySensorMock, sensorMock } = SensorsRepositoryMock;
+  const { emptySensorMock, sensorMock } = EspSensorsWsServiceMock;
   const { protectionRuleMock, protectionRulesMock } =
     ProtectionRuleRepositoryMock;
   const { protectionResultMock } = ProtectionStrategyExecutorMock;

@@ -2,12 +2,12 @@ import { Test } from '@nestjs/testing';
 import { LogsService } from '@modules/logs/logs.service';
 import { DcBatteryProtectionStrategy } from '@modules/automation/protection-rule/strategies';
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
-import { SensorItem, Sensor } from '@modules/sensors/entities';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
 import {
   ProtectionRulesResult,
   ProtectionMappedRule,
 } from '@modules/automation/protection-rule/protection-rule.types';
+import { EspSensor } from '@api/modules/esp';
 
 describe('DcBatteryProtectionStrategy', () => {
   let strategy: DcBatteryProtectionStrategy;
@@ -38,9 +38,7 @@ describe('DcBatteryProtectionStrategy', () => {
     });
 
     it('should log ac output average voltage rule', () => {
-      const sensorMock: SensorItem = {
-        pid: '',
-        sensor: {} as Sensor,
+      const sensorMock: EspSensor = {
         avgVoltage: 123,
         protection: {
           dcBatteryAvgVoltage: true,

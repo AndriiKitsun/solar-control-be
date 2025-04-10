@@ -2,10 +2,8 @@ import { Test } from '@nestjs/testing';
 import { AsicsScalingUpStrategy } from '@modules/asics/strategies/scaling/asics-scaling-up.strategy';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Asic } from '@modules/asics/entities';
-import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
 import { ControlRuleId } from '@modules/automation/control-rule/enums';
-import { SensorId } from '@modules/sensors/enums';
 import { delay } from '@common/utils';
 import { ASIC_START_IDLE_TIME } from '@modules/asics/asics.constants';
 import { AsicsRepositoryMock } from '../../mocks/asics.repository.mock';
@@ -20,6 +18,7 @@ import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/moc
 import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
 import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/mocks/other.service.mock';
 import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
+import { EspSensorsData, EspSensorId } from '@api/modules/esp';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -67,7 +66,7 @@ describe('AsicsScalingUpStrategy', () => {
 
   describe('shouldScale', () => {
     it('should return false when rule is not related to dc battery sensor', () => {
-      const sensorMock = {} as Sensor;
+      const sensorMock = {} as EspSensorsData;
       const ruleMock = { id: 'someRule' } as unknown as ControlRule;
 
       const result = strategy.shouldScale(sensorMock, ruleMock);
@@ -76,7 +75,7 @@ describe('AsicsScalingUpStrategy', () => {
     });
 
     it('should return false when no dc battery sensor data', () => {
-      const sensorMock = { sensors: [] } as unknown as Sensor;
+      const sensorMock = { sensors: [] } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleUpValue: 123,
@@ -89,8 +88,8 @@ describe('AsicsScalingUpStrategy', () => {
 
     it('should return false when dc avg voltage is less than scale up value', () => {
       const sensorMock = {
-        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 123 }],
-      } as unknown as Sensor;
+        sensors: [{ name: EspSensorId.DC_BATTERY, avgVoltage: 123 }],
+      } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleUpValue: 150,
@@ -103,8 +102,8 @@ describe('AsicsScalingUpStrategy', () => {
 
     it('should return true when dc avg voltage is more than scale up value', () => {
       const sensorMock = {
-        sensors: [{ name: SensorId.DC_BATTERY, avgVoltage: 200 }],
-      } as unknown as Sensor;
+        sensors: [{ name: EspSensorId.DC_BATTERY, avgVoltage: 200 }],
+      } as unknown as EspSensorsData;
       const ruleMock = {
         id: ControlRuleId.DC_BATTERY_AVG_VOLTAGE,
         scaleUpValue: 150,

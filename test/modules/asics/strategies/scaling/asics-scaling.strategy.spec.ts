@@ -1,10 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Sensor } from '@modules/sensors/entities';
 import { ControlRule } from '@modules/automation/control-rule/entities';
-import { SensorId } from '@modules/sensors/enums';
 import { Cache } from 'cache-manager';
-import { SENSORS_DATA_CACHE } from '@modules/sensors/sensors.constants';
 import { AsicsScalingStrategy } from '@modules/asics/strategies/scaling/asics-scaling.strategy';
 import { Injectable, Inject } from '@nestjs/common';
 import { Asic } from '@modules/asics/entities';
@@ -17,6 +14,11 @@ import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/moc
 import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
 import { AsicsSettingsApiServiceMock } from '@api/modules/asics/collections/settings/mocks/settings.service.mock';
 import { AsicPerfSummary, AsicSetting } from '@api/modules/asics';
+import {
+  EspSensorsData,
+  EspSensorId,
+  ESP_SENSORS_CACHE,
+} from '@api/modules/esp';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -33,7 +35,7 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
     return Promise.resolve();
   }
 
-  shouldScale(sensor: Sensor, rule: ControlRule): boolean {
+  shouldScale(sensor: EspSensorsData, rule: ControlRule): boolean {
     return false;
   }
 }
@@ -83,11 +85,11 @@ describe('AsicsScaleStrategy', () => {
     const sensorMock = {
       sensors: [
         {
-          name: SensorId.DC_BATTERY,
+          name: EspSensorId.DC_BATTERY,
           avgVoltage: 110,
         },
       ],
-    } as Sensor;
+    } as EspSensorsData;
 
     let getSpy: jest.SpiedFunction<Cache['get']>;
     let shouldScaleSpy: jest.SpiedFunction<
@@ -102,13 +104,13 @@ describe('AsicsScaleStrategy', () => {
     it('should return where no saved sensors data', async () => {
       await strategy.run(controlRuleMock);
 
-      expect(getSpy).toHaveBeenCalledWith(SENSORS_DATA_CACHE);
+      expect(getSpy).toHaveBeenCalledWith(ESP_SENSORS_CACHE);
 
       expect(shouldScaleSpy).not.toHaveBeenCalled();
     });
 
     it('should return when sensors data prevent scaling', async () => {
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
+      await cache.set(ESP_SENSORS_CACHE, sensorMock);
 
       await strategy.run(controlRuleMock);
 
@@ -119,7 +121,7 @@ describe('AsicsScaleStrategy', () => {
       const findWhereSpy = jest.spyOn(asicsRepository, 'findWhere');
 
       shouldScaleSpy.mockReturnValueOnce(true);
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
+      await cache.set(ESP_SENSORS_CACHE, sensorMock);
 
       await strategy.run(controlRuleMock);
 
@@ -132,7 +134,7 @@ describe('AsicsScaleStrategy', () => {
       const scaleSpy = jest.spyOn(strategy, 'scale');
 
       shouldScaleSpy.mockReturnValueOnce(true);
-      await cache.set(SENSORS_DATA_CACHE, sensorMock);
+      await cache.set(ESP_SENSORS_CACHE, sensorMock);
 
       await strategy.run(controlRuleMock);
 

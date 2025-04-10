@@ -1,20 +1,19 @@
 import { Test } from '@nestjs/testing';
 import { ProtectionStrategyExecutor } from '@modules/automation/protection-rule/strategies';
 import { PROTECTION_STRATEGY_CONFIG } from '@modules/automation/protection-rule/protection-rule.constants';
-import { SensorId } from '@modules/sensors/enums';
 import { ProtectionStrategyMock } from './mocks/protection-strategy.mock';
-import { Sensor, SensorItem } from '@modules/sensors/entities';
 import { ProtectionRuleRepositoryMock } from '../mocks/protection-rule.repository.mock';
 import { ProtectionResultDto } from '@modules/automation/protection-rule/dto';
 import { ProtectionMappedRule } from '@modules/automation/protection-rule/protection-rule.types';
 import { ProtectionRuleId } from '@modules/automation/protection-rule/enums';
+import { EspSensorId, EspSensorsData, EspSensor } from '@api/modules/esp';
 
 describe('ProtectionStrategyExecutor', () => {
   let executor: ProtectionStrategyExecutor;
 
   const strategyMock = new ProtectionStrategyMock();
-  const configMock: Partial<Record<SensorId, ProtectionStrategyMock>> = {
-    [SensorId.AC_INPUT]: strategyMock,
+  const configMock: Partial<Record<EspSensorId, ProtectionStrategyMock>> = {
+    [EspSensorId.AC_INPUT]: strategyMock,
   };
 
   const { protectionRulesMock, protectionRuleMock } =
@@ -53,7 +52,7 @@ describe('ProtectionStrategyExecutor', () => {
             voltage: 123,
           },
         ],
-      } as Sensor;
+      } as EspSensorsData;
       const expectedResult: ProtectionResultDto = {
         triggered: false,
         rules: {
@@ -76,11 +75,11 @@ describe('ProtectionStrategyExecutor', () => {
         pTriggered: false,
         sensors: [
           {
-            name: SensorId.AC_OUTPUT,
+            name: EspSensorId.AC_OUTPUT,
             voltage: 123,
           },
         ],
-      } as Sensor;
+      } as EspSensorsData;
       const expectedResult: ProtectionResultDto = {
         triggered: false,
         rules: {
@@ -100,13 +99,13 @@ describe('ProtectionStrategyExecutor', () => {
 
     it('should run protection strategy', () => {
       const sensorItemMock = {
-        name: SensorId.AC_INPUT,
+        name: EspSensorId.AC_INPUT,
         voltage: 123,
-      } as SensorItem;
+      } as EspSensor;
       const sensorMock = {
         pTriggered: true,
         sensors: [sensorItemMock],
-      } as Sensor;
+      } as EspSensorsData;
       const expectedRules: ProtectionMappedRule = {
         [ProtectionRuleId.AC_OUTPUT_VOLTAGE]: protectionRuleMock,
       };
