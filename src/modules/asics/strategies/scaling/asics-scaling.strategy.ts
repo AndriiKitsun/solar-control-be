@@ -1,9 +1,7 @@
-import { Sensor } from '../../../sensors/entities';
 import { ControlRule } from '../../../automation/control-rule/entities';
 import { Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { SENSORS_DATA_CACHE } from '../../../sensors/sensors.constants';
 import { Asic } from '../../entities';
 import { AsicWithPerfSummary } from '../../types/asic-scaling.types';
 import { Maybe } from '@common/types';
@@ -15,6 +13,7 @@ import {
   AsicSettingSaveResult,
   AsicSetting,
 } from '@api/modules/asics';
+import { EspSensorsData, ESP_SENSORS_CACHE } from '@api/modules/esp';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
@@ -27,7 +26,7 @@ export abstract class AsicsScalingStrategy {
   ) {}
 
   async run(rule: ControlRule): Promise<void> {
-    const sensor = await this.cache.get<Sensor>(SENSORS_DATA_CACHE);
+    const sensor = await this.cache.get<EspSensorsData>(ESP_SENSORS_CACHE);
 
     if (!sensor?.sensors?.length || !this.shouldScale(sensor, rule)) {
       return;
@@ -104,6 +103,6 @@ export abstract class AsicsScalingStrategy {
     return this.asicsApiFacade.saveSettings(ip, token, changePresetSetting);
   }
 
-  abstract shouldScale(sensor: Sensor, rule: ControlRule): boolean;
+  abstract shouldScale(sensor: EspSensorsData, rule: ControlRule): boolean;
   abstract scale(): Promise<void>;
 }

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Sensor } from '../../../sensors/entities';
 import { ProtectionRule } from '../entities';
 import { PROTECTION_STRATEGY_CONFIG } from '../protection-rule.constants';
 import { ProtectionResultDto } from '../dto';
@@ -7,6 +6,7 @@ import {
   ProtectionMappedRule,
   ProtectionStrategyConfig,
 } from '../protection-rule.types';
+import { EspSensorsData, EspSensorId } from '@api/modules/esp';
 
 @Injectable()
 export class ProtectionStrategyExecutor {
@@ -15,7 +15,10 @@ export class ProtectionStrategyExecutor {
     private readonly strategyConfig: ProtectionStrategyConfig,
   ) {}
 
-  execute(sensor: Sensor, rules: ProtectionRule[]): ProtectionResultDto {
+  execute(
+    sensor: EspSensorsData,
+    rules: ProtectionRule[],
+  ): ProtectionResultDto {
     const mappedRules = rules.reduce((acc, rule) => {
       acc[rule.id] = rule;
 
@@ -28,7 +31,7 @@ export class ProtectionStrategyExecutor {
         continue;
       }
 
-      const selected = this.strategyConfig[sensorItem.name];
+      const selected = this.strategyConfig[sensorItem.name as EspSensorId];
 
       if (!selected) {
         continue;

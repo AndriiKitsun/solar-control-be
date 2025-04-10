@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { SensorId } from '../../../sensors/enums';
-import { SensorItem } from '../../../sensors/entities';
 import { ProtectionStrategy } from './protection.strategy';
 import { LogsService } from '../../../logs/logs.service';
 import {
   ProtectionRulesResult,
   ProtectionMappedRule,
 } from '../protection-rule.types';
+import { EspSensor, EspSensorId } from '@api/modules/esp';
 
 @Injectable()
 export class AcOutputProtectionStrategy extends ProtectionStrategy {
-  readonly name: SensorId = SensorId.AC_OUTPUT;
+  readonly name = EspSensorId.AC_OUTPUT;
 
   constructor(protected override readonly logsService: LogsService) {
     super(logsService);
   }
 
-  run(sensor: SensorItem, rules: ProtectionMappedRule): ProtectionRulesResult {
+  run(sensor: EspSensor, rules: ProtectionMappedRule): ProtectionRulesResult {
     const result: ProtectionRulesResult = {
       acOutputFrequency: false,
       acOutputVoltage: false,

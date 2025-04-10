@@ -1,8 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ControlRule } from '../../../automation/control-rule/entities';
-import { Sensor } from '../../../sensors/entities';
 import { ControlRuleId } from '../../../automation/control-rule/enums';
-import { SensorId } from '../../../sensors/enums';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Asic } from '../../entities';
@@ -10,6 +8,7 @@ import { decrypt } from '@common/utils';
 import { AsicsScalingStrategy } from './asics-scaling.strategy';
 import { AsicsRepository } from '../../asics.repository';
 import { AsicsApiFacade, AsicPerfSummary } from '@api/modules/asics';
+import { EspSensorsData, EspSensorId } from '@api/modules/esp';
 
 @Injectable()
 export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
@@ -22,13 +21,13 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     super(cache, asicsRepository, asicsApiFacade);
   }
 
-  shouldScale(sensor: Sensor, rule: ControlRule): boolean {
+  shouldScale(sensor: EspSensorsData, rule: ControlRule): boolean {
     if (rule.id !== ControlRuleId.DC_BATTERY_AVG_VOLTAGE) {
       return false;
     }
 
     const dcBattery = sensor.sensors.find(
-      (sensorItem) => sensorItem.name === SensorId.DC_BATTERY,
+      (sensorItem) => sensorItem.name === EspSensorId.DC_BATTERY,
     );
 
     if (!dcBattery?.avgVoltage) {
