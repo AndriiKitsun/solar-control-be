@@ -14,6 +14,8 @@ import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/m
 import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
 import { AsicPerfSummary, AsicsApiFacade } from '@api/modules/asics';
 import { EspSensorsData, EspSensorId } from '@api/modules/esp';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
 
 jest.mock('@common/utils', () => ({
   decrypt: jest.fn(() => 'password'),
@@ -45,6 +47,10 @@ describe('AsicsScalingDownStrategy', () => {
         {
           provide: AsicsApiFacade,
           useClass: AsicsApiFacadeMock,
+        },
+        {
+          provide: LogsService,
+          useClass: LogsServiceMock,
         },
       ],
     }).compile();
