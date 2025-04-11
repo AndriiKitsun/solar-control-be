@@ -19,9 +19,9 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
-    private readonly logsService: LogsService,
+    protected override readonly logsService: LogsService,
   ) {
-    super(cache, asicsRepository, asicsApiFacade);
+    super(cache, asicsRepository, asicsApiFacade, logsService);
   }
 
   shouldScale(sensor: EspSensorsData, rule: ControlRule): boolean {

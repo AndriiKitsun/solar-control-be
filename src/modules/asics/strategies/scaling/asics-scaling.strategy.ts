@@ -14,6 +14,8 @@ import {
   AsicSetting,
 } from '@api/modules/asics';
 import { EspSensorsData, ESP_SENSORS_CACHE } from '@api/modules/esp';
+import { LogsService } from '../../../logs/logs.service';
+import { LogType } from '../../../logs/enums';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
@@ -23,18 +25,26 @@ export abstract class AsicsScalingStrategy {
     protected readonly cache: Cache,
     protected readonly asicsRepository: AsicsRepository,
     protected readonly asicsApiFacade: AsicsApiFacade,
+    protected readonly logsService: LogsService,
   ) {}
 
   async run(rule: ControlRule): Promise<void> {
-    const sensor = await this.cache.get<EspSensorsData>(ESP_SENSORS_CACHE);
+    try {
+      const sensor = await this.cache.get<EspSensorsData>(ESP_SENSORS_CACHE);
 
-    if (!sensor?.sensors?.length || !this.shouldScale(sensor, rule)) {
-      return;
+      if (!sensor?.sensors?.length || !this.shouldScale(sensor, rule)) {
+        return;
+      }
+
+      this.asics = await this.asicsRepository.findWhere({ automated: true });
+
+      await this.scale();
+    } catch {
+      this.logsService.error({
+        type: LogType.CONTROL,
+        message: 'Unknown error occurred during scaling Asics',
+      });
     }
-
-    this.asics = await this.asicsRepository.findWhere({ automated: true });
-
-    await this.scale();
   }
 
   async findAsicWithPreset(

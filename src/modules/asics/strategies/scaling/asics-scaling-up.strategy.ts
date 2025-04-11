@@ -16,14 +16,16 @@ import { LogType } from '../../../logs/enums';
 
 @Injectable()
 export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
+  private isStarting = false;
+
   constructor(
     @Inject(CACHE_MANAGER)
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
-    private readonly logsService: LogsService,
+    protected override readonly logsService: LogsService,
   ) {
-    super(cache, asicsRepository, asicsApiFacade);
+    super(cache, asicsRepository, asicsApiFacade, logsService);
   }
 
   shouldScale(sensor: EspSensorsData, rule: ControlRule): boolean {
@@ -47,6 +49,10 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
 
     if (stoppedAsic) {
       return this.startAsicOnFirstPreset(stoppedAsic);
+    }
+
+    if (this.isStarting) {
+      return;
     }
 
     const { asic, perfSummary } = await this.findAsicWithPreset(
@@ -80,26 +86,44 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
     const { ip, password } = asic;
     const token = await this.asicsApiFacade.login(ip, decrypt(password));
 
-    await this.asicsApiFacade.start(ip, token);
-    await delay(ASIC_START_IDLE_TIME);
-
-    const presets = await this.asicsApiFacade.getPresets(ip, token);
-    const preset = presets.find((preset) => preset.status === 'tuned');
-
-    if (!preset) {
-      return;
-    }
-
-    await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
+    await this.logsService.runWith(() => this.asicsApiFacade.start(ip, token), {
       before: {
         type: LogType.CONTROL,
-        message: `Starting '${asic.hostname}' asic on first '${preset.name}' preset`,
+        message: `Starting '${asic.hostname}' Asic`,
       },
       after: {
         type: LogType.CONTROL,
         message: `Error occurred during starting '${asic.hostname}' Asic`,
       },
     });
+
+    this.isStarting = true;
+
+    await delay(ASIC_START_IDLE_TIME);
+
+    this.isStarting = false;
+
+    const presets = await this.asicsApiFacade.getPresets(ip, token);
+    const perfSummary = await this.asicsApiFacade.getPerfSummary(ip);
+    const firstPreset = presets.find((preset) => preset.status === 'tuned');
+
+    if (!firstPreset || firstPreset.name === perfSummary.current_preset?.name) {
+      return;
+    }
+
+    await this.logsService.runWith(
+      () => this.changePreset(ip, token, firstPreset),
+      {
+        before: {
+          type: LogType.CONTROL,
+          message: `Switching '${asic.hostname}' asic preset from '${perfSummary.current_preset?.name}' to '${firstPreset.name}'`,
+        },
+        after: {
+          type: LogType.CONTROL,
+          message: `Error occurred during switching preset for '${asic.hostname}' Asic`,
+        },
+      },
+    );
   }
 
   async incrementAsicPreset(
