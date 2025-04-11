@@ -9,6 +9,8 @@ import { AsicsScalingStrategy } from './asics-scaling.strategy';
 import { AsicsRepository } from '../../asics.repository';
 import { AsicsApiFacade, AsicPerfSummary } from '@api/modules/asics';
 import { EspSensorsData, EspSensorId } from '@api/modules/esp';
+import { LogsService } from '../../../logs/logs.service';
+import { LogType } from '../../../logs/enums';
 
 @Injectable()
 export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
@@ -17,6 +19,7 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
+    private readonly logsService: LogsService,
   ) {
     super(cache, asicsRepository, asicsApiFacade);
   }
@@ -71,6 +74,17 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
       return;
     }
 
-    await this.changePreset(ip, token, tunedPresets[activePresetIdx - 1]);
+    const preset = tunedPresets[activePresetIdx - 1];
+
+    await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
+      before: {
+        type: LogType.CONTROL,
+        message: `Scaling down ${asic.hostname} asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+      },
+      after: {
+        type: LogType.CONTROL,
+        message: `Error occurred during scaling down ${asic.hostname} Asic`,
+      },
+    });
   }
 }

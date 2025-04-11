@@ -11,6 +11,8 @@ import { AsicsScalingStrategy } from './asics-scaling.strategy';
 import { AsicsRepository } from '../../asics.repository';
 import { AsicsApiFacade, AsicPerfSummary } from '@api/modules/asics';
 import { EspSensorsData, EspSensorId } from '@api/modules/esp';
+import { LogsService } from '../../../logs/logs.service';
+import { LogType } from '../../../logs/enums';
 
 @Injectable()
 export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
@@ -19,6 +21,7 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
+    private readonly logsService: LogsService,
   ) {
     super(cache, asicsRepository, asicsApiFacade);
   }
@@ -87,7 +90,16 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
       return;
     }
 
-    await this.changePreset(ip, token, preset);
+    await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
+      before: {
+        type: LogType.CONTROL,
+        message: `Starting ${asic.hostname} asic on first '${preset.name}' preset`,
+      },
+      after: {
+        type: LogType.CONTROL,
+        message: `Error occurred during starting ${asic.hostname} Asic`,
+      },
+    });
   }
 
   async incrementAsicPreset(
@@ -108,6 +120,15 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
       return;
     }
 
-    await this.changePreset(ip, token, preset);
+    await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
+      before: {
+        type: LogType.CONTROL,
+        message: `Scaling up ${asic.hostname} asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+      },
+      after: {
+        type: LogType.CONTROL,
+        message: `Error occurred during scaling up ${asic.hostname} Asic`,
+      },
+    });
   }
 }
