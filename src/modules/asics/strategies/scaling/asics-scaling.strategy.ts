@@ -42,7 +42,7 @@ export abstract class AsicsScalingStrategy {
     } catch {
       this.logsService.error({
         type: LogType.CONTROL,
-        message: 'Unknown error occurred during scaling Asics',
+        message: 'An unknown error occurred during scaling Asics',
       });
     }
   }
