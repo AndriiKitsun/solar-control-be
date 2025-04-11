@@ -93,11 +93,11 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
     await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
       before: {
         type: LogType.CONTROL,
-        message: `Starting ${asic.hostname} asic on first '${preset.name}' preset`,
+        message: `Starting '${asic.hostname}' asic on first '${preset.name}' preset`,
       },
       after: {
         type: LogType.CONTROL,
-        message: `Error occurred during starting ${asic.hostname} Asic`,
+        message: `Error occurred during starting '${asic.hostname}' Asic`,
       },
     });
   }
@@ -123,11 +123,11 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
     await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
       before: {
         type: LogType.CONTROL,
-        message: `Scaling up ${asic.hostname} asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+        message: `Scaling up '${asic.hostname}' asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
       },
       after: {
         type: LogType.CONTROL,
-        message: `Error occurred during scaling up ${asic.hostname} Asic`,
+        message: `Error occurred during scaling up '${asic.hostname}' Asic`,
       },
     });
   }

@@ -79,11 +79,11 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
       before: {
         type: LogType.CONTROL,
-        message: `Scaling down ${asic.hostname} asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+        message: `Scaling down '${asic.hostname}' asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
       },
       after: {
         type: LogType.CONTROL,
-        message: `Error occurred during scaling down ${asic.hostname} Asic`,
+        message: `Error occurred during scaling down '${asic.hostname}' Asic`,
       },
     });
   }
