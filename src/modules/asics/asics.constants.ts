@@ -1,14 +1,13 @@
 import { TypeORMCacheConfig } from '@common/types';
-import { AsicsCacheKey } from './enums';
 import { DateMilliseconds } from '@common/enums';
 
-export const ASICS_CACHE_CONFIG: TypeORMCacheConfig<AsicsCacheKey> = {
-  [AsicsCacheKey.GET_ASICS]: {
-    id: AsicsCacheKey.GET_ASICS,
+export const ASICS_CACHE_CONFIG: TypeORMCacheConfig = {
+  getAsics: {
+    id: 'asic:get-asics',
     milliseconds: DateMilliseconds.DAY,
   },
-  [AsicsCacheKey.GET_ASIC]: {
-    id: AsicsCacheKey.GET_ASIC,
+  getAsic: {
+    id: 'asic:get-asic',
     milliseconds: DateMilliseconds.DAY,
   },
 };
