@@ -35,7 +35,7 @@ export class ProtectionRuleService {
     private readonly cache: Cache,
   ) {}
 
-  @OnEvent(ESP_SENSORS_EVENT)
+  @OnEvent(ESP_SENSORS_EVENT, { async: true })
   async onSensorsEvent(sensor: EspSensorsData): Promise<void> {
     if (!sensor.sensors.length) {
       return;
