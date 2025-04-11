@@ -1,6 +1,3 @@
 import { TypeORMRequestCacheConfig } from '../interfaces';
 
-export type TypeORMCacheConfig<T extends string> = Record<
-  T,
-  TypeORMRequestCacheConfig
->;
+export type TypeORMCacheConfig = Record<string, TypeORMRequestCacheConfig>;
