@@ -37,6 +37,6 @@ export class LogsServiceMock implements ClassMock<LogsService> {
     callback: () => Promise<T>,
     options: RunWithLogOptions,
   ): Promise<void | T> {
-    return;
+    return callback();
   }
 }
