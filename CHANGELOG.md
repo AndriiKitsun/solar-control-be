@@ -1,5 +1,42 @@
 # solar-control-be
 
+## 1.6.0
+
+### Minor Changes
+
+- [#56](https://github.com/AndriiKitsun/solar-control-be/pull/56) [`19d435b`](https://github.com/AndriiKitsun/solar-control-be/commit/19d435b3dc6c3ae9de607689a38be805f0f26b5c) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-111: Protection rules collection consistency
+
+- [#53](https://github.com/AndriiKitsun/solar-control-be/pull/53) [`dcac211`](https://github.com/AndriiKitsun/solar-control-be/commit/dcac2113575274ce2302e05da6a178f0350f726a) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-113: Implement Control rules collection
+
+  - Add `automation/control` collection
+  - Add Asics control automation strategies (scale up & scale out strategies)
+
+- [#57](https://github.com/AndriiKitsun/solar-control-be/pull/57) [`21483ce`](https://github.com/AndriiKitsun/solar-control-be/commit/21483ce92ddeed64b20fcc4250783609c76d1a38) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-139: Delete deprecated logic related to avg voltage calculation
+
+- [#60](https://github.com/AndriiKitsun/solar-control-be/pull/60) [`140ccb7`](https://github.com/AndriiKitsun/solar-control-be/commit/140ccb7e9f49b04c8917232b10b5818871c7e0fe) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-119: Asic scaling UAT testing
+
+  - Use async EventEmitter listeners
+  - Handle and log unknown errors during Asic scaling
+  - Update Asic scaling log messages
+  - Prevent Asic from stopping when the status is not "mining" (also prevents stopping already stopped Asic)
+  - Prevent Asic increment scaling when it is still starting
+  - Prevent switching to the first Asic preset when the current preset is already the first
+  - Change the debug log level to info for the runWith method
+
+- [#54](https://github.com/AndriiKitsun/solar-control-be/pull/54) [`f146a4b`](https://github.com/AndriiKitsun/solar-control-be/commit/f146a4bab050e2a24af76301e8ae8ebce311b3f3) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-140: Add automation control flag to Asic model
+
+- [#61](https://github.com/AndriiKitsun/solar-control-be/pull/61) [`e989e1f`](https://github.com/AndriiKitsun/solar-control-be/commit/e989e1f30a7a09f23f879babdfccbda1315e5b56) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-145: Cover Asics module with unit tests
+
+- [#55](https://github.com/AndriiKitsun/solar-control-be/pull/55) [`c887311`](https://github.com/AndriiKitsun/solar-control-be/commit/c887311abd1d6fbe2b60d7ceeda924d47e6f3e16) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-142: Refactor Asics API Service
+
+- [#62](https://github.com/AndriiKitsun/solar-control-be/pull/62) [`a99ca39`](https://github.com/AndriiKitsun/solar-control-be/commit/a99ca397e71283b0867331c374f2b92b00ab3482) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-144: Cover Logs module with unit tests
+
+- [#58](https://github.com/AndriiKitsun/solar-control-be/pull/58) [`fe53d5d`](https://github.com/AndriiKitsun/solar-control-be/commit/fe53d5d4269f8ef2fa9df006db4a7a3b3d112dcd) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-143: Add Asic scaling logging
+
+### Patch Changes
+
+- [#59](https://github.com/AndriiKitsun/solar-control-be/pull/59) [`0964072`](https://github.com/AndriiKitsun/solar-control-be/commit/096407286837d298068e5158b035fea52c368827) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-146: Cache keys should be unique
+
 ## 1.5.0
 
 ### Minor Changes
