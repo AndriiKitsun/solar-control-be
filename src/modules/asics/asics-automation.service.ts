@@ -58,7 +58,7 @@ export class AsicsAutomationService implements OnApplicationBootstrap {
     );
   }
 
-  @OnEvent(CONTROL_RULE_SAVED_EVENT)
+  @OnEvent(CONTROL_RULE_SAVED_EVENT, { async: true })
   restartAsicScalingStrategies(rule: ControlRule): void {
     this.asicScalingStrategyExecutor.execute(rule);
   }

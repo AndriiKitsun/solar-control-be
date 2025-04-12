@@ -7,7 +7,7 @@ import { Observable, Subject, map } from 'rxjs';
 export class SensorsService {
   private readonly sensorsSse$ = new Subject<EspSensorsData>();
 
-  @OnEvent(ESP_SENSORS_EVENT)
+  @OnEvent(ESP_SENSORS_EVENT, { async: true })
   onSensorsEvent(data: EspSensorsData): void {
     this.sensorsSse$.next(data);
   }

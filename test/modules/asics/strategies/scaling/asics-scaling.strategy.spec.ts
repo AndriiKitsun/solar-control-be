@@ -19,6 +19,8 @@ import {
   EspSensorId,
   ESP_SENSORS_CACHE,
 } from '@api/modules/esp';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -27,8 +29,9 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
+    protected override readonly logsService: LogsService,
   ) {
-    super(cache, asicsRepository, asicsApiFacade);
+    super(cache, asicsRepository, asicsApiFacade, logsService);
   }
 
   scale(): Promise<void> {
@@ -45,6 +48,7 @@ describe('AsicsScaleStrategy', () => {
   let cache: Cache;
   let asicsRepository: AsicsRepository;
   let asicsApiFacade: AsicsApiFacade;
+  let logsService: LogsService;
 
   const { controlRuleMock } = ControlRuleRepositoryMock;
   const { tokenMock } = AsicsAuthApiServiceMock;
@@ -68,6 +72,10 @@ describe('AsicsScaleStrategy', () => {
           provide: AsicsApiFacade,
           useClass: AsicsApiFacadeMock,
         },
+        {
+          provide: LogsService,
+          useClass: LogsServiceMock,
+        },
       ],
     }).compile();
 
@@ -75,6 +83,7 @@ describe('AsicsScaleStrategy', () => {
     cache = module.get(CACHE_MANAGER);
     asicsRepository = module.get(AsicsRepository);
     asicsApiFacade = module.get(AsicsApiFacade);
+    logsService = module.get(LogsService);
   });
 
   it('should be defined', () => {
@@ -139,6 +148,19 @@ describe('AsicsScaleStrategy', () => {
       await strategy.run(controlRuleMock);
 
       expect(scaleSpy).toHaveBeenCalled();
+    });
+
+    it('should create log in case when error occurred', async () => {
+      const errorSpy = jest.spyOn(logsService, 'error');
+
+      jest.spyOn(strategy, 'scale').mockRejectedValueOnce(new Error('error'));
+
+      shouldScaleSpy.mockReturnValueOnce(true);
+      await cache.set(ESP_SENSORS_CACHE, sensorMock);
+
+      await strategy.run(controlRuleMock);
+
+      expect(errorSpy).toHaveBeenCalled();
     });
   });
 

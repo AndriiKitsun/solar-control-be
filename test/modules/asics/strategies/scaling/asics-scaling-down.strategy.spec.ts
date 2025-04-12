@@ -12,7 +12,11 @@ import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/moc
 import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
 import { AsicsOtherApiServiceMock } from '@api/modules/asics/collections/other/mocks/other.service.mock';
 import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
-import { AsicPerfSummary, AsicsApiFacade } from '@api/modules/asics';
+import {
+  AsicPerfSummary,
+  AsicsApiFacade,
+  AsicStatus,
+} from '@api/modules/asics';
 import { EspSensorsData, EspSensorId } from '@api/modules/esp';
 import { LogsService } from '@modules/logs/logs.service';
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
@@ -187,6 +191,24 @@ describe('AsicsScalingDownStrategy', () => {
       await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
 
       expect(stopSpy).toHaveBeenCalledWith(asicMock.ip, tokenMock);
+      expect(changePresetSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not stop asic when asic status is not mining', async () => {
+      const perfSummaryMock = {
+        current_preset: { name: asicTunedPreset1Mock.name },
+      } as AsicPerfSummary;
+      const statusMock = { miner_state: 'failure' } as AsicStatus;
+
+      const stopSpy = jest.spyOn(asicsApiFacade, 'stop');
+      const getStatusSpy = jest
+        .spyOn(asicsApiFacade, 'getStatus')
+        .mockResolvedValueOnce(statusMock);
+
+      await strategy.decrementAsicPreset(asicMock, perfSummaryMock);
+
+      expect(getStatusSpy).toHaveBeenCalledWith(asicMock.ip);
+      expect(stopSpy).not.toHaveBeenCalled();
       expect(changePresetSpy).not.toHaveBeenCalled();
     });
 
