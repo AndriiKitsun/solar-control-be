@@ -6,6 +6,7 @@ import { LogsRepository } from '@modules/logs/logs.repository';
 import { Log } from '@modules/logs/entities';
 import { LogParamsMock } from './params/log.params.mock';
 import { LogsRepositoryMock } from './mocks/logs.repository.mock';
+import { CreateLogDtoMock } from './dto/mocks/create-log.dto.mock';
 
 describe('LogsRepository', () => {
   let repository: LogsRepository;
@@ -13,6 +14,7 @@ describe('LogsRepository', () => {
 
   const { logParamsMock } = LogParamsMock;
   const { logsMock } = LogsRepositoryMock;
+  const { createLogDtoMock } = CreateLogDtoMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -44,6 +46,30 @@ describe('LogsRepository', () => {
       expect(findSpy).toHaveBeenCalled();
 
       expect(result).toBe(logsMock);
+    });
+  });
+
+  describe('saveLog', () => {
+    it('should insert log dto', async () => {
+      const insertSpy = jest.spyOn(logRepository, 'insert');
+
+      const result = await repository.saveLog(createLogDtoMock);
+
+      expect(insertSpy).toHaveBeenCalledWith(createLogDtoMock);
+
+      expect(result).toBe(createLogDtoMock);
+    });
+  });
+
+  describe('deleteAll', () => {
+    it('should delete all logs', async () => {
+      const deleteSpy = jest.spyOn(logRepository, 'delete');
+
+      const result = await repository.deleteAll();
+
+      expect(deleteSpy).toHaveBeenCalledWith({});
+
+      expect(result).toBeUndefined();
     });
   });
 });

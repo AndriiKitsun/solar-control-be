@@ -9,12 +9,16 @@ import { MessageEvent } from '@nestjs/common';
 import { LogsRepositoryMock } from './logs.repository.mock';
 
 export class LogsServiceMock implements ClassMock<LogsService> {
+  static readonly logMessageMock: MessageEvent = {
+    data: LogsRepositoryMock.logMock,
+  };
+
   async getLogs(params: LogParams): Promise<Log[]> {
     return LogsRepositoryMock.logsMock;
   }
 
   getLogStream(): Observable<MessageEvent> {
-    return of({ data: LogsRepositoryMock.logMock });
+    return of(LogsServiceMock.logMessageMock);
   }
 
   async saveLog(logDto: CreateLogDto): Promise<void> {
