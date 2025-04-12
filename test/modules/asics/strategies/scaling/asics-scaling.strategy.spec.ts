@@ -19,6 +19,8 @@ import {
   EspSensorId,
   ESP_SENSORS_CACHE,
 } from '@api/modules/esp';
+import { LogsService } from '@modules/logs/logs.service';
+import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -27,8 +29,9 @@ class AsicsScalingStrategyMock extends AsicsScalingStrategy {
     protected override readonly cache: Cache,
     protected override readonly asicsRepository: AsicsRepository,
     protected override readonly asicsApiFacade: AsicsApiFacade,
+    protected override readonly logsService: LogsService,
   ) {
-    super(cache, asicsRepository, asicsApiFacade);
+    super(cache, asicsRepository, asicsApiFacade, logsService);
   }
 
   scale(): Promise<void> {
@@ -67,6 +70,10 @@ describe('AsicsScaleStrategy', () => {
         {
           provide: AsicsApiFacade,
           useClass: AsicsApiFacadeMock,
+        },
+        {
+          provide: LogsService,
+          useClass: LogsServiceMock,
         },
       ],
     }).compile();
