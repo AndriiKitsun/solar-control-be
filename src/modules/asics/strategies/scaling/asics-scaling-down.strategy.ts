@@ -69,9 +69,25 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     }
 
     if (activePresetIdx === 0) {
-      await this.asicsApiFacade.stop(ip, token);
+      const status = await this.asicsApiFacade.getStatus(ip);
 
-      return;
+      if (status.miner_state !== 'mining') {
+        return;
+      }
+
+      return this.logsService.runWith(
+        () => this.asicsApiFacade.stop(ip, token),
+        {
+          before: {
+            type: LogType.CONTROL,
+            message: `Stopping '${asic.hostname}' Asic on first preset`,
+          },
+          after: {
+            type: LogType.CONTROL,
+            message: `An error occurred during stopping '${asic.hostname}' Asic`,
+          },
+        },
+      );
     }
 
     const preset = tunedPresets[activePresetIdx - 1];
@@ -79,7 +95,7 @@ export class AsicsScalingDownStrategy extends AsicsScalingStrategy {
     await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
       before: {
         type: LogType.CONTROL,
-        message: `Scaling down '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+        message: `Scaling down '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.pretty}' to '${preset.pretty}'`,
       },
       after: {
         type: LogType.CONTROL,

@@ -116,7 +116,7 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
       {
         before: {
           type: LogType.CONTROL,
-          message: `Switching '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.name}' to '${firstPreset.name}'`,
+          message: `Switching '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.pretty}' to '${firstPreset.pretty}'`,
         },
         after: {
           type: LogType.CONTROL,
@@ -147,7 +147,7 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
     await this.logsService.runWith(() => this.changePreset(ip, token, preset), {
       before: {
         type: LogType.CONTROL,
-        message: `Scaling up '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.name}' to '${preset.name}'`,
+        message: `Scaling up '${asic.hostname}' Asic preset from '${perfSummary.current_preset?.pretty}' to '${preset.pretty}'`,
       },
       after: {
         type: LogType.CONTROL,

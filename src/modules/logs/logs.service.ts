@@ -53,7 +53,7 @@ export class LogsService {
     options: RunWithLogOptions,
   ): Promise<T | void> {
     try {
-      this.debug(options.before);
+      this.info(options.before);
 
       return await callback();
     } catch {
