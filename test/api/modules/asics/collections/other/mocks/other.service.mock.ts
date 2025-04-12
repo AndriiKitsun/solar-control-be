@@ -20,18 +20,13 @@ export class AsicsOtherApiServiceMock
     unlocked: false,
   };
 
-  static readonly asicInfoMock: AsicInfo = {
-    serial: '',
-    hr_measure: 'MH/s',
-    install_type: 'sd',
-    platform: 'xil',
-    build_time: '',
-    fw_name: '',
-    fw_version: '',
-    miner: '',
-    model: '',
-    system: undefined,
-  };
+  static readonly asicInfoMock = {
+    system: {
+      network_status: {
+        hostname: 'hostname',
+      },
+    },
+  } as AsicInfo;
 
   static readonly asicSummaryMock = {
     miner_status: {

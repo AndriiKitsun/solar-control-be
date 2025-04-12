@@ -23,6 +23,7 @@ const config: Config = {
     '.constants.ts',
     '.schema.d.ts',
     'main.ts',
+    'db',
   ],
   coverageReporters: ['html-spa'],
 };
