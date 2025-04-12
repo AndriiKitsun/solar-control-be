@@ -16,7 +16,18 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     automated: false,
   };
 
-  static readonly asicsMock: Asic[] = [this.asicMock];
+  static readonly asic2Mock: Asic = {
+    id: 'id2',
+    ip: '192.168.1.21',
+    address: 'address',
+    password: 'password',
+    hostname: 'hostname',
+    t2Active: true,
+    t2EndStop: true,
+    automated: true,
+  };
+
+  static readonly asicsMock: Asic[] = [this.asicMock, this.asic2Mock];
 
   async create(createAsicDto: CreateAsicDto): Promise<Asic> {
     return AsicsRepositoryMock.asicMock;

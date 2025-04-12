@@ -163,6 +163,15 @@ describe('AsicsScalingUpStrategy', () => {
       expect(findAsicWithPresetSpy).not.toHaveBeenCalled();
     });
 
+    it('should not scale asic when it is starting', async () => {
+      strategy['isStarting'] = true;
+
+      await strategy.scale();
+
+      expect(findAsicWithPresetSpy).not.toHaveBeenCalled();
+      expect(incrementAsicPresetSpy).not.toHaveBeenCalled();
+    });
+
     it('should scale by incrementing asic preset', async () => {
       const asicWithSummaryMock: AsicWithPerfSummary = {
         asic: asicMock,

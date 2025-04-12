@@ -7,12 +7,16 @@ import { AsicsServiceMock } from './mocks/asics.service.mock';
 import { IdParamMock } from '@common/params/mocks/id.param.mock';
 import { LogsService } from '@modules/logs/logs.service';
 import { LogsServiceMock } from '../logs/mocks/logs.service.mock';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { AsicsApiFacade, AsicPerfSummary } from '@api/modules/asics';
 import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.facade.mock';
+import { CreateAsicDtoMock } from './dto/mocks/create-asic.dto.mock';
+import { Asic } from '@modules/asics/entities';
+import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/mocks/auth.service.mock';
+import { LogType } from '@modules/logs/enums';
 
 jest.mock('@common/utils', () => ({
   encrypt: jest.fn(() => 'encrypted'),
+  decrypt: jest.fn(() => 'password'),
 }));
 
 describe('AsicsService', () => {
@@ -20,9 +24,11 @@ describe('AsicsService', () => {
   let asicsRepository: AsicsRepository;
   let asicsApiFacade: AsicsApiFacade;
 
-  const { asicSummaryResponseDtoMock } = AsicsServiceMock;
-  const { asicMock } = AsicsRepositoryMock;
+  const { createAsicDtoMock } = CreateAsicDtoMock;
+  const { asicMock, asicsMock, asic2Mock } = AsicsRepositoryMock;
   const { idMock } = IdParamMock;
+  const { asicSummaryResponseDtoMock } = AsicsServiceMock;
+  const { tokenMock } = AsicsAuthApiServiceMock;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -35,10 +41,6 @@ describe('AsicsService', () => {
         {
           provide: AsicsApiFacade,
           useClass: AsicsApiFacadeMock,
-        },
-        {
-          provide: CACHE_MANAGER,
-          useValue: {},
         },
         {
           provide: LogsService,
@@ -56,6 +58,39 @@ describe('AsicsService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('create', () => {
+    it('should return created asic', async () => {
+      const expectedPayload: Partial<Asic> = {
+        ip: '192.168.1.21',
+        address: 'address',
+        password: 'encrypted',
+        hostname: 'hostname',
+      };
+
+      const getInfoSpy = jest.spyOn(asicsApiFacade, 'getInfo');
+      const createSpy = jest.spyOn(asicsRepository, 'create');
+
+      const result = await service.create(createAsicDtoMock);
+
+      expect(getInfoSpy).toHaveBeenCalledWith(createAsicDtoMock.ip);
+      expect(createSpy).toHaveBeenCalledWith(expectedPayload);
+
+      expect(result).toBe(asicMock);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return asics', async () => {
+      const findAllSpy = jest.spyOn(asicsRepository, 'findAll');
+
+      const result = await service.findAll();
+
+      expect(findAllSpy).toHaveBeenCalled();
+
+      expect(result).toBe(asicsMock);
+    });
+  });
+
   describe('update', () => {
     let updateSpy: jest.SpiedFunction<AsicsRepository['update']>;
 
@@ -64,9 +99,7 @@ describe('AsicsService', () => {
     });
 
     it('should update asic with passed dto', async () => {
-      const dtoMock: UpdateAsicDto = {
-        address: 'home',
-      };
+      const dtoMock: UpdateAsicDto = { address: 'home' };
 
       const result = await service.update(idMock, dtoMock);
 
@@ -82,6 +115,18 @@ describe('AsicsService', () => {
       await service.update(idMock, dtoMock);
 
       expect(updateSpy).toHaveBeenCalledWith(idMock, expectedDto);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete asic', async () => {
+      const deleteSoy = jest.spyOn(asicsRepository, 'delete');
+
+      const result = await service.delete(idMock);
+
+      expect(deleteSoy).toHaveBeenCalledWith(idMock);
+
+      expect(result).toBeUndefined();
     });
   });
 
@@ -120,6 +165,64 @@ describe('AsicsService', () => {
       const result = await service.getSummary(idMock);
 
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('start', () => {
+    it('should login and start asic', async () => {
+      const loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      const startSpy = jest.spyOn(asicsApiFacade, 'start');
+
+      const result = await service.start(asicMock);
+
+      expect(loginSpy).toHaveBeenCalledWith(asicMock.ip, 'password');
+      expect(startSpy).toHaveBeenCalledWith(asicMock.ip, tokenMock);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('startAsics', () => {
+    it('should login and start all asicc in list', async () => {
+      const loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      const startSpy = jest.spyOn(asicsApiFacade, 'start');
+
+      await Promise.all(service.startAsics(asicsMock, LogType.CONTROL));
+
+      expect(loginSpy).toHaveBeenNthCalledWith(1, asicMock.ip, 'password');
+      expect(loginSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip, 'password');
+
+      expect(startSpy).toHaveBeenNthCalledWith(1, asicMock.ip, tokenMock);
+      expect(startSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip, tokenMock);
+    });
+  });
+
+  describe('stop', () => {
+    it('should login and stop asic', async () => {
+      const loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      const stopSpy = jest.spyOn(asicsApiFacade, 'stop');
+
+      const result = await service.stop(asicMock);
+
+      expect(loginSpy).toHaveBeenCalledWith(asicMock.ip, 'password');
+      expect(stopSpy).toHaveBeenCalledWith(asicMock.ip, tokenMock);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('stopAsics', () => {
+    it('should login and stop all asics in list', async () => {
+      const loginSpy = jest.spyOn(asicsApiFacade, 'login');
+      const stopSpy = jest.spyOn(asicsApiFacade, 'stop');
+
+      await Promise.all(service.stopAsics(asicsMock, LogType.CONTROL));
+
+      expect(loginSpy).toHaveBeenNthCalledWith(1, asicMock.ip, 'password');
+      expect(loginSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip, 'password');
+
+      expect(stopSpy).toHaveBeenNthCalledWith(1, asicMock.ip, tokenMock);
+      expect(stopSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip, tokenMock);
     });
   });
 });
