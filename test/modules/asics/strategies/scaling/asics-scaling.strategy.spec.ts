@@ -355,7 +355,7 @@ describe('AsicsScaleStrategy', () => {
             },
             globals: {
               freq: 485,
-              volt: 1415,
+              volt: 1477,
             },
             chains: [
               {

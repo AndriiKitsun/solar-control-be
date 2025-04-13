@@ -8,6 +8,7 @@ import { CreateLogDtoMock } from './dto/mocks/create-log.dto.mock';
 import { LogPayload, RunWithLogOptions } from '@modules/logs/logs.types';
 import { LogType, LogLevel } from '@modules/logs/enums';
 import { CreateLogDto } from '@modules/logs/dto';
+import { LoggerServiceMock } from '@common/mocks/logger.service.mock';
 
 describe('LogsService', () => {
   let service: LogsService;
@@ -28,6 +29,8 @@ describe('LogsService', () => {
         },
       ],
     }).compile();
+
+    module.useLogger(new LoggerServiceMock());
 
     service = module.get(LogsService);
     logsRepository = module.get(LogsRepository);

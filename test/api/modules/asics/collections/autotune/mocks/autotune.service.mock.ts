@@ -11,7 +11,7 @@ export class AsicsAutotuneApiServiceMock
     modded_psu_required: false,
     tune_settings: {
       hashrate: 66407,
-      volt: 14150,
+      volt: 14765,
       freq: 485,
       chains: [
         {
