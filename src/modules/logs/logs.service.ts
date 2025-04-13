@@ -1,4 +1,4 @@
-import { Injectable, MessageEvent } from '@nestjs/common';
+import { Injectable, MessageEvent, Logger } from '@nestjs/common';
 import { LogsRepository } from './logs.repository';
 import { Log } from './entities';
 import { CreateLogDto } from './dto';
@@ -11,6 +11,7 @@ import { LogPayload, RunWithLogOptions } from './logs.types';
 @Injectable()
 export class LogsService {
   private readonly logs$ = new Subject<Log>();
+  private readonly logger = new Logger(LogsService.name);
 
   constructor(private readonly logsRepository: LogsRepository) {}
 
@@ -56,7 +57,9 @@ export class LogsService {
       this.info(options.before);
 
       return await callback();
-    } catch {
+    } catch (e) {
+      this.logger.error(e);
+
       this.warn(options.after);
     }
   }

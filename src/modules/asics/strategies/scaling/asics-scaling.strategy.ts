@@ -98,7 +98,7 @@ export abstract class AsicsScalingStrategy {
           globals: {
             freq: preset.tune_settings?.freq,
             volt: preset.tune_settings?.volt
-              ? preset.tune_settings.volt / 10
+              ? Math.round(preset.tune_settings.volt / 10)
               : undefined,
           },
           chains: preset.tune_settings?.chains?.map((chain, i) => ({
