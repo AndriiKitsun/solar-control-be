@@ -1,5 +1,11 @@
 # solar-control-be
 
+## 1.6.1
+
+### Patch Changes
+
+- [#64](https://github.com/AndriiKitsun/solar-control-be/pull/64) [`d058d3e`](https://github.com/AndriiKitsun/solar-control-be/commit/d058d3ecd57fb129fe75abce7a70cc2640bba7d1) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-147: Global Asic voltage should be integer during switching preset
+
 ## 1.6.0
 
 ### Minor Changes
