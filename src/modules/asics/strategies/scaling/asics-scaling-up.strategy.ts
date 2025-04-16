@@ -39,7 +39,7 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
 
     this.logsService.debug({
       type: LogType.CONTROL,
-      message: `Asics scaling up check: ${dcBattery?.avgVoltage ?? 0} > ${rule.scaleUpValue}`,
+      message: `Asics scaling up check: ${dcBattery?.avgVoltage} > ${rule.scaleUpValue}`,
     });
 
     if (!dcBattery?.avgVoltage) {
