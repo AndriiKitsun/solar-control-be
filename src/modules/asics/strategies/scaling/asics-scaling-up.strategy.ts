@@ -37,6 +37,11 @@ export class AsicsScalingUpStrategy extends AsicsScalingStrategy {
       (sensorItem) => sensorItem.name === EspSensorId.DC_BATTERY,
     );
 
+    this.logsService.debug({
+      type: LogType.CONTROL,
+      message: `Asics scaling up check: ${dcBattery?.avgVoltage ?? 0} > ${rule.scaleUpValue}`,
+    });
+
     if (!dcBattery?.avgVoltage) {
       return false;
     }
