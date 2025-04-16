@@ -14,6 +14,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     t2Active: false,
     t2EndStop: false,
     automated: false,
+    t2Automated: false,
   };
 
   static readonly asic2Mock: Asic = {
@@ -25,6 +26,7 @@ export class AsicsRepositoryMock implements ClassMock<AsicsRepository> {
     t2Active: true,
     t2EndStop: true,
     automated: true,
+    t2Automated: true,
   };
 
   static readonly asicsMock: Asic[] = [this.asicMock, this.asic2Mock];

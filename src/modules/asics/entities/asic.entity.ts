@@ -30,4 +30,8 @@ export class Asic {
   @Expose()
   @Column({ default: false })
   automated!: boolean;
+
+  @Expose()
+  @Column({ default: false })
+  t2Automated!: boolean;
 }

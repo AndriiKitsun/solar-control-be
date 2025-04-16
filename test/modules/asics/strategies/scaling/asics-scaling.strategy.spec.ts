@@ -21,6 +21,12 @@ import {
 } from '@api/modules/esp';
 import { LogsService } from '@modules/logs/logs.service';
 import { LogsServiceMock } from '../../../logs/mocks/logs.service.mock';
+import { isT2Zone } from '@common/utils';
+import SpyInstance = jest.SpyInstance;
+
+jest.mock('@common/utils', () => ({
+  isT2Zone: jest.fn(() => false),
+}));
 
 @Injectable()
 class AsicsScalingStrategyMock extends AsicsScalingStrategy {
@@ -104,10 +110,14 @@ describe('AsicsScaleStrategy', () => {
     let shouldScaleSpy: jest.SpiedFunction<
       AsicsScalingStrategyMock['shouldScale']
     >;
+    let getAsicsSpy: jest.SpiedFunction<AsicsScalingStrategyMock['getAsics']>;
 
     beforeEach(() => {
       getSpy = jest.spyOn(cache, 'get');
       shouldScaleSpy = jest.spyOn(strategy, 'shouldScale');
+      getAsicsSpy = jest
+        .spyOn(strategy, 'getAsics')
+        .mockResolvedValue(asicsMock);
     });
 
     it('should return where no saved sensors data', async () => {
@@ -127,14 +137,12 @@ describe('AsicsScaleStrategy', () => {
     });
 
     it('should fetch list of automated asics', async () => {
-      const findWhereSpy = jest.spyOn(asicsRepository, 'findWhere');
-
       shouldScaleSpy.mockReturnValueOnce(true);
       await cache.set(ESP_SENSORS_CACHE, sensorMock);
 
       await strategy.run(controlRuleMock);
 
-      expect(findWhereSpy).toHaveBeenCalledWith({ automated: true });
+      expect(getAsicsSpy).toHaveBeenCalled();
 
       expect(strategy.asics).toBe(asicsMock);
     });
@@ -161,6 +169,35 @@ describe('AsicsScaleStrategy', () => {
       await strategy.run(controlRuleMock);
 
       expect(errorSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('getAsics', () => {
+    let findWhereSpy: jest.SpiedFunction<AsicsRepository['findWhere']>;
+
+    beforeEach(() => {
+      findWhereSpy = jest.spyOn(asicsRepository, 'findWhere');
+    });
+
+    it('should return all automated asics', async () => {
+      const result = await strategy.getAsics();
+
+      expect(findWhereSpy).toHaveBeenCalledWith({ automated: true });
+
+      expect(result).toEqual(asicsMock);
+    });
+
+    it('should return all automated asics with T2 allow setting when current zone is T2', async () => {
+      (isT2Zone as unknown as SpyInstance).mockReturnValueOnce(true);
+
+      const result = await strategy.getAsics();
+
+      expect(findWhereSpy).toHaveBeenCalledWith({
+        automated: true,
+        t2Automated: true,
+      });
+
+      expect(result).toEqual(asicsMock);
     });
   });
 
