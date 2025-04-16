@@ -13,7 +13,7 @@ import { AsicsApiFacadeMock } from '@api/modules/asics/services/mocks/asics-api.
 import { AsicsAuthApiServiceMock } from '@api/modules/asics/collections/auth/mocks/auth.service.mock';
 import { AsicsAutotuneApiServiceMock } from '@api/modules/asics/collections/autotune/mocks/autotune.service.mock';
 import { AsicsSettingsApiServiceMock } from '@api/modules/asics/collections/settings/mocks/settings.service.mock';
-import { AsicPerfSummary, AsicSetting } from '@api/modules/asics';
+import { AsicPerfSummary, AsicSetting, AsicStatus } from '@api/modules/asics';
 import {
   EspSensorsData,
   EspSensorId,
@@ -166,16 +166,28 @@ describe('AsicsScaleStrategy', () => {
 
   describe('findAsicWithPreset', () => {
     let getPerfSummarySpy: jest.SpiedFunction<AsicsApiFacade['getPerfSummary']>;
+    let getStatusSpy: jest.SpiedFunction<AsicsApiFacade['getStatus']>;
+
+    function smallestPresetPredicate(
+      savedPreset: string,
+      preset: string,
+    ): boolean {
+      return savedPreset < preset;
+    }
+
+    function highestPresetPredicate(
+      savedPreset: string,
+      preset: string,
+    ): boolean {
+      return savedPreset > preset;
+    }
 
     beforeEach(() => {
       getPerfSummarySpy = jest.spyOn(asicsApiFacade, 'getPerfSummary');
+      getStatusSpy = jest.spyOn(asicsApiFacade, 'getStatus');
     });
 
     describe('to get asic with smallest preset', () => {
-      function presetPredicate(savedPreset: string, preset: string): boolean {
-        return savedPreset < preset;
-      }
-
       it('should return asic and preset with smallest activated preset', async () => {
         const asic1Mock = { ip: '1' };
         const asic2Mock = { ip: '2' };
@@ -206,7 +218,7 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          smallestPresetPredicate,
         );
 
         expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
@@ -230,7 +242,7 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          smallestPresetPredicate,
         );
 
         expect(result.asic).toEqual(asic1Mock);
@@ -245,7 +257,7 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          smallestPresetPredicate,
         );
 
         expect(result.asic).toBeUndefined();
@@ -254,10 +266,6 @@ describe('AsicsScaleStrategy', () => {
     });
 
     describe('to get asic with highest preset', () => {
-      function presetPredicate(savedPreset: string, preset: string): boolean {
-        return savedPreset > preset;
-      }
-
       it('should return asic and preset with highest activated preset', async () => {
         const asic1Mock = { ip: '1' };
         const asic2Mock = { ip: '2' };
@@ -288,7 +296,7 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          highestPresetPredicate,
         );
 
         expect(getPerfSummarySpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
@@ -312,7 +320,7 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          highestPresetPredicate,
         );
 
         expect(result.asic).toEqual(asic1Mock);
@@ -327,12 +335,45 @@ describe('AsicsScaleStrategy', () => {
 
         const result = await strategy.findAsicWithPreset(
           asicsMock,
-          presetPredicate,
+          highestPresetPredicate,
         );
 
         expect(result.asic).toBeUndefined();
         expect(result.perfSummary).toBeUndefined();
       });
+    });
+
+    it('should skip asic when its status is not mining', async () => {
+      const asic1Mock = { ip: '1' };
+      const asic2Mock = { ip: '2' };
+      const asic3Mock = { ip: '3' };
+      const asicsMock = [asic1Mock, asic2Mock, asic3Mock] as Asic[];
+
+      const asicPerfSummaryMock = {
+        current_preset: { name: '1500' },
+      } as AsicPerfSummary;
+
+      const asic1StatusMock = { miner_state: 'mining' } as AsicStatus;
+      const asic3StatusMock = { miner_state: 'stopped' } as AsicStatus;
+
+      getPerfSummarySpy.mockResolvedValue(asicPerfSummaryMock);
+
+      getStatusSpy
+        .mockResolvedValueOnce(asic1StatusMock)
+        .mockRejectedValueOnce(new Error('error'))
+        .mockResolvedValueOnce(asic3StatusMock);
+
+      const result = await strategy.findAsicWithPreset(
+        asicsMock,
+        highestPresetPredicate,
+      );
+
+      expect(getStatusSpy).toHaveBeenNthCalledWith(1, asic1Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(2, asic2Mock.ip);
+      expect(getStatusSpy).toHaveBeenNthCalledWith(3, asic3Mock.ip);
+
+      expect(result.asic).toEqual(asic1Mock);
+      expect(result.perfSummary).toEqual(asicPerfSummaryMock);
     });
   });
 

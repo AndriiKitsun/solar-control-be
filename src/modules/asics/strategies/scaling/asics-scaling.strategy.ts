@@ -54,14 +54,22 @@ export abstract class AsicsScalingStrategy {
     const perfSummaries = await Promise.allSettled(
       asics.map((asic) => this.asicsApiFacade.getPerfSummary(asic.ip)),
     );
+    const statuses = await Promise.allSettled(
+      asics.map((asic) => this.asicsApiFacade.getStatus(asic.ip)),
+    );
 
     let savedAsic: Maybe<Asic>;
     let savedPerfSummary: Maybe<AsicPerfSummary>;
 
     for (let i = 0; i < perfSummaries.length; i++) {
       const perfSummary = perfSummaries[i];
+      const status = statuses[i];
 
-      if (perfSummary.status === 'rejected') {
+      if (perfSummary.status === 'rejected' || status.status === 'rejected') {
+        continue;
+      }
+
+      if (status.value.miner_state !== 'mining') {
         continue;
       }
 
