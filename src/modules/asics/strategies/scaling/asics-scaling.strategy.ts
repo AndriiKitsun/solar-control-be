@@ -16,6 +16,8 @@ import {
 import { EspSensorsData, ESP_SENSORS_CACHE } from '@api/modules/esp';
 import { LogsService } from '../../../logs/logs.service';
 import { LogType } from '../../../logs/enums';
+import { isT2Zone } from '@common/utils';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 export abstract class AsicsScalingStrategy {
   asics: Asic[] = [];
@@ -36,7 +38,7 @@ export abstract class AsicsScalingStrategy {
         return;
       }
 
-      this.asics = await this.asicsRepository.findWhere({ automated: true });
+      this.asics = await this.getAsics();
 
       await this.scale();
     } catch {
@@ -45,6 +47,16 @@ export abstract class AsicsScalingStrategy {
         message: 'An unknown error occurred during scaling Asics',
       });
     }
+  }
+
+  getAsics(): Promise<Asic[]> {
+    const opts: FindOptionsWhere<Asic> = { automated: true };
+
+    if (isT2Zone()) {
+      opts.t2Automated = true;
+    }
+
+    return this.asicsRepository.findWhere(opts);
   }
 
   async findAsicWithPreset(

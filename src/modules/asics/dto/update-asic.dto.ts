@@ -14,4 +14,8 @@ export class UpdateAsicDto extends PartialType(CreateAsicDto) {
   @IsBoolean()
   @IsOptional()
   automated?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  t2Automated?: boolean;
 }
