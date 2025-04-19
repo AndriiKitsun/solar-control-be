@@ -17,15 +17,15 @@ export class AcOutputProtectionStrategy extends ProtectionStrategy {
 
   run(sensor: EspSensor, rules: ProtectionMappedRule): ProtectionRulesResult {
     const result: ProtectionRulesResult = {
-      acOutputFrequency: false,
+      acOutputAvgFrequency: false,
       acOutputVoltage: false,
       acOutputAvgVoltage: false,
     };
 
-    if (sensor.protection?.acOutputFrequency && rules.acOutputFrequency) {
-      this.logRule(rules.acOutputFrequency, sensor.frequency);
+    if (sensor.protection?.acOutputAvgFrequency && rules.acOutputAvgFrequency) {
+      this.logRule(rules.acOutputAvgFrequency, sensor.avgFrequency);
 
-      result.acOutputFrequency = true;
+      result.acOutputAvgFrequency = true;
     }
 
     if (sensor.protection?.acOutputVoltage && rules.acOutputVoltage) {

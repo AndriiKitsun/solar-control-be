@@ -56,7 +56,7 @@ describe('ProtectionStrategyExecutor', () => {
       const expectedResult: ProtectionResultDto = {
         triggered: false,
         rules: {
-          acOutputFrequency: false,
+          acOutputAvgFrequency: false,
           acOutputVoltage: false,
           acOutputAvgVoltage: false,
           dcBatteryAvgVoltage: false,
@@ -83,7 +83,7 @@ describe('ProtectionStrategyExecutor', () => {
       const expectedResult: ProtectionResultDto = {
         triggered: false,
         rules: {
-          acOutputFrequency: false,
+          acOutputAvgFrequency: false,
           acOutputVoltage: false,
           acOutputAvgVoltage: false,
           dcBatteryAvgVoltage: false,
@@ -112,7 +112,7 @@ describe('ProtectionStrategyExecutor', () => {
       const expectedResult: ProtectionResultDto = {
         triggered: true,
         rules: {
-          acOutputFrequency: false,
+          acOutputAvgFrequency: false,
           acOutputVoltage: false,
           acOutputAvgVoltage: true,
           dcBatteryAvgVoltage: false,

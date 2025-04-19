@@ -275,6 +275,11 @@ export interface components {
       frequency?: number;
       /**
        * Format: float
+       * @description Average AC frequency in Hz
+       */
+      avgFrequency?: number;
+      /**
+       * Format: float
        * @description AC power factor of the load
        */
       powerFactor?: number;
