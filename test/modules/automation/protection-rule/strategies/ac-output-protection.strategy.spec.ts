@@ -39,21 +39,21 @@ describe('AcOutputProtectionStrategy', () => {
 
     it('should log ac output frequency rule', () => {
       const sensorMock: EspSensor = {
-        frequency: 123,
+        avgFrequency: 123,
         protection: {
-          acOutputFrequency: true,
+          acOutputAvgFrequency: true,
         },
       };
       const rulesMock: ProtectionMappedRule = {
-        [ProtectionRuleId.AC_OUTPUT_FREQUENCY]: {
-          id: ProtectionRuleId.AC_OUTPUT_FREQUENCY,
+        [ProtectionRuleId.AC_OUTPUT_AVG_FREQUENCY]: {
+          id: ProtectionRuleId.AC_OUTPUT_AVG_FREQUENCY,
           enabled: true,
           min: 49,
           max: 51,
         },
       };
       const expectedResult: ProtectionRulesResult = {
-        acOutputFrequency: true,
+        acOutputAvgFrequency: true,
         acOutputVoltage: false,
         acOutputAvgVoltage: false,
       };
@@ -61,8 +61,8 @@ describe('AcOutputProtectionStrategy', () => {
       const result = strategy.run(sensorMock, rulesMock);
 
       expect(logRuleSpy).toHaveBeenCalledWith(
-        rulesMock.acOutputFrequency,
-        sensorMock.frequency,
+        rulesMock.acOutputAvgFrequency,
+        sensorMock.avgFrequency,
       );
 
       expect(result).toEqual(expectedResult);
@@ -84,7 +84,7 @@ describe('AcOutputProtectionStrategy', () => {
         },
       };
       const expectedResult: ProtectionRulesResult = {
-        acOutputFrequency: false,
+        acOutputAvgFrequency: false,
         acOutputVoltage: true,
         acOutputAvgVoltage: false,
       };
@@ -115,7 +115,7 @@ describe('AcOutputProtectionStrategy', () => {
         },
       };
       const expectedResult: ProtectionRulesResult = {
-        acOutputFrequency: false,
+        acOutputAvgFrequency: false,
         acOutputVoltage: false,
         acOutputAvgVoltage: true,
       };

@@ -10,7 +10,7 @@ export class ProtectionStrategyExecutorMock
   static readonly protectionResultMock: ProtectionResultDto = {
     triggered: false,
     rules: {
-      acOutputFrequency: false,
+      acOutputAvgFrequency: false,
       acOutputVoltage: false,
       acOutputAvgVoltage: false,
       dcBatteryAvgVoltage: false,

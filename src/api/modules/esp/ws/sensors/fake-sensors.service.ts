@@ -67,7 +67,7 @@ export class EspFakeSensorsWsService {
         fractionDigits: faker.number.int({ min: 0, max: 3 }),
       }),
       protection: {
-        acOutputFrequency: faker.datatype.boolean(),
+        acOutputAvgFrequency: faker.datatype.boolean(),
         acOutputVoltage: faker.datatype.boolean(),
       },
     };
