@@ -1,5 +1,19 @@
 # solar-control-be
 
+## 1.7.0
+
+### Minor Changes
+
+- [#67](https://github.com/AndriiKitsun/solar-control-be/pull/67) [`877d6b4`](https://github.com/AndriiKitsun/solar-control-be/commit/877d6b4d423505ab786465cc1c8627f2ce645a5e) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-158: Add additional logging for scaling checks
+
+- [#68](https://github.com/AndriiKitsun/solar-control-be/pull/68) [`7551722`](https://github.com/AndriiKitsun/solar-control-be/commit/75517228ee01cd85b616ddfc52464b0eef711ef6) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-154: Add Asic setting to prevent control automation during T2 zone
+
+- [#69](https://github.com/AndriiKitsun/solar-control-be/pull/69) [`113d776`](https://github.com/AndriiKitsun/solar-control-be/commit/113d77679cbce62cc417abc169abd9262fec2a30) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-159: Adjust AC Output Frequency protection rule
+
+### Patch Changes
+
+- [#66](https://github.com/AndriiKitsun/solar-control-be/pull/66) [`b823902`](https://github.com/AndriiKitsun/solar-control-be/commit/b823902a53d266ba41a6064204283c10f093a31b) Thanks [@AndriiKitsun](https://github.com/AndriiKitsun)! - SC-157: Asic preset comparison should include the current Asic status
+
 ## 1.6.1
 
 ### Patch Changes
